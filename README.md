@@ -1,2 +1,2 @@
-# machineShop
-managing infrastructure &amp; configuration 
+# stuttgart-things/machineShop
+managing infrastructure and configuration 
