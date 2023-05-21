@@ -46,7 +46,7 @@ tasks:
     desc: Relase binaries
     deps: [tag]
     cmds:
-      - unset GITLAB_TOKEN
+      - unset GITLAB_TOKEN && rm -rf ./dist
       - goreleaser healthcheck
       - goreleaser check
       - goreleaser release --skip-publish --snapshot --clean
