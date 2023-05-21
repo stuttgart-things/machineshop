@@ -41,3 +41,12 @@ tasks:
       - git push
       - git tag -a {{ .UPDATED_TAG_VERSION }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}'
       - git push origin --tags
+
+  release:
+    desc: Relase binaries
+    deps: [tag]
+    cmds:
+      - goreleaser healthcheck
+      - goreleaser check
+      - goreleaser release --skip-publish --snapshot --clean
+      - goreleaser release --clean
