@@ -1,1 +1,43 @@
 ---
+version: "3"
+
+vars:
+  MAJOR:
+    sh: git describe --tags --abbrev=0 | cut -d "." -f1
+  MINOR:
+    sh: git describe --tags --abbrev=0 | cut -d "." -f2
+  PATCH:
+    sh: git describe --tags --abbrev=0 | cut -d "." -f3
+  VERSION:
+    sh: git describe --tags --abbrev=0
+  DATE:
+    sh: date +"%y.%m%d.%H%M"
+  UPDATED_TAG:
+    sh: old_tag=$(git describe --tags --abbrev=0 | cut -d "." -f3); new_tag=$((old_tag+1)); echo $new_tag
+  UPDATED_TAG_VERSION:
+    sh: t1=$(git describe --tags --abbrev=0 | cut -f1 -d'.'); t2=$(git describe --tags --abbrev=0 | cut -f2 -d'.'); echo $t1.$t2.{{.UPDATED_TAG}}
+
+tasks:
+  lint:
+    desc: Lint
+    cmds:
+      - cmd: golangci-lint run
+        ignore_error: true
+
+  test:
+    desc: Test
+    cmds:
+      - go mod tidy
+      - go test -v
+
+  tag:
+    desc: Commit, push & tag the module
+    deps: [lint]
+    cmds:
+      - go mod tidy
+      - git pull
+      - git add *
+      - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}'
+      - git push
+      - git tag -a {{ .UPDATED_TAG_VERSION }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}'
+      - git push origin --tags
