@@ -71,3 +71,4 @@ tasks:
       - goreleaser check
       - goreleaser release --skip-publish --snapshot --clean
       - goreleaser release --clean
+      - rm -rf ./dist
