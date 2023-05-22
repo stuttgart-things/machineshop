@@ -35,7 +35,7 @@ tasks:
     deps: [lint, test]
     cmds:
       - go install -ldflags="-X {{ .MODULE }}/cmd.version=v{{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }} -X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
-      - "{{ .PROJECT_NAME }} version"
+      - "{{ .PROJECT_NAME }} terraform"
 
   lint:
     desc: Lint
