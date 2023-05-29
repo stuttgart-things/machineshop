@@ -14,10 +14,9 @@ managing infrastructure and configuration
 
 ## RELEASES
 ```
-[DEV]: v0.1.1
+[DEV]: v0.1.0
 ```
 
-projdir: PacMan3
 
 Author Information
 ------------------
