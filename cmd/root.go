@@ -12,7 +12,7 @@ import (
 
 var (
 	gitRepository string
-	logFile       string
+	logFilePath   string
 )
 
 var rootCmd = &cobra.Command{

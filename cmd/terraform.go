@@ -48,21 +48,14 @@ var terraformCmd = &cobra.Command{
 			pterm.White("VAULT_ROLE_ID: ") + "\t" + pterm.LightMagenta(os.Getenv("VAULT_ROLE_IDta")) + "\n" +
 			pterm.White("VAULT_SECRET_ID: ") + pterm.LightMagenta(os.Getenv("VAULT_SECRET_ID")) + "\n" +
 			pterm.White("VAULT_TOKEN: ") + "\t" + pterm.LightMagenta(os.Getenv("VAULT_TOKEN")) + "\n" +
+			pterm.White("LOG-FILE: ") + "\t" + pterm.LightMagenta(logFilePath) + "\n" +
 			"\n" +
 			pterm.White("VERSION: ") + "\t" + pterm.LightMagenta(version+" ("+date+")"))
 		pterm.Println()
 
 		surveys.RunTerraform(gitRepository, gitPath)
 
-		// Calling MultiWriter method with its parameters
-
-		fileWriter := internal.CreateFileLogger("/tmp/test.log")
-
-		// f, err := os.OpenFile("/tmp/123.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0600)
-		// if err != nil {
-		// 	panic(err)
-		// }
-		// defer f.Close()
+		fileWriter := internal.CreateFileLogger(logFilePath)
 
 		multiWriter := io.MultiWriter(os.Stdout, fileWriter)
 
