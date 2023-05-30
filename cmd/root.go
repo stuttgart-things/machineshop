@@ -33,7 +33,7 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().StringVar(&gitRepository, "git", "https://github.com/stuttgart-things/stuttgart-things.git", "iac git repository")
-	rootCmd.PersistentFlags().StringVar(&logFile, "log", "/tmp/machineshop.log", "log file path")
+	rootCmd.PersistentFlags().StringVar(&logFilePath, "log", "/tmp/machineshop.log", "log file path")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }
