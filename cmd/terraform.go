@@ -5,7 +5,7 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
-	"time"
+	"os"
 
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
@@ -21,31 +21,33 @@ var terraformCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		gitPath, _ := cmd.LocalFlags().GetString("path")
 
-		panels := pterm.Panels{
-			{{Data: pterm.White("\n/terraform")}, {Data: pterm.White("\n" + version)}, {Data: pterm.White("\n" + date)}},
-			{{Data: pterm.Magenta("\nGIT-REPO: " + gitRepository)}, {Data: pterm.Magenta("\nGIT-PATH: " + gitPath)}},
-			{{Data: pterm.Magenta("\nVAULT:\n" + gitRepository)}, {Data: pterm.Magenta("\nGIT-PATH:\n" + gitPath)}},
-		}
+		// panels := pterm.Panels{
+		// 	{{Data: pterm.White("\n/terraform")}, {Data: pterm.White("\n" + version)}, {Data: pterm.White("\n" + date)}},
+		// 	{{Data: pterm.Magenta("\nGIT-REPO: " + gitRepository)}, {Data: pterm.Magenta("\nGIT-PATH: " + gitPath)}},
+		// 	{{Data: pterm.Magenta("\nVAULT:\n" + gitRepository)}, {Data: pterm.Magenta("\nGIT-PATH:\n" + gitPath)}},
+		// }
 
 		// Print panels.
-		_ = pterm.DefaultPanel.WithPanels(panels).WithPadding(5).Render()
+		// _ = pterm.DefaultPanel.WithPanels(panels).WithPadding(5).Render()
 
 		ptermLogo, _ := pterm.DefaultBigText.WithLetters(
 			putils.LettersFromStringWithStyle("machine", pterm.NewStyle(pterm.FgLightCyan)),
 			putils.LettersFromStringWithStyle("Shop", pterm.NewStyle(pterm.FgLightMagenta))).
 			Srender()
 
-		pterm.DefaultCenter.Print(ptermLogo)
+		pterm.DefaultCenter.Print("\n" + ptermLogo)
 
-		pterm.DefaultCenter.Print(pterm.DefaultHeader.WithFullWidth().WithBackgroundStyle(pterm.NewStyle(pterm.BgLightBlue)).WithMargin(2).Sprint("/TERRAFORM"))
+		pterm.DefaultCenter.Print(pterm.DefaultHeader.WithFullWidth().WithBackgroundStyle(pterm.NewStyle(pterm.BgLightCyan)).WithMargin(2).Sprint("/TERRAFORM"))
 
-		pterm.Info.Println("GIT-REPO: " + gitRepository +
-			"\nPTerm works on nearly every terminal and operating system." +
-			"\nIt's super easy to use!" +
-			"\nIf you want, you can customize everything :)" +
-			"\nYou can see the code of this demo in the " + pterm.LightMagenta("./_examples/demo") + " directory." +
+		pterm.Info.Println(pterm.White("GIT-REPO: ") + "\t" + pterm.LightMagenta(gitRepository) + "\n" +
+			pterm.White("GIT-PATH: ") + "\t" + pterm.LightMagenta(gitPath) + "\n" +
+			pterm.White("VAULT_ADDR: ") + "\t" + pterm.LightMagenta(os.Getenv("VAULT_ADDR")) + "\n" +
+			pterm.White("VAULT_NAMESPACE: ") + pterm.LightMagenta(os.Getenv("VAULT_NAMESPACE")) + "\n" +
+			pterm.White("VAULT_ROLE_ID: ") + "\t" + pterm.LightMagenta(os.Getenv("VAULT_ROLE_ID")) + "\n" +
+			pterm.White("VAULT_SECRET_ID: ") + pterm.LightMagenta(os.Getenv("VAULT_SECRET_ID")) + "\n" +
+			pterm.White("VAULT_TOKEN: ") + "\t" + pterm.LightMagenta(os.Getenv("VAULT_TOKEN")) + "\n" +
 			"\n" +
-			"\nThis demo was updated at: " + pterm.Green(time.Now().Format("02 Jan 2006 - 15:04:05 MST")))
+			pterm.White("VERSION: ") + "\t" + pterm.LightMagenta(version+" ("+date+")"))
 		pterm.Println()
 
 		surveys.RunTerraform(gitRepository, gitPath)

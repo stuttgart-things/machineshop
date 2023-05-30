@@ -7,8 +7,6 @@ package cmd
 import (
 	"os"
 
-	"github.com/fatih/color"
-
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +34,7 @@ var rootCmd = &cobra.Command{
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	// fmt.Println(banner)
-	color.Blue(banner)
+	// color.Blue(banner)
 
 	err := rootCmd.Execute()
 	if err != nil {
