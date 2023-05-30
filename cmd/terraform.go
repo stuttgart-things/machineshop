@@ -23,15 +23,6 @@ var terraformCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		gitPath, _ := cmd.LocalFlags().GetString("path")
 
-		// panels := pterm.Panels{
-		// 	{{Data: pterm.White("\n/terraform")}, {Data: pterm.White("\n" + version)}, {Data: pterm.White("\n" + date)}},
-		// 	{{Data: pterm.Magenta("\nGIT-REPO: " + gitRepository)}, {Data: pterm.Magenta("\nGIT-PATH: " + gitPath)}},
-		// 	{{Data: pterm.Magenta("\nVAULT:\n" + gitRepository)}, {Data: pterm.Magenta("\nGIT-PATH:\n" + gitPath)}},
-		// }
-
-		// Print panels.
-		// _ = pterm.DefaultPanel.WithPanels(panels).WithPadding(5).Render()
-
 		ptermLogo, _ := pterm.DefaultBigText.WithLetters(
 			putils.LettersFromStringWithStyle("machine", pterm.NewStyle(pterm.FgLightCyan)),
 			putils.LettersFromStringWithStyle("Shop", pterm.NewStyle(pterm.FgLightMagenta))).
