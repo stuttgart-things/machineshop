@@ -2,7 +2,7 @@
 Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 */
 
-package functions
+package internal
 
 import (
 	"fmt"

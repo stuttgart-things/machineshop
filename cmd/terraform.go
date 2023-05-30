@@ -5,12 +5,14 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
+	"io"
 	"os"
 
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
 
 	"github.com/spf13/cobra"
+	"github.com/stuttgart-things/machineShop/internal"
 	"github.com/stuttgart-things/machineShop/surveys"
 )
 
@@ -43,7 +45,7 @@ var terraformCmd = &cobra.Command{
 			pterm.White("GIT-PATH: ") + "\t" + pterm.LightMagenta(gitPath) + "\n" +
 			pterm.White("VAULT_ADDR: ") + "\t" + pterm.LightMagenta(os.Getenv("VAULT_ADDR")) + "\n" +
 			pterm.White("VAULT_NAMESPACE: ") + pterm.LightMagenta(os.Getenv("VAULT_NAMESPACE")) + "\n" +
-			pterm.White("VAULT_ROLE_ID: ") + "\t" + pterm.LightMagenta(os.Getenv("VAULT_ROLE_ID")) + "\n" +
+			pterm.White("VAULT_ROLE_ID: ") + "\t" + pterm.LightMagenta(os.Getenv("VAULT_ROLE_IDta")) + "\n" +
 			pterm.White("VAULT_SECRET_ID: ") + pterm.LightMagenta(os.Getenv("VAULT_SECRET_ID")) + "\n" +
 			pterm.White("VAULT_TOKEN: ") + "\t" + pterm.LightMagenta(os.Getenv("VAULT_TOKEN")) + "\n" +
 			"\n" +
@@ -51,6 +53,25 @@ var terraformCmd = &cobra.Command{
 		pterm.Println()
 
 		surveys.RunTerraform(gitRepository, gitPath)
+
+		// Calling MultiWriter method with its parameters
+
+		fileWriter := internal.CreateFileLogger("/tmp/test.log")
+
+		// f, err := os.OpenFile("/tmp/123.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0600)
+		// if err != nil {
+		// 	panic(err)
+		// }
+		// defer f.Close()
+
+		multiWriter := io.MultiWriter(os.Stdout, fileWriter)
+
+		logger := pterm.DefaultLogger.
+			WithLevel(pterm.LogLevelTrace).
+			WithWriter(multiWriter). // Only show logs with a level of Trace or higher.
+			WithCaller()             // ! Show the caller of the log function.
+
+		logger.Trace("Doing not so important stuff", logger.Args("priority", "super low"))
 	},
 }
 

@@ -7,7 +7,7 @@ package surveys
 import (
 	"fmt"
 
-	"github.com/stuttgart-things/machineShop/functions"
+	"github.com/stuttgart-things/machineShop/internal"
 )
 
 func RunTerraform(gitRepository, gitPath string) {
@@ -15,5 +15,5 @@ func RunTerraform(gitRepository, gitPath string) {
 	fmt.Println(gitRepository)
 	fmt.Println(gitPath)
 
-	functions.GetFileListFromGitRepository(gitRepository, gitPath, nil)
+	internal.GetFileListFromGitRepository(gitRepository, gitPath, nil)
 }
