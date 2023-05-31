@@ -21,18 +21,16 @@ var terraformCmd = &cobra.Command{
 	Short: "manage infrastructure in any cloud",
 	Long:  `predictably provision and manage infrastructure in any cloud.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		gitPath, _ := cmd.LocalFlags().GetString("path")
 
+		gitPath, _ := cmd.LocalFlags().GetString("path")
 		ptermLogo, _ := pterm.DefaultBigText.WithLetters(
 			putils.LettersFromStringWithStyle("machine", pterm.NewStyle(pterm.FgLightCyan)),
 			putils.LettersFromStringWithStyle("Shop", pterm.NewStyle(pterm.FgLightMagenta))).
 			Srender()
 
 		pterm.DefaultCenter.Print("\n" + ptermLogo)
-
 		pterm.DefaultCenter.Print(pterm.DefaultHeader.WithFullWidth().WithBackgroundStyle(pterm.NewStyle(pterm.BgLightCyan)).WithMargin(2).Sprint("/TERRAFORM"))
-
-		pterm.Info.Println(pterm.White("GIT-REPO: ") + "\t" + pterm.LightMagenta(gitRepository) + "\n" +
+		pterm.Info.Println(pterm.White("GIT-REPO ") + "\t\t" + pterm.LightMagenta(gitRepository) + "\n" +
 			pterm.White("GIT-PATH ") + "\t\t" + pterm.LightMagenta(gitPath) + "\n" +
 			pterm.White("VAULT_ADDR ") + "\t\t" + pterm.LightMagenta(os.Getenv("VAULT_ADDR")) + "\n" +
 			pterm.White("VAULT_NAMESPACE ") + "\t\t" + pterm.LightMagenta(os.Getenv("VAULT_NAMESPACE")) + "\n" +
@@ -46,15 +44,13 @@ var terraformCmd = &cobra.Command{
 
 		surveys.RunTerraform(gitRepository, gitPath)
 
+		// LOGGING
 		fileWriter := internal.CreateFileLogger(logFilePath)
-
 		multiWriter := io.MultiWriter(os.Stdout, fileWriter)
-
 		logger := pterm.DefaultLogger.
 			WithLevel(pterm.LogLevelTrace).
 			WithWriter(multiWriter). // Only show logs with a level of Trace or higher.
 			WithCaller()             // ! Show the caller of the log function.
-
 		logger.Trace("Doing not so important stuff", logger.Args("priority", "super low"))
 	},
 }

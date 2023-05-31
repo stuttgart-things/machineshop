@@ -12,8 +12,6 @@ import (
 
 func RunTerraform(gitRepository, gitPath string) {
 
-	fmt.Println(gitRepository)
-	fmt.Println(gitPath)
-
-	internal.GetFileListFromGitRepository(gitRepository, gitPath, nil)
+	fileList := internal.GetFileListFromGitRepository(gitRepository, gitPath, nil)
+	fmt.Println(fileList)
 }

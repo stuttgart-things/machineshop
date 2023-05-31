@@ -30,7 +30,6 @@ func GetFileListFromGitRepository(repository, directory string, auth *http.Basic
 	if err != nil {
 		fmt.Println("Could not git clone repository")
 	}
-	fmt.Println("Repository cloned")
 
 	// Get git default worktree
 	w, err := r.Worktree()
@@ -38,17 +37,12 @@ func GetFileListFromGitRepository(repository, directory string, auth *http.Basic
 		fmt.Println("Could not get git worktree: %w", err)
 	}
 
-	fmt.Println(w)
+	fmt.Println("W", w)
 	files, _ := fs.ReadDir(directory)
 
 	for _, file := range files {
 		fileList = append(fileList, file.Name())
-		fmt.Println(file.Name())
 	}
 
-	// file, _ := fs.Open(filename)
-	// fileContent, _ := ioutil.ReadAll(file)
-
-	// return string(fileContent)
 	return
 }
