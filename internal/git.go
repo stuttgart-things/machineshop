@@ -22,7 +22,7 @@ func GetFileListFromGitRepository(repository, directory string, auth *http.Basic
 	fs := memfs.New()
 
 	// Clone repo into memfs
-	r, err := git.Clone(storer, fs, &git.CloneOptions{
+	_, err := git.Clone(storer, fs, &git.CloneOptions{
 		URL:  repository,
 		Auth: auth,
 	})
@@ -31,13 +31,6 @@ func GetFileListFromGitRepository(repository, directory string, auth *http.Basic
 		fmt.Println("Could not git clone repository")
 	}
 
-	// Get git default worktree
-	w, err := r.Worktree()
-	if err != nil {
-		fmt.Println("Could not get git worktree: %w", err)
-	}
-
-	fmt.Println("W", w)
 	files, _ := fs.ReadDir(directory)
 
 	for _, file := range files {

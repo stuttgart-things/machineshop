@@ -5,14 +5,12 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
-	"io"
 	"os"
 
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
 
 	"github.com/spf13/cobra"
-	"github.com/stuttgart-things/machineShop/internal"
 	"github.com/stuttgart-things/machineShop/surveys"
 )
 
@@ -44,20 +42,10 @@ var terraformCmd = &cobra.Command{
 
 		surveys.RunTerraform(gitRepository, gitPath)
 
-		// LOGGING
-		fileWriter := internal.CreateFileLogger(logFilePath)
-		multiWriter := io.MultiWriter(os.Stdout, fileWriter)
-		logger := pterm.DefaultLogger.
-			WithLevel(pterm.LogLevelTrace).
-			WithWriter(multiWriter). // Only show logs with a level of Trace or higher.
-			WithCaller()             // ! Show the caller of the log function.
-		logger.Trace("Doing not so important stuff", logger.Args("priority", "super low"))
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(terraformCmd)
-
 	terraformCmd.Flags().String("path", "machineShop/terraform", "path to terraform automation code")
-
 }
