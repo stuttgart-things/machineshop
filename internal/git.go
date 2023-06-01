@@ -15,7 +15,7 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
-func GetFileListFromGitRepository(repository, directory string, auth *http.BasicAuth) (fileList []string) {
+func GetFileListFromGitRepository(repository, directory string, auth *http.BasicAuth) (fileList, directoryList []string) {
 
 	// Init memory storage and fs
 	storer := memory.NewStorage()
@@ -34,8 +34,39 @@ func GetFileListFromGitRepository(repository, directory string, auth *http.Basic
 	files, _ := fs.ReadDir(directory)
 
 	for _, file := range files {
-		fileList = append(fileList, file.Name())
+
+		if file.IsDir() {
+			directoryList = append(directoryList, file.Name())
+		} else {
+			fileList = append(fileList, file.Name())
+		}
 	}
 
 	return
 }
+
+// func GetFolderListFromGitRepository(repository, directory string, auth *http.BasicAuth) (fileList []string) {
+
+// 	// Init memory storage and fs
+// 	storer := memory.NewStorage()
+// 	fs := memfs.New()
+
+// 	// Clone repo into memfs
+// 	_, err := git.Clone(storer, fs, &git.CloneOptions{
+// 		URL:  repository,
+// 		Auth: auth,
+// 	})
+
+// 	if err != nil {
+// 		fmt.Println("Could not git clone repository")
+// 	}
+
+// 	files, _ := fs.ReadDir(directory)
+
+// 	for _, file := range files {
+// 		fmt.Println(file.IsDir())
+// 		// fileList = append(fileList, file.Name())
+// 	}
+
+// 	return
+// }

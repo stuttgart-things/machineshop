@@ -47,5 +47,5 @@ var terraformCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(terraformCmd)
-	terraformCmd.Flags().String("path", "machineShop/terraform", "path to terraform automation code")
+	terraformCmd.Flags().String("path", "machineShop/tf", "path to terraform automation code")
 }
