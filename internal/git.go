@@ -44,29 +44,3 @@ func GetFileListFromGitRepository(repository, directory string, auth *http.Basic
 
 	return
 }
-
-// func GetFolderListFromGitRepository(repository, directory string, auth *http.BasicAuth) (fileList []string) {
-
-// 	// Init memory storage and fs
-// 	storer := memory.NewStorage()
-// 	fs := memfs.New()
-
-// 	// Clone repo into memfs
-// 	_, err := git.Clone(storer, fs, &git.CloneOptions{
-// 		URL:  repository,
-// 		Auth: auth,
-// 	})
-
-// 	if err != nil {
-// 		fmt.Println("Could not git clone repository")
-// 	}
-
-// 	files, _ := fs.ReadDir(directory)
-
-// 	for _, file := range files {
-// 		fmt.Println(file.IsDir())
-// 		// fileList = append(fileList, file.Name())
-// 	}
-
-// 	return
-// }

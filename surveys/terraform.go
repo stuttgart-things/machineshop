@@ -35,6 +35,7 @@ func RunTerraform(gitRepository, gitPath string) {
 		fmt.Println(selectedProfile)
 
 	} else {
+
 		_, folderList := internal.GetFileListFromGitRepository(gitRepository, gitPath+"/"+configSubFolder, nil)
 		selectedProfile = sthingsCli.AskSingleSelectQuestion("SELECT PROFILE:", folderList)
 		fmt.Println(selectedProfile)
