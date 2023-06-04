@@ -26,7 +26,17 @@ var (
 
 )
 
-func RunTerraform(gitRepository, gitPath string) {
+func RunTerraform(gitRepository, gitPath, gitUser, gitToken string) {
+	fmt.Println("HELLO", gitUser+gitToken)
+
+	// gitRepo := "https://codehub.sva.de/Lab/stuttgart-things/stuttgart-things.git"
+	gitFilePath := "machineShop/tf/state/shipyard12/hello.tf"
+	gitCommitMessage := "updated for stuttgart-things"
+	// auth := internal.GetGitAuth("phermann", "ZvZ6UNsieKZCKUM1aFQg")
+	auth := internal.GetGitAuth(gitUser, gitToken)
+	fileContent := "blalba2"
+
+	internal.GitCommitFile(gitRepository, auth, []byte(fileContent), gitFilePath, gitCommitMessage)
 
 	if sthingsCli.AskSingleSelectQuestion("OPERATION:", []string{"apply", "destroy"}) == "apply" {
 

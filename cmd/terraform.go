@@ -40,7 +40,7 @@ var terraformCmd = &cobra.Command{
 			pterm.White("VERSION ") + "\t\t\t" + pterm.LightMagenta(version+" ("+date+")"))
 		pterm.Println()
 
-		surveys.RunTerraform(gitRepository, gitPath)
+		surveys.RunTerraform(gitRepository, gitPath, gitUser, gitToken)
 
 	},
 }
