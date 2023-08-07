@@ -25,24 +25,18 @@ vars:
     sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD) ; fi
 
 tasks:
-
   run:
     desc: Run
     deps: [install]
     cmds:
-      - go run main.go
-
-  debug:
-    desc: bla
-    cmds:
-      - echo {{ .BRANCH }}
+      - "{{ .PROJECT_NAME }}"
 
   install:
     desc: Install
     deps: [lint, test]
     cmds:
       - go install -ldflags="-X {{ .MODULE }}/cmd.version=v{{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }} -X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
-      - "{{ .PROJECT_NAME }} terraform"
+      - "{{ .PROJECT_NAME }}"
 
   lint:
     desc: Lint
