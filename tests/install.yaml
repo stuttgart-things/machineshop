@@ -1,0 +1,17 @@
+---
+install:
+  - argocd:
+      binary:
+        url: https://github.com/argoproj/argo-cd/releases/download/v{{ or .decksmanVersion "2.5.10" }}/argocd-linux-amd64
+        bin: argocd-linux-amd64
+  - decksman:
+      binary:
+        url: https://artifacts.tiab.labda.sva.de/decksman/decksman-{{ or .decksmanVersion "0.8.436" }}.zip
+        bin: decksman
+  - nodejs:
+      script: |
+        sudo apt install npm nodejs -y
+        sudo npm cache clean -f
+        sudo npm install -g n
+        sudo n stable
+        sudo n latest
