@@ -15,6 +15,8 @@ var (
 	gitUser       string
 	gitToken      string
 	logFilePath   string
+	gitBranch     string
+	gitCommitID   string
 )
 
 var rootCmd = &cobra.Command{
@@ -34,9 +36,11 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&gitRepository, "git", "https://github.com/stuttgart-things/stuttgart-things.git", "iac git repository")
+	rootCmd.PersistentFlags().StringVar(&gitRepository, "git", "https://github.com/stuttgart-things/stuttgart-things.git", "source git repository")
 	rootCmd.PersistentFlags().StringVar(&logFilePath, "log", "/tmp/machineshop.log", "log file path")
 	rootCmd.PersistentFlags().StringVar(&gitUser, "gitUser", "git/data/github:username", "git user")
+	rootCmd.PersistentFlags().StringVar(&gitBranch, "branch", "main", "git branch")
+	rootCmd.PersistentFlags().StringVar(&gitCommitID, "commitID", "", "git commit id")
 	rootCmd.PersistentFlags().StringVar(&gitToken, "gitToken", "git/data/github:token", "git token")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -7,12 +7,12 @@ package internal
 import (
 	"fmt"
 
-	http "github.com/go-git/go-git/v5/plumbing/transport/http"
-
+	billy "github.com/go-git/go-billy/v5"
 	memfs "github.com/go-git/go-billy/v5/memfs"
+	http "github.com/go-git/go-git/v5/plumbing/transport/http"
 	memory "github.com/go-git/go-git/v5/storage/memory"
 
-	"github.com/go-git/go-git/v5"
+	git "github.com/go-git/go-git/v5"
 )
 
 func GetFileListFromGitRepository(repository, directory string, auth *http.BasicAuth) (fileList, directoryList []string) {
@@ -43,6 +43,23 @@ func GetFileListFromGitRepository(repository, directory string, auth *http.Basic
 	}
 
 	return
+}
+
+func GetFileListFromGitFS(directory string, fs billy.Filesystem) (fileList, directoryList []string) {
+
+	files, _ := fs.ReadDir(directory)
+
+	for _, file := range files {
+
+		if file.IsDir() {
+			directoryList = append(directoryList, file.Name())
+		} else {
+			fileList = append(fileList, file.Name())
+		}
+	}
+
+	return
+
 }
 
 func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, filePath, commitMsg string) error {
