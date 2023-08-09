@@ -5,7 +5,7 @@ managing infrastructure and configuration
 ## RELEASES
 
 ```
-[DEV]: v0.1.0
+[DEV]: v0.1.24
 ```
 
 <details><summary><b>APACHE 2.0</b></summary>
