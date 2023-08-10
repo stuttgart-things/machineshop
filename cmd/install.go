@@ -13,12 +13,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// installCmd represents the install command
+// var config Profile
+
+// type Install struct {
+// 	Url string `mapstructure:"url"`
+// 	Bin string `mapstructure:"bin"`
+// }
+
+// type Profile struct {
+// 	InstallProfile []map[string]Install `mapstructure:"install"`
+// }
+
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "install binaries",
 	Long:  `Install binaries`,
 	Run: func(cmd *cobra.Command, args []string) {
+
 		gitPath, _ := cmd.LocalFlags().GetString("path")
 		profile, _ := cmd.LocalFlags().GetString("profile")
 		source, _ := cmd.LocalFlags().GetString("source")
@@ -37,6 +48,8 @@ var installCmd = &cobra.Command{
 		fmt.Println(fileList, directoryList)
 
 		// READ PROFILE FILE
+		// config = sthingsCli.ReadYamlToObject(templatePath, ".yaml", config).(Profile)
+		// fmt.Println(config)
 
 	},
 }
