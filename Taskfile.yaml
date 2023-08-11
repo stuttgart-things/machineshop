@@ -74,3 +74,13 @@ tasks:
       - goreleaser release --skip-publish --snapshot --clean
       - goreleaser release --clean
       - rm -rf ./dist
+
+  git-push:
+    desc: Commit & push the module
+    cmds:
+      - go mod tidy
+      - git pull
+      - git config advice.addIgnoredFile false
+      - git add *
+      - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
+      - git push

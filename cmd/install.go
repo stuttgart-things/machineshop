@@ -13,16 +13,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// var config Profile
+var config Profile
 
-// type Install struct {
-// 	Url string `mapstructure:"url"`
-// 	Bin string `mapstructure:"bin"`
-// }
+type Install struct {
+	Url string `mapstructure:"url"`
+	Bin string `mapstructure:"bin"`
+}
 
-// type Profile struct {
-// 	InstallProfile []map[string]Install `mapstructure:"install"`
-// }
+type Profile struct {
+	InstallProfile []map[string]Install `mapstructure:"install"`
+}
 
 var installCmd = &cobra.Command{
 	Use:   "install",
@@ -38,18 +38,19 @@ var installCmd = &cobra.Command{
 
 		fmt.Println(profile)
 		fmt.Println(source)
+		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 
-		fileList, _ := internal.GetFileListFromGitRepository(gitRepository, gitPath, nil)
+		fileList, _ := sthingsCli.GetFileListFromGitRepository(gitPath, repo)
 		selectedProfile := sthingsCli.AskSingleSelectQuestion("SELECT PROFILE:", fileList)
 		fmt.Println(selectedProfile)
 
-		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 		fileList, directoryList := sthingsCli.GetFileListFromGitRepository("", repo)
 		fmt.Println(fileList, directoryList)
 
 		// READ PROFILE FILE
-		// config = sthingsCli.ReadYamlToObject(templatePath, ".yaml", config).(Profile)
-		// fmt.Println(config)
+		templatePath := "/home/sthings/projects/go/src/github/machineShop/tests/install.yaml"
+		config = sthingsCli.ReadYamlToObject(templatePath, ".yaml", config).(Profile)
+		fmt.Println(config)
 
 	},
 }

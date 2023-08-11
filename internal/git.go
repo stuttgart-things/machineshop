@@ -129,10 +129,3 @@ func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, 
 
 	return nil
 }
-
-func GetGitAuth(gitUser, gitToken string) *http.BasicAuth {
-	return &http.BasicAuth{
-		Username: gitUser,
-		Password: gitToken,
-	}
-}

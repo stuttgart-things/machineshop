@@ -33,20 +33,22 @@ func RunTerraform(gitRepository, gitPath, gitUser, gitToken string) {
 	gitFilePath := "machineShop/tf/state/shipyard12/hello.tf"
 	gitCommitMessage := "updated for stuttgart-things"
 	// auth := internal.GetGitAuth("phermann", "ZvZ6UNsieKZCKUM1aFQg")
-	auth := internal.GetGitAuth(gitUser, gitToken)
+	auth := sthingsCli.CreateGitAuth(gitUser, gitToken)
 	fileContent := "blalba2"
 
 	internal.GitCommitFile(gitRepository, auth, []byte(fileContent), gitFilePath, gitCommitMessage)
 
 	if sthingsCli.AskSingleSelectQuestion("OPERATION:", []string{"apply", "destroy"}) == "apply" {
+		repo, _ := sthingsCli.CloneGitRepository(gitRepository, "main", "", nil)
 
-		fileList, _ := internal.GetFileListFromGitRepository(gitRepository, gitPath, nil)
+		fileList, _ := sthingsCli.GetFileListFromGitRepository(gitPath, repo)
 		selectedProfile = sthingsCli.AskSingleSelectQuestion("SELECT PROFILE:", fileList)
 		fmt.Println(selectedProfile)
 
 	} else {
+		repo, _ := sthingsCli.CloneGitRepository(gitRepository, "main", "", nil)
+		_, folderList := sthingsCli.GetFileListFromGitRepository(gitPath+"/"+configSubFolder, repo)
 
-		_, folderList := internal.GetFileListFromGitRepository(gitRepository, gitPath+"/"+configSubFolder, nil)
 		selectedProfile = sthingsCli.AskSingleSelectQuestion("SELECT PROFILE:", folderList)
 		fmt.Println(selectedProfile)
 
