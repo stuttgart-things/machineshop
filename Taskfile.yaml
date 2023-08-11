@@ -50,17 +50,25 @@ tasks:
       - go mod tidy
       - go test -v
 
-  tag:
-    desc: Commit, push & tag the module
-    deps: [lint]
+  git-push:
+    desc: Commit & push the module
     cmds:
-      - rm -rf ./dist
       - go mod tidy
       - git pull
+      - git config advice.addIgnoredFile false
       - git add *
-      - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}'
+      - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
       - git push
-      - git tag -a {{ .UPDATED_TAG_VERSION }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}'
+
+  tag:
+    desc: Commit, push & tag the module
+    deps: [lint, test]
+    cmds:
+      - task: git-push
+      - rm -rf dist
+      - go mod tidy
+      - git pull --tags
+      - git tag -a {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
       - git push origin --tags
 
   release:
@@ -74,13 +82,3 @@ tasks:
       - goreleaser release --skip-publish --snapshot --clean
       - goreleaser release --clean
       - rm -rf ./dist
-
-  git-push:
-    desc: Commit & push the module
-    cmds:
-      - go mod tidy
-      - git pull
-      - git config advice.addIgnoredFile false
-      - git add *
-      - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
-      - git push
