@@ -7,27 +7,29 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/stuttgart-things/machineShop/surveys"
+
 	"github.com/stuttgart-things/machineShop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/spf13/cobra"
 )
 
-var config Profile
+// var config Profile
 
-type Install struct {
-	Url string `mapstructure:"url"`
-	Bin string `mapstructure:"bin"`
-}
+// type Install struct {
+// 	Url string `mapstructure:"url"`
+// 	Bin string `mapstructure:"bin"`
+// }
 
-type Script struct {
-	Script string `mapstructure:"script"`
-}
+// type Script struct {
+// 	Script string `mapstructure:"script"`
+// }
 
-type Profile struct {
-	BinaryProfile []map[string]Install `mapstructure:"binary"`
-	ScriptProfile []map[string]Script  `mapstructure:"script"`
-}
+// type Profile struct {
+// 	BinaryProfile []map[string]Install `mapstructure:"binary"`
+// 	ScriptProfile []map[string]Script  `mapstructure:"script"`
+// }
 
 var installCmd = &cobra.Command{
 	Use:   "install",
@@ -53,26 +55,11 @@ var installCmd = &cobra.Command{
 		fmt.Println(fileList, directoryList)
 
 		// READ PROFILE FILE
+		file := sthingsCli.ReadFileContentFromGitRepo(repo, "tests/install.yaml")
+		fmt.Println("File content: %+v\n", file)
 
-		// READ PROFILE FILE
-
-		templatePath := "/home/sthings/projects/go/src/github/machineShop/tests/install.yaml"
-		config = sthingsCli.ReadYamlToObject(templatePath, ".yaml", config).(Profile)
-
-		// INSTALL BINARIES
-		for _, binaryProfile := range config.BinaryProfile {
-
-			fmt.Println(binaryProfile["argocd"].Url)
-			fmt.Println(binaryProfile["argocd"].Bin)
-
-		}
-
-		// INSTALL SCRIPTS
-		for _, scriptProfile := range config.ScriptProfile {
-
-			fmt.Println(scriptProfile["argocd"].Script)
-
-		}
+		// READ FROM SCRIPT HERE
+		surveys.SelectInstallProfiles()
 
 	},
 }
