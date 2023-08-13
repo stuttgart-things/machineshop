@@ -20,8 +20,13 @@ type Install struct {
 	Bin string `mapstructure:"bin"`
 }
 
+type Script struct {
+	Script string `mapstructure:"script"`
+}
+
 type Profile struct {
-	InstallProfile []map[string]Install `mapstructure:"install"`
+	InstallProfile []map[string]Install `mapstructure:"binary"`
+	ScriptProfile  []map[string]Script  `mapstructure:"script"`
 }
 
 var installCmd = &cobra.Command{
@@ -50,7 +55,20 @@ var installCmd = &cobra.Command{
 		// READ PROFILE FILE
 		templatePath := "/home/sthings/projects/go/src/github/machineShop/tests/install.yaml"
 		config = sthingsCli.ReadYamlToObject(templatePath, ".yaml", config).(Profile)
-		fmt.Println(config)
+		// fmt.Println(config)
+
+		for _, config := range config.InstallProfile {
+
+			fmt.Println(config["argocd"].Url)
+			fmt.Println(config["argocd"].Bin)
+
+		}
+
+		for _, config := range config.ScriptProfile {
+
+			fmt.Println(config["argocd"].Script)
+
+		}
 
 	},
 }
