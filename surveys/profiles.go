@@ -26,25 +26,29 @@ type Profile struct {
 	ScriptProfile []map[string]Script  `mapstructure:"script"`
 }
 
-func SelectInstallProfiles() {
+func SelectInstallProfiles(yamlFile string) {
 
-	templatePath := "/home/sthings/projects/go/src/github/machineShop/tests/install.yaml"
-	config = sthingsCli.ReadYamlToObject(templatePath, ".yaml", config).(Profile)
+	keys := []string{}
+	config := sthingsCli.ReadInlineYamlToObject([]byte(yamlFile), config).(Profile)
 
 	// INSTALL BINARIES
 	for _, binaryProfile := range config.BinaryProfile {
 
-		fmt.Println(binaryProfile["argocd"].Url)
-		fmt.Println(binaryProfile["argocd"].Bin)
+		for key := range binaryProfile {
+			keys = append(keys, key+"-binary")
+		}
 
 	}
 
 	// INSTALL SCRIPTS
 	for _, scriptProfile := range config.ScriptProfile {
 
-		fmt.Println(scriptProfile["argocd"].Script)
+		for key := range scriptProfile {
+			keys = append(keys, key+"-script")
+		}
 
 	}
 
-	// local or git
+	selectedInstall := sthingsCli.AskMultiSelectQuestion("SELECT TO INSTALL:", keys)
+	fmt.Println("SELECTED: ", selectedInstall)
 }
