@@ -30,10 +30,6 @@ var installCmd = &cobra.Command{
 
 		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 
-		// fileList, _ := sthingsCli.GetFileListFromGitRepository(gitPath, repo)
-		// selectedProfile := sthingsCli.AskSingleSelectQuestion("SELECT PROFILE:", fileList)
-		// fmt.Println(selectedProfile)
-
 		fileList, directoryList := sthingsCli.GetFileListFromGitRepository("", repo)
 		fmt.Println(fileList, directoryList)
 
