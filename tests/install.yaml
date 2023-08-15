@@ -1,11 +1,12 @@
 ---
 binary:
   - argocd:
-      url: https://github.com/argoproj/argo-cd/releases/download/v{{ or .decksmanVersion "2.5.10" }}/argocd-linux-amd64
+      url: https://github.com/argoproj/argo-cd/releases/download/v2.8.0/argocd-linux-amd64
       bin: argocd-linux-amd64
-  - decksman:
-      url: https://artifacts.tiab.labda.sva.de/decksman/decksman-{{ or .decksmanVersion "0.8.436" }}.zip
-      bin: decksman
+  - argocd:
+      url: https://github.com/tektoncd/cli/releases/download/v0.31.2/tkn_0.31.2_Linux_x86_64.tar.gz
+      bin: tkn
+
 script:
   - argocd:
       script: |

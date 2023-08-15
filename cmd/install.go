@@ -33,9 +33,11 @@ var installCmd = &cobra.Command{
 		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 		profileFile := sthingsCli.ReadFileContentFromGitRepo(repo, profile)
 
-		// READ FROM S
+		// GET CONFIG
 		selectedInstallProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
 		fmt.Println(selectedInstallProfiles, allConfig)
+
+		surveys.InstallBin(selectedInstallProfiles, allConfig)
 	},
 }
 
