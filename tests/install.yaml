@@ -3,11 +3,11 @@ binary:
   - argocd:
       url: https://github.com/argoproj/argo-cd/releases/download/v2.8.0/argocd-linux-amd64
       bin: argocd-linux-amd64
-  - argocd:
+  - tkn:
       url: https://github.com/tektoncd/cli/releases/download/v0.31.2/tkn_0.31.2_Linux_x86_64.tar.gz
       bin: tkn
 
 script:
-  - argocd:
+  - hello:
       script: |
         echo hello
