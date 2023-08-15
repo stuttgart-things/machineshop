@@ -6,25 +6,33 @@ package surveys
 
 import (
 	"fmt"
-	// sthingsCli "github.com/stuttgart-things/sthingsCli"
+
+	"github.com/stuttgart-things/machineShop/internal"
+
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
-func InstallBin(selectedInstallProfiles []string, allConfig Profile) {
+func InstallBin(selectedInstallProfiles []string, allConfig Profile, bin string) {
 
-	// downloadTarget := "/tmp"
+	downloadDir := sthingsCli.AskSingleInputQuestion("BIN DIR:", bin)
+
+	if !internal.CheckForUnixWritePermissions(downloadDir) {
+		fmt.Println("NO PERMISSIONS!")
+	}
 
 	for _, binaryProfile := range allConfig.BinaryProfile {
 
-		// for key := range binaryProfile {
-
 		for _, selectedProfile := range selectedInstallProfiles {
-			fmt.Println(binaryProfile[selectedProfile].Url)
+
+			if binaryProfile[selectedProfile].Url != "" {
+
+				fmt.Println(binaryProfile[selectedProfile].Url)
+				sthingsCli.DownloadFileWithProgressBar(binaryProfile[selectedProfile].Url, downloadDir)
+
+			}
+
 		}
 
-		// }
-
 	}
-
-	// sthingsCli.DownloadFileWithProgressBar(downloadURL, downloadTarget)
 
 }

@@ -6,6 +6,8 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os/user"
 
 	"github.com/stuttgart-things/machineShop/surveys"
 
@@ -24,7 +26,18 @@ var installCmd = &cobra.Command{
 		gitPath, _ := cmd.LocalFlags().GetString("path")
 		profile, _ := cmd.LocalFlags().GetString("profile")
 		source, _ := cmd.LocalFlags().GetString("source")
+		bin, _ := cmd.LocalFlags().GetString("bin")
+
 		fmt.Println(source)
+
+		user, err := user.Current()
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		username := user.Username
+
+		fmt.Printf("Username: %s\n", username)
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/INSTALL")
@@ -37,12 +50,13 @@ var installCmd = &cobra.Command{
 		selectedInstallProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
 		fmt.Println(selectedInstallProfiles, allConfig)
 
-		surveys.InstallBin(selectedInstallProfiles, allConfig)
+		surveys.InstallBin(selectedInstallProfiles, allConfig, bin)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(installCmd)
+	installCmd.Flags().String("bin", "/usr/bin/", "source of profile: git or local")
 	installCmd.Flags().String("source", "git", "source of profile: git or local")
 	installCmd.Flags().String("profile", "tests/install.yaml", "path to install profile")
 }
