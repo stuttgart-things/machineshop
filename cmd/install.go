@@ -26,19 +26,16 @@ var installCmd = &cobra.Command{
 		source, _ := cmd.LocalFlags().GetString("source")
 		fmt.Println(source)
 
+		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/INSTALL")
 
+		// GET REPO + READ PROFILE FILE
 		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
-
-		fileList, directoryList := sthingsCli.GetFileListFromGitRepository("", repo)
-		fmt.Println(fileList, directoryList)
-
-		// READ PROFILE FILE
-		file := sthingsCli.ReadFileContentFromGitRepo(repo, profile)
+		profileFile := sthingsCli.ReadFileContentFromGitRepo(repo, profile)
 
 		// READ FROM SCRIPT HERE
-		surveys.SelectInstallProfiles(file)
-
+		selectedInstallProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
+		fmt.Println(selectedInstallProfiles, allConfig)
 	},
 }
 

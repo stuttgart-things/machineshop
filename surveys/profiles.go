@@ -5,12 +5,10 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package surveys
 
 import (
-	"fmt"
-
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
-var config Profile
+var allConfig Profile
 
 type Install struct {
 	Url string `mapstructure:"url"`
@@ -26,29 +24,29 @@ type Profile struct {
 	ScriptProfile []map[string]Script  `mapstructure:"script"`
 }
 
-func SelectInstallProfiles(yamlFile string) {
+func SelectInstallProfiles(yamlFile string) (selectedInstallProfiles []string, allConfig Profile) {
 
-	keys := []string{}
-	config := sthingsCli.ReadInlineYamlToObject([]byte(yamlFile), config).(Profile)
+	allKeys := []string{}
+	allConfig = sthingsCli.ReadInlineYamlToObject([]byte(yamlFile), allConfig).(Profile)
 
-	// INSTALL BINARIES
-	for _, binaryProfile := range config.BinaryProfile {
+	// ITERATE OVER INSTALL BINARIES
+	for _, binaryProfile := range allConfig.BinaryProfile {
 
 		for key := range binaryProfile {
-			keys = append(keys, key+"-binary")
+			allKeys = append(allKeys, key)
 		}
 
 	}
 
-	// INSTALL SCRIPTS
-	for _, scriptProfile := range config.ScriptProfile {
+	// ITERATE OVERINSTALL SCRIPTS
+	for _, scriptProfile := range allConfig.ScriptProfile {
 
 		for key := range scriptProfile {
-			keys = append(keys, key+"-script")
+			allKeys = append(allKeys, key)
 		}
 
 	}
 
-	selectedInstall := sthingsCli.AskMultiSelectQuestion("SELECT TO INSTALL:", keys)
-	fmt.Println("SELECTED: ", selectedInstall)
+	selectedInstallProfiles = sthingsCli.AskMultiSelectQuestion("SELECT TO INSTALL:", allKeys)
+	return
 }
