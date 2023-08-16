@@ -12,22 +12,28 @@ import (
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
+var (
+	tmpDownloadDir = "/tmp/machineShop"
+)
+
 func InstallBin(selectedInstallProfiles []string, allConfig Profile, bin string) {
 
-	downloadDir := sthingsCli.AskSingleInputQuestion("BIN DIR:", bin)
+	binDir := sthingsCli.AskSingleInputQuestion("BIN DIR:", bin)
 
-	if !internal.CheckForUnixWritePermissions(downloadDir) {
-		fmt.Println("NO PERMISSIONS!")
-	}
+	if !internal.CheckForUnixWritePermissions(binDir) {
+		fmt.Println("NO WRITE PERMISSIONS!", binDir)
+	} else {
 
-	for _, binaryProfile := range allConfig.BinaryProfile {
+		for _, binaryProfile := range allConfig.BinaryProfile {
 
-		for _, selectedProfile := range selectedInstallProfiles {
+			for _, selectedProfile := range selectedInstallProfiles {
 
-			if binaryProfile[selectedProfile].Url != "" {
+				if binaryProfile[selectedProfile].Url != "" {
 
-				fmt.Println(binaryProfile[selectedProfile].Url)
-				sthingsCli.DownloadFileWithProgressBar(binaryProfile[selectedProfile].Url, downloadDir)
+					fmt.Println(binaryProfile[selectedProfile].Url)
+					sthingsCli.DownloadFileWithProgressBar(binaryProfile[selectedProfile].Url, tmpDownloadDir)
+
+				}
 
 			}
 
