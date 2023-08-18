@@ -6,6 +6,7 @@ package surveys
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/stuttgart-things/machineShop/internal"
 
@@ -14,6 +15,7 @@ import (
 
 var (
 	tmpDownloadDir = "/tmp/machineShop"
+	wg             sync.WaitGroup
 )
 
 func InstallBin(selectedInstallProfiles []string, allConfig Profile, bin string) {
@@ -30,14 +32,26 @@ func InstallBin(selectedInstallProfiles []string, allConfig Profile, bin string)
 
 				if binaryProfile[selectedProfile].Url != "" {
 
-					fmt.Println(binaryProfile[selectedProfile].Url)
-					sthingsCli.DownloadFileWithProgressBar(binaryProfile[selectedProfile].Url, tmpDownloadDir)
+					wg.Add(1)
+
+					name := selectedProfile
+					url := binaryProfile[selectedProfile].Url
+
+					go func() {
+						defer wg.Done()
+
+						fmt.Println("Downloading", name, url)
+						sthingsCli.DownloadFileWithProgressBar(url, tmpDownloadDir)
+
+					}()
 
 				}
 
 			}
 
 		}
+
+		wg.Wait()
 
 	}
 

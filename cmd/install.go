@@ -6,8 +6,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-	"os/user"
 
 	"github.com/stuttgart-things/machineShop/surveys"
 
@@ -29,15 +27,6 @@ var installCmd = &cobra.Command{
 		bin, _ := cmd.LocalFlags().GetString("bin")
 
 		fmt.Println(source)
-
-		user, err := user.Current()
-		if err != nil {
-			log.Fatalf(err.Error())
-		}
-
-		username := user.Username
-
-		fmt.Printf("Username: %s\n", username)
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/INSTALL")
