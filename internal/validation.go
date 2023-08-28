@@ -13,6 +13,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// SHOULD BE MOVED TO STHINGS-BASE!
+
 func ValidateOSUser() (username string) {
 
 	user, err := user.Current()
@@ -25,6 +27,8 @@ func ValidateOSUser() (username string) {
 	return
 
 }
+
+// SHOULD BE MOVED TO STHINGS-BASE!
 
 func CheckForUnixWritePermissions(filePath string) bool {
 
