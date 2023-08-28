@@ -11,30 +11,45 @@ import (
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
-func CloneRepositories(selectedReleaseProfiles []string, allConfig Profile, bin string) {
+func CloneRepositories(selectedReleaseProfiles []string, allConfig ReleaseProfile, tmp string) {
 
-	binDir := sthingsCli.AskSingleInputQuestion("TMP DIR:", bin)
+	tmpDir := sthingsCli.AskSingleInputQuestion("TMP DIR:", tmp)
 
-	if !internal.CheckForUnixWritePermissions(binDir) {
-		fmt.Println("NO WRITE PERMISSIONS!", binDir)
+	if !internal.CheckForUnixWritePermissions(tmpDir) {
+		fmt.Println("NO WRITE PERMISSIONS!", tmpDir)
+
 	} else {
 
-		for _, binaryProfile := range allConfig.BinaryProfile {
+		for _, repositoryProfile := range allConfig.RepositoryProfile {
 
 			for _, selectedProfile := range selectedReleaseProfiles {
 
-				if binaryProfile[selectedProfile].Url != "" {
+				if repositoryProfile[selectedProfile].Url != "" {
 
 					wg.Add(1)
 
 					name := selectedProfile
-					url := binaryProfile[selectedProfile].Url
+					url := repositoryProfile[selectedProfile].Url
+					branch := repositoryProfile[selectedProfile].Branch
+					version := repositoryProfile[selectedProfile].Version
 
 					go func() {
 						defer wg.Done()
 
-						fmt.Println("Downloading", name, url)
-						sthingsCli.DownloadFileWithProgressBar(url, tmpDownloadDir)
+						fmt.Println("Cloning", name, url)
+
+						repo, _ := sthingsCli.CloneGitRepository(url, branch, version, nil)
+						files, dirs := sthingsCli.GetFileListFromGitRepository(".", repo)
+						fmt.Println(files, dirs)
+
+						// hello, err := git.PlainClone("/tmp/release", true, &git.CloneOptions{
+						// 	URL:               url,
+
+						// 	Progress:          os.Stdout,
+						// 	RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
+						// })
+
+						// fmt.Println(hello, err)
 
 					}()
 

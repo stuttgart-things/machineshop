@@ -21,6 +21,7 @@ var releaseCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("release called")
 
+		tmpPath, _ := cmd.LocalFlags().GetString("tmp")
 		gitPath, _ := cmd.LocalFlags().GetString("path")
 		profile, _ := cmd.LocalFlags().GetString("profile")
 
@@ -33,10 +34,15 @@ var releaseCmd = &cobra.Command{
 
 		selectedReleaseProfiles, allConfig := surveys.SelectReleaseProfiles(profileFile)
 		fmt.Println(selectedReleaseProfiles, allConfig)
+
+		surveys.CloneRepositories(selectedReleaseProfiles, allConfig, tmpPath)
+
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(releaseCmd)
 	releaseCmd.Flags().String("profile", "tests/release.yaml", "path to install profile")
+	releaseCmd.Flags().String("tmp", "/tmp", "tmp dir for collection release files")
+
 }

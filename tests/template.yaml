@@ -1,0 +1,6 @@
+---
+runs:
+  packagePublishHelmChart:
+    name: package-publish-{{ .chartName }}
+    addRandomDateToRunName: {{ or .randomName "false" }}
+    namespace: {{ .namespace }}
