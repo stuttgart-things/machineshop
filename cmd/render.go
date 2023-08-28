@@ -41,25 +41,27 @@ var renderCmd = &cobra.Command{
 		// INIT TEMPLATE VARIABLES
 		templateVariables := make(map[string]interface{})
 
-		// READ DEFAULTS IF DEFINED
+		// READ DEFAULTS (IF DEFINED)
 		if defaultsPath != "" {
 			defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
 			fmt.Println(defaultsFile)
 			templateVariables = internal.ReadYamlFile([]byte(defaultsFile))
 		}
 
-		// templateVariables["chartName"] = "gude-chart"
-		// templateVariables["namespace"] = "gude"
-		// templateVariables["randomName"] = true
+		// READ VALUES (IF GIVEN)
+		// tbd!
 
+		// RENDER TEMPLATE
 		rendered, err := sthingsBase.RenderTemplateInline(templateFile, "missingkey=zero", "{{", "}}", templateVariables)
-
 		if err != nil {
 			fmt.Println(err)
 		}
 
+		// OUTPUT TO STRING (IF FLAG)
 		fmt.Println(string(rendered))
 
+		// OUTPUT TO FILE (IF FLAG)
+		// tbd!
 	},
 }
 
