@@ -1,0 +1,8 @@
+---
+repositories:
+  - deploy-configure-rke:
+      url: https://github.com/stuttgart-things/deploy-configure-rke.git
+      version: main
+  - configure-rke-node:
+      url: https://github.com/stuttgart-things/configure-rke-node.git
+      version: main
