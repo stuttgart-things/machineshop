@@ -31,6 +31,7 @@ func CheckForUnixWritePermissions(filePath string) bool {
 	return unix.Access(filePath, unix.W_OK) == nil
 }
 
+// SHOULD BE MOVED TO STHINGS-CLI!
 func ReadYamlFile(yamlFileContent []byte) (yamlStructure map[string]interface{}) {
 
 	yamlStructure = make(map[string]interface{})
