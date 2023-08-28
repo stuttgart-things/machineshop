@@ -6,6 +6,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/stuttgart-things/machineShop/surveys"
+
 	"github.com/spf13/cobra"
 	"github.com/stuttgart-things/machineShop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
@@ -29,12 +31,12 @@ var releaseCmd = &cobra.Command{
 		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 		profileFile := sthingsCli.ReadFileContentFromGitRepo(repo, profile)
 
-		fmt.Println(profileFile)
-
+		selectedReleaseProfiles, allConfig := surveys.SelectReleaseProfiles(profileFile)
+		fmt.Println(selectedReleaseProfiles, allConfig)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(releaseCmd)
-	installCmd.Flags().String("profile", "tests/release.yaml", "path to install profile")
+	releaseCmd.Flags().String("profile", "tests/release.yaml", "path to install profile")
 }

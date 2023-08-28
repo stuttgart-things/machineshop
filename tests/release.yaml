@@ -1,8 +1,11 @@
 ---
+releaseName: rancher-things
 repositories:
   - deploy-configure-rke:
       url: https://github.com/stuttgart-things/deploy-configure-rke.git
-      version: main
+      branch: main
+      version: ""
   - configure-rke-node:
       url: https://github.com/stuttgart-things/configure-rke-node.git
-      version: main
+      branch: main
+      version: ""
