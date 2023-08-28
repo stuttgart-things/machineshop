@@ -1,2 +1,4 @@
 ---
-gude: hello
+chartName: hello
+namespace: gude
+randomName: true

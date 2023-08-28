@@ -6,6 +6,8 @@ package cmd
 import (
 	"fmt"
 
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
+
 	"github.com/stuttgart-things/machineShop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
@@ -36,11 +38,27 @@ var renderCmd = &cobra.Command{
 		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 		templateFile := sthingsCli.ReadFileContentFromGitRepo(repo, templatePath)
 
+		// INIT TEMPLATE VARIABLES
+		templateVariables := make(map[string]interface{})
+
+		// READ DEFAULTS IF DEFINED
 		if defaultsPath != "" {
-			defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, templatePath)
+			defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
+			fmt.Println(defaultsFile)
+			templateVariables = internal.ReadYamlFile([]byte(defaultsFile))
 		}
 
-		fmt.Println(templateFile)
+		// templateVariables["chartName"] = "gude-chart"
+		// templateVariables["namespace"] = "gude"
+		// templateVariables["randomName"] = true
+
+		rendered, err := sthingsBase.RenderTemplateInline(templateFile, "missingkey=zero", "{{", "}}", templateVariables)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println(string(rendered))
 
 	},
 }
