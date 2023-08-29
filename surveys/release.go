@@ -16,7 +16,7 @@ func CloneRepositories(selectedReleaseProfiles []string, allConfig ReleaseProfil
 	tmpDir := sthingsCli.AskSingleInputQuestion("TMP DIR:", tmp)
 
 	if !internal.CheckForUnixWritePermissions(tmpDir) {
-		fmt.Println("NO WRITE PERMISSIONS!", tmpDir)
+		fmt.Println("NO WRITE PERMISSIONS ON DIR!", tmpDir)
 
 	} else {
 

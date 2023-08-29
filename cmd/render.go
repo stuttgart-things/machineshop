@@ -24,15 +24,23 @@ var renderCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 
+		// FLAGS
 		source, _ := cmd.LocalFlags().GetString("source")
 		gitPath, _ := cmd.LocalFlags().GetString("path")
 		templatePath, _ := cmd.LocalFlags().GetString("template")
 		defaultsPath, _ := cmd.LocalFlags().GetString("defaults")
-
-		fmt.Println(source, templatePath, defaultsPath)
+		outputFormat, _ := cmd.LocalFlags().GetString("output")
+		destinationPath, _ := cmd.LocalFlags().GetString("destination")
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/RENDER")
+
+		// fmt.Println(source, templatePath, defaultsPath)
+		log.Info("SOURCE: ", source)
+		log.Info("TEMPLATE-PATH: ", templatePath)
+		log.Info("DEFAULTS: ", defaultsPath)
+		log.Info("OUTPUT-FORMAT: ", outputFormat)
+		log.Info("DESTINATION-PATH: ", destinationPath+"\n")
 
 		// GET REPO + READ PROFILE FILE
 		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
@@ -52,16 +60,14 @@ var renderCmd = &cobra.Command{
 		// tbd!
 
 		// RENDER TEMPLATE
-		rendered, err := sthingsBase.RenderTemplateInline(templateFile, "missingkey=zero", "{{", "}}", templateVariables)
+		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, "missingkey=zero", "{{", "}}", templateVariables)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		// OUTPUT TO STRING (IF FLAG)
-		fmt.Println(string(rendered))
+		// HANDLE OUTPUT
+		internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), true)
 
-		// OUTPUT TO FILE (IF FLAG)
-		// tbd!
 	},
 }
 
@@ -70,4 +76,6 @@ func init() {
 	renderCmd.Flags().String("source", "git", "source of profile: git or local")
 	renderCmd.Flags().String("template", "tests/template.yaml", "path to to be rendered template")
 	renderCmd.Flags().String("defaults", "", "path to defaults template file")
+	renderCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
+	renderCmd.Flags().String("destination", "", "path to output (if output file)")
 }

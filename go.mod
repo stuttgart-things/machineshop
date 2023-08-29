@@ -7,7 +7,7 @@ require (
 	github.com/go-git/go-git/v5 v5.8.1
 	github.com/pterm/pterm v0.12.62
 	github.com/spf13/cobra v1.7.0
-	github.com/stuttgart-things/sthingsBase v0.1.16
+	github.com/stuttgart-things/sthingsBase v0.1.19
 	github.com/stuttgart-things/sthingsCli v0.1.25
 	go.hein.dev/go-version v0.1.0
 	golang.org/x/sys v0.10.0

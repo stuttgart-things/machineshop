@@ -5,10 +5,17 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package internal
 
 import (
+	"fmt"
 	"os"
+
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
+)
+
+var (
+	logger = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
 )
 
 func PrintBanner(logFilePath, gitPath, gitRepository, version, date, cmd string) {
@@ -31,5 +38,18 @@ func PrintBanner(logFilePath, gitPath, gitRepository, version, date, cmd string)
 		"\n" +
 		pterm.White("VERSION ") + "\t\t\t" + pterm.LightMagenta(version+" ("+date+")"))
 	pterm.Println()
+}
+
+func HandleRenderOutput(outputFormat, destinationPath, renderedTemplate string, overwrite bool) {
+
+	switch outputFormat {
+	default:
+		logger.Error(outputFormat, "output format not defined")
+	case "stdout":
+		fmt.Println(string(renderedTemplate))
+	case "file":
+		logger.Info("rendered template written to ", destinationPath)
+		sthingsBase.WriteDataToFile(destinationPath, string(renderedTemplate))
+	}
 
 }

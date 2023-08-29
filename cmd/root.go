@@ -7,6 +7,8 @@ package cmd
 import (
 	"os"
 
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
+
 	"github.com/spf13/cobra"
 )
 
@@ -17,6 +19,7 @@ var (
 	logFilePath   string
 	gitBranch     string
 	gitCommitID   string
+	log           = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
 )
 
 var rootCmd = &cobra.Command{
