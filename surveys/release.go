@@ -7,7 +7,8 @@ package surveys
 import (
 	"fmt"
 
-	"github.com/stuttgart-things/machineShop/internal"
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
+
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
@@ -15,7 +16,7 @@ func CloneRepositories(selectedReleaseProfiles []string, allConfig ReleaseProfil
 
 	tmpDir := sthingsCli.AskSingleInputQuestion("TMP DIR:", tmp)
 
-	if !internal.CheckForUnixWritePermissions(tmpDir) {
+	if !sthingsBase.CheckForUnixWritePermissions(tmpDir) {
 		fmt.Println("NO WRITE PERMISSIONS ON DIR!", tmpDir)
 
 	} else {

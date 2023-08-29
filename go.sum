@@ -452,8 +452,8 @@ github.com/stretchr/testify v1.8.3/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXl
 github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=
 github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7 h1:nVooDvBYhBPQysVjbvWP3S1CQgmNG/Vovt+ahmv9Cas=
 github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7/go.mod h1:RhH+7myjNLGs/BFeYO5U7ekmM7OsymsIOUN/DkewR3g=
-github.com/stuttgart-things/sthingsBase v0.1.19 h1:AUZY0Mv8el0dVhD7CipHwJG5jwpVqfuTWJM92+8e2r0=
-github.com/stuttgart-things/sthingsBase v0.1.19/go.mod h1:0xbqIpnHFKBCWjzzq1hXzk/ALxxE4gTtWpQxIVK5y9Q=
+github.com/stuttgart-things/sthingsBase v0.1.20 h1:z7Ir1vQ653+7//uRHq+fx0k+QCz2rukFrRFWP86/Uow=
+github.com/stuttgart-things/sthingsBase v0.1.20/go.mod h1:W5FmSsDZBfm1wfD/RO91N/nbB8ACGbC4eBBd1ALqIx8=
 github.com/stuttgart-things/sthingsCli v0.1.25 h1:jAcUwi2iwHtn8bvDN3qL5He2dxgVz5sDNahtyS3owBQ=
 github.com/stuttgart-things/sthingsCli v0.1.25/go.mod h1:XnXPfEw9v5cu/1zb1HNxaoydgwg/va+hQe1e66GLBe0=
 github.com/subosito/gotenv v1.4.2 h1:X1TuBLAMDFbaTAChgCBLu3DU3UPyELpnF2jjJ2cz/S8=

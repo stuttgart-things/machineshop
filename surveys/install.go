@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/stuttgart-things/machineShop/internal"
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
@@ -22,7 +22,7 @@ func InstallBin(selectedInstallProfiles []string, allConfig Profile, bin string)
 
 	binDir := sthingsCli.AskSingleInputQuestion("BIN DIR:", bin)
 
-	if !internal.CheckForUnixWritePermissions(binDir) {
+	if !sthingsBase.CheckForUnixWritePermissions(binDir) {
 		fmt.Println("NO WRITE PERMISSIONS!", binDir)
 	} else {
 

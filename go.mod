@@ -7,10 +7,9 @@ require (
 	github.com/go-git/go-git/v5 v5.8.1
 	github.com/pterm/pterm v0.12.62
 	github.com/spf13/cobra v1.7.0
-	github.com/stuttgart-things/sthingsBase v0.1.19
+	github.com/stuttgart-things/sthingsBase v0.1.20
 	github.com/stuttgart-things/sthingsCli v0.1.25
 	go.hein.dev/go-version v0.1.0
-	golang.org/x/sys v0.10.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -105,6 +104,7 @@ require (
 	golang.org/x/crypto v0.11.0 // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/net v0.12.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/term v0.10.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
 	golang.org/x/time v0.1.0 // indirect
