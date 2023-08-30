@@ -1,6 +1,6 @@
 # stuttgart-things/machineShop
 
-managing infrastructure and configuration
+git based cli for managing configuration as code
 
 ## RELEASES
 
