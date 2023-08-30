@@ -5,16 +5,24 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
+	billy "github.com/go-git/go-billy/v5"
 	"github.com/stuttgart-things/machineShop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/spf13/cobra"
 )
 
-var defaultsFile string
+var (
+	templateFile     string
+	defaultsFile     string
+	repo             billy.Filesystem
+	defaultVariables = make(map[string]interface{})
+	flagVariables    = make(map[string]interface{})
+)
 
 // renderCmd represents the render command
 var renderCmd = &cobra.Command{
@@ -38,29 +46,59 @@ var renderCmd = &cobra.Command{
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/RENDER")
 
 		// fmt.Println(source, templatePath, defaultsPath)
-		log.Info("SOURCE: ", source)
 		log.Info("TEMPLATE-PATH: ", templatePath)
 		log.Info("DEFAULTS: ", defaultsPath)
 		log.Info("OUTPUT-FORMAT: ", outputFormat)
 		log.Info("DESTINATION-PATH: ", destinationPath+"\n")
 
-		// GET REPO + READ PROFILE FILE
-		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
-		templateFile := sthingsCli.ReadFileContentFromGitRepo(repo, templatePath)
+		// GET REPO + READ TEMPLATE + DEFAULTS
+		if source == "git" {
+			repo, _ = sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
+			templateFile = sthingsCli.ReadFileContentFromGitRepo(repo, templatePath)
 
-		// INIT TEMPLATE VARIABLES
-		defaultVariables := make(map[string]interface{})
-		flagVariables := make(map[string]interface{})
+			if defaultsPath != "" {
+				defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
+				log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
+				fmt.Println(defaultsFile)
+				defaultVariables = internal.ReadYamlFile([]byte(defaultsFile))
+			} else {
+				log.Info("NO DEFAULTS FILE FROM GIT DEFINED")
+			}
+
+		} else if source == "local" {
+			templateExists, _ := sthingsBase.VerifyIfFileOrDirExists(templatePath, "file")
+			log.Info("LOCAL TEMPLATE FOUND : ", templatePath)
+
+			if templateExists {
+				templateFile = sthingsBase.ReadFileToVariable(templatePath)
+			} else {
+				log.Error("LOCAL TEMPLATE NOT FOUND : ", templatePath)
+				os.Exit(3)
+			}
+
+			if defaultsPath != "" {
+
+				defaultsFileExists, _ := sthingsBase.VerifyIfFileOrDirExists(defaultsPath, "file")
+
+				if defaultsFileExists {
+					defaultsFile = sthingsBase.ReadFileToVariable(defaultsPath)
+					log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
+					fmt.Println(defaultsFile)
+					defaultVariables = internal.ReadYamlFile([]byte(defaultsFile))
+				} else {
+					log.Error("LOCAL DEFAULTS FILE NOT FOUND : ", templatePath)
+					os.Exit(3)
+				}
+			} else {
+				log.Info("NO DEFAULTS FILE DEFINED")
+			}
+
+		} else {
+			log.Error("SOURCE COULD BE ONLY GIT OR LOCAL", source)
+			os.Exit(3)
+		}
 
 		// READ DEFAULTS (IF DEFINED)
-		if defaultsPath != "" {
-			log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
-			defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
-			fmt.Println(defaultsFile)
-			defaultVariables = internal.ReadYamlFile([]byte(defaultsFile))
-		} else {
-			log.Info("NO DEFAULTS FILE DEFINED")
-		}
 
 		// READ VALUES (IF DEFINED)
 		if len(templateValues) > 0 {
@@ -68,7 +106,7 @@ var renderCmd = &cobra.Command{
 			fmt.Println("VALUES", flagVariables)
 			// log.SayWithField("reading values..", "values", flagVariables)
 		} else {
-			log.Info("NO VALUES DEFINED")
+			log.Warn("NO VALUES DEFINED")
 		}
 
 		variables := internal.MergeMaps(defaultVariables, flagVariables)
