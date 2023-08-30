@@ -58,6 +58,7 @@ var renderCmd = &cobra.Command{
 			repo, _ = sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 			templateFile = sthingsCli.ReadFileContentFromGitRepo(repo, templatePath)
 
+			// READ DEFAULTS (IF DEFINED)
 			if defaultsPath != "" {
 				defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
 				log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
@@ -79,15 +80,18 @@ var renderCmd = &cobra.Command{
 				os.Exit(3)
 			}
 
+			// READ DEFAULTS (IF DEFINED)
 			if defaultsPath != "" {
 
 				defaultsFileExists, _ := sthingsBase.VerifyIfFileOrDirExists(defaultsPath, "file")
 
+				// IF DEFAULTS FILE EXISTS
 				if defaultsFileExists {
 					defaultsFile = sthingsBase.ReadFileToVariable(defaultsPath)
 					log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
 					fmt.Println(defaultsFile)
 					defaultVariables = internal.ReadYamlFile([]byte(defaultsFile))
+
 				} else {
 					log.Error("LOCAL DEFAULTS FILE NOT FOUND : ", templatePath)
 					os.Exit(3)
@@ -101,8 +105,6 @@ var renderCmd = &cobra.Command{
 			os.Exit(3)
 		}
 
-		// READ DEFAULTS (IF DEFINED)
-
 		// READ VALUES (IF DEFINED)
 		if len(templateValues) > 0 {
 			flagVariables = internal.VerifyReadKeyValues(templateValues, log)
@@ -112,6 +114,7 @@ var renderCmd = &cobra.Command{
 			log.Warn("NO VALUES DEFINED")
 		}
 
+		// MERGE DEFAULTS + VALUES
 		variables := internal.MergeMaps(defaultVariables, flagVariables)
 
 		// RENDER TEMPLATE
@@ -119,7 +122,6 @@ var renderCmd = &cobra.Command{
 		if forceRenderOption {
 			renderOption = "missingkey=zero"
 		}
-
 		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, "{{", "}}", variables)
 		if err != nil {
 			fmt.Println(err)
