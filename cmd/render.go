@@ -64,11 +64,9 @@ var renderCmd = &cobra.Command{
 		if len(templateValues) > 0 {
 			flagValues := internal.VerifyReadKeyValues(templateValues, log)
 			log.SayWithField("reading values..", "values", flagValues)
+		} else {
+			log.Info("NO VALUES DEFINED")
 		}
-
-		//
-
-		// tbd!
 
 		// RENDER TEMPLATE
 		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, "missingkey=zero", "{{", "}}", templateVariables)
