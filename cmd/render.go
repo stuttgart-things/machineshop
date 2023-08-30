@@ -52,6 +52,8 @@ var renderCmd = &cobra.Command{
 		log.Info("DESTINATION-PATH: ", destinationPath+"\n")
 
 		// GET REPO + READ TEMPLATE + DEFAULTS
+
+		// HANDLE SOURCE:GIT FOR TEMPLATE + DEFAULTS
 		if source == "git" {
 			repo, _ = sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 			templateFile = sthingsCli.ReadFileContentFromGitRepo(repo, templatePath)
@@ -65,6 +67,7 @@ var renderCmd = &cobra.Command{
 				log.Info("NO DEFAULTS FILE FROM GIT DEFINED")
 			}
 
+			// HANDLE SOURCE:LOCAL FOR TEMPLATE + DEFAULTS
 		} else if source == "local" {
 			templateExists, _ := sthingsBase.VerifyIfFileOrDirExists(templatePath, "file")
 			log.Info("LOCAL TEMPLATE FOUND : ", templatePath)
