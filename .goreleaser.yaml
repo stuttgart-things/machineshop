@@ -12,7 +12,7 @@ builds:
     goos:
       - linux
       #- windows
-      #- darwin
+      - darwin
     ldflags:
      - -s -w -X github.com/stuttgart-things/machineShop/cmd.version={{.Version}} -X github.com/stuttgart-things/machineShop/cmd.commit={{.Commit}} -X github.com/stuttgart-things/machineShop/cmd.date={{ .CommitDate }}
 

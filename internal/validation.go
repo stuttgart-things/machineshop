@@ -7,6 +7,10 @@ package internal
 import (
 	"fmt"
 	"log"
+	"os"
+	"strings"
+
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
 	"gopkg.in/yaml.v3"
 )
@@ -27,4 +31,38 @@ func ReadYamlFile(yamlFileContent []byte) (yamlStructure map[string]interface{})
 	}
 
 	return
+}
+
+func VerifyReadKeyValues(templateValues []string, log *sthingsBase.Logger) map[string]string {
+
+	templateData := make(map[string]string)
+
+	if len(templateValues) > 0 {
+
+		if sthingsBase.VerifyIfStringIsBase64(templateValues[0]) {
+			base64decodedValues := sthingsBase.DecodeBase64String(templateValues[0])
+			templateValues = strings.Split(base64decodedValues, ",")
+		}
+
+		for _, v := range templateValues {
+			values := strings.Split(v, "=")
+
+			// IF VALUE IS BASE64 ENDCODED THIS IS NEEDED TO PATCH THE STRING BACK IF = ARE INCLUDED
+			values = []string{values[0], strings.Join(values[1:], "=")}
+
+			// CHECK FOR EMPTY KEY
+			if strings.TrimSpace(values[0]) == "" {
+				fmt.Println("no key for value", strings.TrimSpace(values[1]), "defined. exiting")
+				log.Error("no key defined. exiting")
+				os.Exit(3)
+			}
+
+			templateData[strings.TrimSpace(values[0])] = strings.TrimSpace(values[1])
+
+		}
+	} else {
+		log.Warn("no values defined..")
+	}
+
+	return templateData
 }

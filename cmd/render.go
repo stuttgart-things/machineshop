@@ -31,6 +31,7 @@ var renderCmd = &cobra.Command{
 		defaultsPath, _ := cmd.LocalFlags().GetString("defaults")
 		outputFormat, _ := cmd.LocalFlags().GetString("output")
 		destinationPath, _ := cmd.LocalFlags().GetString("destination")
+		templateValues, _ := cmd.Flags().GetStringSlice("values")
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/RENDER")
@@ -51,12 +52,22 @@ var renderCmd = &cobra.Command{
 
 		// READ DEFAULTS (IF DEFINED)
 		if defaultsPath != "" {
+			log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
 			defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
 			fmt.Println(defaultsFile)
 			templateVariables = internal.ReadYamlFile([]byte(defaultsFile))
+		} else {
+			log.Info("NO DEFAULTS FILE DEFINED")
 		}
 
-		// READ VALUES (IF GIVEN)
+		// READ VALUES (IF DEFINED)
+		if len(templateValues) > 0 {
+			flagValues := internal.VerifyReadKeyValues(templateValues, log)
+			log.SayWithField("reading values..", "values", flagValues)
+		}
+
+		//
+
 		// tbd!
 
 		// RENDER TEMPLATE
@@ -78,4 +89,5 @@ func init() {
 	renderCmd.Flags().String("defaults", "", "path to defaults template file")
 	renderCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
 	renderCmd.Flags().String("destination", "", "path to output (if output file)")
+	renderCmd.Flags().StringSlice("values", []string{}, "templating values")
 }
