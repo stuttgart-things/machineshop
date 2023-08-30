@@ -93,7 +93,7 @@ var renderCmd = &cobra.Command{
 					defaultVariables = internal.ReadYamlFile([]byte(defaultsFile))
 
 				} else {
-					log.Error("LOCAL DEFAULTS FILE NOT FOUND : ", templatePath)
+					log.Error("LOCAL DEFAULTS FILE NOT FOUND : ", defaultsPath)
 					os.Exit(3)
 				}
 			} else {
