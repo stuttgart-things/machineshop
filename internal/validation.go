@@ -33,9 +33,9 @@ func ReadYamlFile(yamlFileContent []byte) (yamlStructure map[string]interface{})
 	return
 }
 
-func VerifyReadKeyValues(templateValues []string, log *sthingsBase.Logger) map[string]string {
+func VerifyReadKeyValues(templateValues []string, log *sthingsBase.Logger) map[string]interface{} {
 
-	templateData := make(map[string]string)
+	templateData := make(map[string]interface{})
 
 	if len(templateValues) > 0 {
 
@@ -65,4 +65,15 @@ func VerifyReadKeyValues(templateValues []string, log *sthingsBase.Logger) map[s
 	}
 
 	return templateData
+}
+
+func MergeMaps[K comparable, V any](m1 map[K]V, m2 map[K]V) map[K]V {
+	merged := make(map[K]V)
+	for key, value := range m1 {
+		merged[key] = value
+	}
+	for key, value := range m2 {
+		merged[key] = value
+	}
+	return merged
 }

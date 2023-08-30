@@ -32,6 +32,7 @@ var renderCmd = &cobra.Command{
 		outputFormat, _ := cmd.LocalFlags().GetString("output")
 		destinationPath, _ := cmd.LocalFlags().GetString("destination")
 		templateValues, _ := cmd.Flags().GetStringSlice("values")
+		forceRenderOption, _ := cmd.LocalFlags().GetBool("force")
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/RENDER")
@@ -48,28 +49,37 @@ var renderCmd = &cobra.Command{
 		templateFile := sthingsCli.ReadFileContentFromGitRepo(repo, templatePath)
 
 		// INIT TEMPLATE VARIABLES
-		templateVariables := make(map[string]interface{})
+		defaultVariables := make(map[string]interface{})
+		flagVariables := make(map[string]interface{})
 
 		// READ DEFAULTS (IF DEFINED)
 		if defaultsPath != "" {
 			log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
 			defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
 			fmt.Println(defaultsFile)
-			templateVariables = internal.ReadYamlFile([]byte(defaultsFile))
+			defaultVariables = internal.ReadYamlFile([]byte(defaultsFile))
 		} else {
 			log.Info("NO DEFAULTS FILE DEFINED")
 		}
 
 		// READ VALUES (IF DEFINED)
 		if len(templateValues) > 0 {
-			flagValues := internal.VerifyReadKeyValues(templateValues, log)
-			log.SayWithField("reading values..", "values", flagValues)
+			flagVariables = internal.VerifyReadKeyValues(templateValues, log)
+			fmt.Println("VALUES", flagVariables)
+			// log.SayWithField("reading values..", "values", flagVariables)
 		} else {
 			log.Info("NO VALUES DEFINED")
 		}
 
+		variables := internal.MergeMaps(defaultVariables, flagVariables)
+
 		// RENDER TEMPLATE
-		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, "missingkey=zero", "{{", "}}", templateVariables)
+		renderOption := "missingkey=error"
+		if forceRenderOption {
+			renderOption = "missingkey=zero"
+		}
+
+		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, "{{", "}}", variables)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -87,5 +97,6 @@ func init() {
 	renderCmd.Flags().String("defaults", "", "path to defaults template file")
 	renderCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
 	renderCmd.Flags().String("destination", "", "path to output (if output file)")
+	renderCmd.Flags().Bool("force", false, "force rendering by missing keys")
 	renderCmd.Flags().StringSlice("values", []string{}, "templating values")
 }
