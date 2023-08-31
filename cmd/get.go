@@ -24,7 +24,7 @@ var getCmd = &cobra.Command{
 		authMethod, _ := cmd.LocalFlags().GetString("auth")
 		secretPath, _ := cmd.LocalFlags().GetString("path")
 
-		// start logging
+		// START LOGGING
 		log.Info("AUTH-METHOD: ", authMethod)
 		log.Info("SECRET-PATH: ", secretPath)
 
