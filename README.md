@@ -2,11 +2,45 @@
 
 git based CLI interface for managing configuration as code
 
-## RELEASES
+## STATUS
+early evil
 
+## FEATURES
+* Render Templates w/ defaults and inline values (RENDER)
+* Retrieve secrets from vault (GET)
+
+## USAGE EXAMPLES
+
+<details><summary><b>RENDER</b></summary>
+
+```bash
+machineShop render --source git \
+--git https://github.com/stuttgart-things/stuttgart-things.git \
+--defaults packer/environments/labul-vsphere.yaml \
+--template packer/os/ubuntu23.hcl \
+--output stdout 
 ```
-[DEV]: v0.1.24
+
+</details>
+
+<details><summary><b>GET</b></summary>
+
+### REQUIREMENT: VAULT APPROLE EXPORTS
+```bash
+export VAULT_NAMESPACE=root
+export VAULT_ROLE_ID=1d42d7e7-8c14-e5f9-801d-b3ecef416616
+export VAULT_SECRET_ID=623c991f-dd76-c437-2723-bb2ef5b02d87
+export VAULT_ADDR=https://≤VAULT_ADDR>[:8200]
 ```
+
+### GET SECRET VALUE BY PATH
+```
+machineShop get --path apps/data/scr:password | tail -n +8
+```
+
+</details>
+
+## LICENSE
 
 <details><summary><b>APACHE 2.0</b></summary>
 
