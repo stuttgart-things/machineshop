@@ -39,7 +39,7 @@ var installCmd = &cobra.Command{
 		selectedInstallProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
 		fmt.Println(selectedInstallProfiles, allConfig)
 
-		surveys.InstallBin(selectedInstallProfiles, allConfig, bin)
+		surveys.InstallBinaries(selectedInstallProfiles, allConfig, bin)
 	},
 }
 

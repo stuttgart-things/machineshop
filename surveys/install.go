@@ -6,6 +6,8 @@ package surveys
 
 import (
 	"fmt"
+	"path/filepath"
+	"strings"
 	"sync"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
@@ -18,7 +20,7 @@ var (
 	wg             sync.WaitGroup
 )
 
-func InstallBin(selectedInstallProfiles []string, allConfig Profile, bin string) {
+func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin string) {
 
 	binDir := sthingsCli.AskSingleInputQuestion("BIN DIR:", bin)
 
@@ -42,6 +44,12 @@ func InstallBin(selectedInstallProfiles []string, allConfig Profile, bin string)
 
 						fmt.Println("Downloading", name, url)
 						sthingsCli.DownloadFileWithProgressBar(url, tmpDownloadDir)
+
+						if strings.Contains(url, ".zip") {
+							sthingsCli.UnZipArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name)
+						} else if strings.Contains(url, ".tar.gz") {
+							sthingsCli.ExtractTarGzArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name, 0700)
+						}
 
 					}()
 

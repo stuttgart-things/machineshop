@@ -7,8 +7,8 @@ require (
 	github.com/go-git/go-git/v5 v5.8.1
 	github.com/pterm/pterm v0.12.62
 	github.com/spf13/cobra v1.7.0
-	github.com/stuttgart-things/sthingsBase v0.1.22
-	github.com/stuttgart-things/sthingsCli v0.1.25
+	github.com/stuttgart-things/sthingsBase v0.1.23
+	github.com/stuttgart-things/sthingsCli v0.1.31
 	go.hein.dev/go-version v0.1.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -75,6 +75,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.0 // indirect
+	github.com/nitishm/go-rejson/v4 v4.1.1-0.20230331060235-d2aa875760e4 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
