@@ -60,12 +60,22 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 							tmpBinPath = tmpDownloadDir + "/" + binName
 						}
 
+						destinationBinPath := binDir + "/" + name
+
+						// VERIFY IF BIN EXISTS ALREADY
+						binExists, _ := sthingsBase.VerifyIfFileOrDirExists(destinationBinPath, "file")
+
+						if binExists { // ADD OVERWRITE OPTION
+							sthingsBase.DeleteFile(destinationBinPath)
+							fmt.Println("EXISTING BIN DELETED")
+						}
+
 						// MOVE BINARY
-						sthingsBase.MoveRenameFileOnFS(tmpBinPath, binDir+"/"+name)
-						fmt.Println("MOVING.." + tmpBinPath + " TO " + binDir + "/" + name)
+						sthingsBase.MoveRenameFileOnFS(tmpBinPath, destinationBinPath)
+						fmt.Println("MOVING.." + tmpBinPath + " TO " + destinationBinPath)
 
 						// CHANGE BINARY PERMISSION TO EXECUTE
-						sthingsBase.SetUnixFilePermissions(binDir+"/"+name, 0755)
+						sthingsBase.SetUnixFilePermissions(destinationBinPath, 0755)
 
 						// DELETE ARCHIVE/EXTRACTFOLDER
 						sthingsBase.RemoveNestedFolder(tmpDownloadDir + "/" + name)

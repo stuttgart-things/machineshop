@@ -45,7 +45,7 @@ var installCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(installCmd)
-	installCmd.Flags().String("bin", "/usr/bin/", "target dir for installing binary files")
+	installCmd.Flags().String("bin", "/usr/bin", "target dir for installing binary files")
 	installCmd.Flags().String("source", "git", "source of profile: git or local")
 	installCmd.Flags().String("profile", "tests/install.yaml", "path to install profile")
 }
