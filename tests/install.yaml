@@ -8,7 +8,7 @@ binary:
       bin: tkn
   - kind:
       url: https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-arm64
-      bin: tkn
+      bin: kind-linux-arm64
 
 script:
   - hello:

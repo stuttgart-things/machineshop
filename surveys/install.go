@@ -38,9 +38,12 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 
 					name := selectedProfile
 					url := binaryProfile[selectedProfile].Url
+					binName := binaryProfile[selectedProfile].Bin
 
 					go func() {
 						defer wg.Done()
+
+						var tmpBinPath string
 
 						// DOWNLOAD ARCHIVE
 						fmt.Println("DOWNLOADING..", name, url)
@@ -49,13 +52,17 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 						// EXTRACT (IF BINARY IS ARCHIVED)
 						if strings.Contains(url, ".zip") {
 							sthingsCli.UnZipArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name)
+							tmpBinPath = tmpDownloadDir + "/" + name + "/" + binName
 						} else if strings.Contains(url, ".tar.gz") {
 							sthingsCli.ExtractTarGzArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name, 0700)
+							tmpBinPath = tmpDownloadDir + "/" + name + "/" + binName
+						} else {
+							tmpBinPath = tmpDownloadDir + "/" + binName
 						}
 
 						// MOVE BINARY
-						sthingsBase.MoveRenameFileOnFS(tmpDownloadDir+"/"+name+"/"+name, binDir+"/"+name)
-						fmt.Println("MOVING.." + tmpDownloadDir + "/" + name + "/" + name + " TO " + binDir + "/" + name)
+						sthingsBase.MoveRenameFileOnFS(tmpBinPath, binDir+"/"+name)
+						fmt.Println("MOVING.." + tmpBinPath + " TO " + binDir + "/" + name)
 
 						// CHANGE BINARY PERMISSION TO EXECUTE
 						sthingsBase.SetUnixFilePermissions(binDir+"/"+name, 0755)
