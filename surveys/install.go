@@ -42,14 +42,26 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 					go func() {
 						defer wg.Done()
 
-						fmt.Println("Downloading", name, url)
+						// DOWNLOAD ARCHIVE
+						fmt.Println("DOWNLOADING..", name, url)
 						sthingsCli.DownloadFileWithProgressBar(url, tmpDownloadDir)
 
+						// EXTRACT (IF BINARY IS ARCHIVED)
 						if strings.Contains(url, ".zip") {
 							sthingsCli.UnZipArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name)
 						} else if strings.Contains(url, ".tar.gz") {
 							sthingsCli.ExtractTarGzArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name, 0700)
 						}
+
+						// MOVE BINARY
+						sthingsBase.MoveRenameFileOnFS(tmpDownloadDir+"/"+name+"/"+name, binDir+"/"+name)
+						fmt.Println("MOVING.." + tmpDownloadDir + "/" + name + "/" + name + " TO " + binDir + "/" + name)
+
+						// CHANGE BINARY PERMISSION TO EXECUTE
+						sthingsBase.SetUnixFilePermissions(binDir+"/"+name, 0755)
+
+						// DELETE ARCHIVE/EXTRACTFOLDER
+						sthingsBase.RemoveNestedFolder(tmpDownloadDir + "/" + name)
 
 					}()
 

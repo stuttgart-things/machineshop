@@ -81,7 +81,6 @@ func SelectReleaseProfiles(yamlFile string) (selectedReleaseProfiles []string, a
 	for _, repositoryProfile := range allReleaseProfiles.RepositoryProfile {
 
 		for key, value := range repositoryProfile {
-
 			values := []string{key, value.Url, value.Branch, value.Version}
 			allKeys = append(allKeys, key)
 			repositoryTable = append(repositoryTable, values)
