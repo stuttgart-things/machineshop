@@ -5,6 +5,19 @@ git based CLI interface for managing configuration as code
 ## STATUS
 early evil
 
+## BINARY INSTALLATION
+
+```bash
+# LINUX x86_64
+VERSION=0.1.43
+wget https://github.com/stuttgart-things/machineShop/releases/download/${VERSION}/machineShop_Linux_x86_64.tar.gz
+tar xvfz machineShop_Linux_x86_64.tar.gz
+sudo mv machineShop /usr/bin/machineShop
+rm -rf LICENSE README.md
+sudo chmod +x /usr/bin/machineShop
+machineShop version
+```
+
 ## FEATURES
 * Render Templates w/ defaults and inline values (RENDER)
 * Retrieve secrets from vault (GET)
