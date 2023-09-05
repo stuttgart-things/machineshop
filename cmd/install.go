@@ -6,15 +6,20 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/stuttgart-things/machineShop/surveys"
 
 	"github.com/stuttgart-things/machineShop/internal"
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/spf13/cobra"
 )
 
+var (
+	profileFile string
+)
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "install binaries",
@@ -31,14 +36,31 @@ var installCmd = &cobra.Command{
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/INSTALL")
 
-		// GET REPO + READ PROFILE FILE
-		repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
-		profileFile := sthingsCli.ReadFileContentFromGitRepo(repo, profile)
+		// LOAD PROFILE BASED ON SOURCE
+		if source == "git" {
+			// GET REPO + READ PROFILE FILE
+			repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
+			profileFile = sthingsCli.ReadFileContentFromGitRepo(repo, profile)
 
-		// GET CONFIG
+		} else if source == "local" {
+
+			profileExists, _ := sthingsBase.VerifyIfFileOrDirExists(profile, "file")
+			log.Info("LOCAL PROFILE FOUND : ", profile)
+
+			if profileExists {
+				profileFile = sthingsBase.ReadFileToVariable(profile)
+			} else {
+				log.Error("LOCAL PROFILE NOT FOUND : ", profile)
+				os.Exit(3)
+			}
+
+		} else {
+			log.Error("SOURCE CAN BE ONLY: GIT OR LOCAL", source)
+			os.Exit(3)
+		}
+
+		// GET TO BE INSTALLED BINS + START INSTALL SURVEY
 		selectedInstallProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
-		fmt.Println(selectedInstallProfiles, allConfig)
-
 		surveys.InstallBinaries(selectedInstallProfiles, allConfig, bin)
 	},
 }

@@ -54,7 +54,7 @@ var renderCmd = &cobra.Command{
 
 		// GET REPO + READ TEMPLATE + DEFAULTS
 
-		// HANDLE SOURCE:GIT FOR TEMPLATE + DEFAULTS
+		// HANDLE SOURCE: GIT FOR TEMPLATE + DEFAULTS
 		if source == "git" {
 			repo, _ = sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 			templateFile = sthingsCli.ReadFileContentFromGitRepo(repo, templatePath)
@@ -102,7 +102,7 @@ var renderCmd = &cobra.Command{
 			}
 
 		} else {
-			log.Error("SOURCE COULD BE ONLY GIT OR LOCAL", source)
+			log.Error("SOURCE CAN BE ONLY: GIT OR LOCAL", source)
 			os.Exit(3)
 		}
 

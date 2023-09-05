@@ -5,7 +5,6 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package surveys
 
 import (
-	"fmt"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -16,6 +15,7 @@ import (
 )
 
 var (
+	log            = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
 	tmpDownloadDir = "/tmp/machineShop"
 	wg             sync.WaitGroup
 )
@@ -25,7 +25,7 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 	binDir := sthingsCli.AskSingleInputQuestion("BIN DIR:", bin)
 
 	if !sthingsBase.CheckForUnixWritePermissions(binDir) {
-		fmt.Println("NO WRITE PERMISSIONS!", binDir)
+		log.Error("NO WRITE PERMISSIONS! ", binDir)
 	} else {
 
 		for _, binaryProfile := range allConfig.BinaryProfile {
@@ -46,7 +46,7 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 						var tmpBinPath string
 
 						// DOWNLOAD ARCHIVE
-						fmt.Println("DOWNLOADING..", name, url)
+						log.Info("DOWNLOADING! ", url)
 						sthingsCli.DownloadFileWithProgressBar(url, tmpDownloadDir)
 
 						// EXTRACT (IF BINARY IS ARCHIVED)
@@ -67,18 +67,20 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 
 						if binExists { // ADD OVERWRITE OPTION
 							sthingsBase.DeleteFile(destinationBinPath)
-							fmt.Println("EXISTING BIN DELETED")
+							log.Warn("EXISTING BINARY DELETED ", destinationBinPath)
 						}
 
 						// MOVE BINARY
 						sthingsBase.MoveRenameFileOnFS(tmpBinPath, destinationBinPath)
-						fmt.Println("MOVING.." + tmpBinPath + " TO " + destinationBinPath)
+						log.Info("MOVING ", tmpBinPath+" TO "+destinationBinPath)
 
 						// CHANGE BINARY PERMISSION TO EXECUTE
 						sthingsBase.SetUnixFilePermissions(destinationBinPath, 0755)
+						log.Info("CHANGING PERMISSIONS TO EXECUTABLE OF ", destinationBinPath)
 
 						// DELETE ARCHIVE/EXTRACTFOLDER
 						sthingsBase.RemoveNestedFolder(tmpDownloadDir + "/" + name)
+						log.Info("REMOVING ", tmpDownloadDir+"/"+name)
 
 					}()
 
