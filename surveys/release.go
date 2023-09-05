@@ -50,8 +50,6 @@ func CloneRepositories(selectedReleaseProfiles []string, allConfig ReleaseProfil
 						// 	RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 						// })
 
-						// fmt.Println(hello, err)
-
 					}()
 
 				}
