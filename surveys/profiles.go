@@ -10,9 +10,6 @@ import (
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
-// INSTALL
-var allConfig Profile
-
 type Install struct {
 	Url string `mapstructure:"url"`
 	Bin string `mapstructure:"bin"`
@@ -55,8 +52,6 @@ func SelectInstallProfiles(yamlFile string) (selectedInstallProfiles []string, a
 }
 
 // RELEASE
-var allReleaseProfiles ReleaseProfile
-
 type ReleaseRepository struct {
 	Url     string `mapstructure:"url"`
 	Branch  string `mapstructure:"branch"`

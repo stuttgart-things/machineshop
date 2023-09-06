@@ -116,7 +116,7 @@ var renderCmd = &cobra.Command{
 		}
 
 		// MERGE DEFAULTS + VALUES
-		variables := internal.MergeMaps(defaultVariables, flagVariables)
+		variables := sthingsBase.MergeMaps(defaultVariables, flagVariables)
 
 		// RENDER TEMPLATE
 		renderOption := "missingkey=error"
