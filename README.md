@@ -31,7 +31,7 @@ machineShop render --source git \
 --git https://github.com/stuttgart-things/stuttgart-things.git \
 --defaults packer/environments/labul-vsphere.yaml \
 --template packer/os/ubuntu23.hcl \
---output stdout 
+--output stdout
 ```
 
 </details>
@@ -49,6 +49,8 @@ export VAULT_ADDR=https://≤VAULT_ADDR>[:8200]
 ### GET SECRET VALUE BY PATH
 ```
 machineShop get --path apps/data/scr:password | tail -n +8
+
+machineShop get --path apps/data/scr:password --output file --destination /tmp/password.txt
 ```
 
 </details>
