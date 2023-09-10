@@ -9,6 +9,9 @@ binary:
   - kind:
       url: https://kind.sigs.k8s.io/dl/v{{ or .kindVersion "0.20.0" }}/kind-linux-arm64
       bin: kind-linux-arm64
+  - gh:
+      url: https://github.com/cli/cli/releases/download/v{{ or .ghVersion 2.34.0" }}/gh_{{ or .ghVersion 2.34.0" }}_linux_amd64.tar.gz
+      bin: gh_2.34.0_linux_amd64/bin/gh
 
 script:
   - hello:

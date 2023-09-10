@@ -48,7 +48,7 @@ func HandleRenderOutput(outputFormat, destinationPath, renderedTemplate string, 
 	case "stdout":
 		fmt.Println(string(renderedTemplate))
 	case "file":
-		logger.Info("rendered template written to ", destinationPath)
+		logger.Info("output file written to ", destinationPath)
 		sthingsBase.WriteDataToFile(destinationPath, string(renderedTemplate))
 	}
 

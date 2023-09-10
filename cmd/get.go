@@ -5,9 +5,9 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
-	"fmt"
 	"os"
 
+	"github.com/stuttgart-things/machineShop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/spf13/cobra"
@@ -23,6 +23,8 @@ var getCmd = &cobra.Command{
 		// FLAGS
 		authMethod, _ := cmd.LocalFlags().GetString("auth")
 		secretPath, _ := cmd.LocalFlags().GetString("path")
+		outputFormat, _ := cmd.LocalFlags().GetString("output")
+		destinationPath, _ := cmd.LocalFlags().GetString("destination")
 
 		// START LOGGING
 		log.Info("AUTH-METHOD: ", authMethod)
@@ -48,9 +50,10 @@ var getCmd = &cobra.Command{
 			os.Setenv("VAULT_TOKEN", token)
 		}
 
+		// GET SECRET VALUE
 		secretValue := sthingsCli.GetVaultSecretValue(secretPath, os.Getenv("VAULT_TOKEN"))
-		fmt.Println(secretValue)
-
+		internal.HandleRenderOutput(outputFormat, destinationPath, secretValue, true)
+		// fmt.Println(secretValue)
 	},
 }
 
@@ -58,4 +61,6 @@ func init() {
 	rootCmd.AddCommand(getCmd)
 	getCmd.Flags().String("auth", "approle", "vault auth method")
 	getCmd.Flags().String("path", "", "path to vault secret")
+	getCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
+	getCmd.Flags().String("destination", "", "path to output (if output file)")
 }
