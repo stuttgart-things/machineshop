@@ -2,15 +2,11 @@
 version: "3"
 
 vars:
-  MODULE: github.com/stuttgart-things/machineShop
   PROJECT_NAME:
     sh: echo ${PWD##*/}
-  MAJOR:
-    sh: git describe --tags --abbrev=0 | cut -d "." -f1
-  MINOR:
-    sh: git describe --tags --abbrev=0 | cut -d "." -f2
-  PATCH:
-    sh: git describe --tags --abbrev=0 | cut -d "." -f3
+  REPOSITORY_NAME: stuttgart-things
+  MODULE: github.com/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}
+  REGISTRY: eu.gcr.io
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
   VERSION:
@@ -35,8 +31,15 @@ tasks:
     desc: Install
     deps: [lint, test]
     cmds:
-      - go install -ldflags="-X {{ .MODULE }}/cmd.version=v{{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }} -X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
+      - go install -ldflags="-X {{ .MODULE }}/cmd.version=v{{ .UPDATED_TAG_VERSION }} -X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
       - "{{ .PROJECT_NAME }}"
+
+  build-image:
+    desc: Build container image
+    deps: [install]
+    cmds:
+      - sudo nerdctl build -t {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .UPDATED_TAG_VERSION }} --build-arg VERSION={{ .UPDATED_TAG_VERSION }} --build-arg BUILD_DATE={{ .DATE }} --build-arg COMMIT={{ .GIT_COMMIT }} .
+      - sudo nerdctl push {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .UPDATED_TAG_VERSION }}
 
   lint:
     desc: Lint
