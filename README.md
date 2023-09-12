@@ -51,6 +51,8 @@ export VAULT_ADDR=https://≤VAULT_ADDR>[:8200]
 machineShop get --path apps/data/scr:password | tail -n +8
 
 machineShop get --path apps/data/scr:password --output file --destination /tmp/password.txt
+
+machineShop get --path kubeconfigs/data/dev21:kubeconfig --output file --destination /tmp/dev211 --b64 true
 ```
 
 </details>
