@@ -42,6 +42,7 @@ var renderCmd = &cobra.Command{
 		destinationPath, _ := cmd.LocalFlags().GetString("destination")
 		templateValues, _ := cmd.Flags().GetStringSlice("values")
 		forceRenderOption, _ := cmd.LocalFlags().GetBool("force")
+		b64DecodeOption, _ := cmd.LocalFlags().GetBool("b64")
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/RENDER")
@@ -129,7 +130,7 @@ var renderCmd = &cobra.Command{
 		}
 
 		// HANDLE OUTPUT
-		internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), true)
+		internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), b64DecodeOption, true)
 
 	},
 }
@@ -143,4 +144,5 @@ func init() {
 	renderCmd.Flags().String("destination", "", "path to output (if output file)")
 	renderCmd.Flags().Bool("force", false, "force rendering by missing keys")
 	renderCmd.Flags().StringSlice("values", []string{}, "templating values")
+	renderCmd.Flags().Bool("b64", false, "decode base64 for output")
 }

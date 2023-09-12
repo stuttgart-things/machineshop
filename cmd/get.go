@@ -25,6 +25,7 @@ var getCmd = &cobra.Command{
 		secretPath, _ := cmd.LocalFlags().GetString("path")
 		outputFormat, _ := cmd.LocalFlags().GetString("output")
 		destinationPath, _ := cmd.LocalFlags().GetString("destination")
+		b64DecodeOption, _ := cmd.LocalFlags().GetBool("b64")
 
 		// START LOGGING
 		log.Info("AUTH-METHOD: ", authMethod)
@@ -52,8 +53,7 @@ var getCmd = &cobra.Command{
 
 		// GET SECRET VALUE
 		secretValue := sthingsCli.GetVaultSecretValue(secretPath, os.Getenv("VAULT_TOKEN"))
-		internal.HandleRenderOutput(outputFormat, destinationPath, secretValue, true)
-		// fmt.Println(secretValue)
+		internal.HandleRenderOutput(outputFormat, destinationPath, secretValue, b64DecodeOption, true)
 	},
 }
 
@@ -63,4 +63,5 @@ func init() {
 	getCmd.Flags().String("path", "", "path to vault secret")
 	getCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
 	getCmd.Flags().String("destination", "", "path to output (if output file)")
+	getCmd.Flags().Bool("b64", false, "decode base64 for output")
 }

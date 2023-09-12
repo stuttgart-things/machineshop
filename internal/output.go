@@ -40,7 +40,12 @@ func PrintBanner(logFilePath, gitPath, gitRepository, version, date, cmd string)
 	pterm.Println()
 }
 
-func HandleRenderOutput(outputFormat, destinationPath, renderedTemplate string, overwrite bool) {
+func HandleRenderOutput(outputFormat, destinationPath, renderedTemplate string, decodeBase64, overwrite bool) {
+
+	// DECODE BASE64 SECRET
+	if sthingsBase.VerifyIfStringIsBase64(renderedTemplate) && decodeBase64 {
+		renderedTemplate = sthingsBase.DecodeBase64String(renderedTemplate)
+	}
 
 	switch outputFormat {
 	default:
