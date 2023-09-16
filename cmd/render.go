@@ -73,9 +73,9 @@ var renderCmd = &cobra.Command{
 			// HANDLE SOURCE:LOCAL FOR TEMPLATE + DEFAULTS
 		} else if source == "local" {
 			templateExists, _ := sthingsBase.VerifyIfFileOrDirExists(templatePath, "file")
-			log.Info("LOCAL TEMPLATE FOUND : ", templatePath)
 
 			if templateExists {
+				log.Info("LOCAL TEMPLATE FOUND : ", templatePath)
 				templateFile = sthingsBase.ReadFileToVariable(templatePath)
 			} else {
 				log.Error("LOCAL TEMPLATE NOT FOUND : ", templatePath)
@@ -109,7 +109,7 @@ var renderCmd = &cobra.Command{
 
 		// READ VALUES (IF DEFINED)
 		if len(templateValues) > 0 {
-			flagVariables = internal.VerifyReadKeyValues(templateValues, log, true)
+			flagVariables = internal.VerifyReadKeyValues(templateValues, log, enableVault)
 			fmt.Println("VALUES", flagVariables)
 		} else {
 			log.Warn("NO VALUES DEFINED")
@@ -130,7 +130,7 @@ var renderCmd = &cobra.Command{
 		}
 
 		// HANDLE OUTPUT
-		internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), b64DecodeOption, true)
+		internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), b64DecodeOption, enableVault)
 
 	},
 }

@@ -5,7 +5,6 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/stuttgart-things/machineShop/surveys"
@@ -30,8 +29,6 @@ var installCmd = &cobra.Command{
 		profile, _ := cmd.LocalFlags().GetString("profile")
 		source, _ := cmd.LocalFlags().GetString("source")
 		bin, _ := cmd.LocalFlags().GetString("bin")
-
-		fmt.Println(source)
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/INSTALL")

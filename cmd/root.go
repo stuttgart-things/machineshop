@@ -19,6 +19,7 @@ var (
 	logFilePath   string
 	gitBranch     string
 	gitCommitID   string
+	enableVault   bool
 	log           = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
 )
 
@@ -46,4 +47,5 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&gitCommitID, "commitID", "", "git commit id")
 	rootCmd.PersistentFlags().StringVar(&gitToken, "gitToken", "git/data/github:token", "git token")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().BoolVar(&enableVault, "vault", true, "Enable vault lookups")
 }

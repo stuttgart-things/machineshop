@@ -83,3 +83,21 @@ func VerifyVaultAuthType(vaultAuthType string, log *sthingsBase.Logger, vaultAut
 		os.Setenv("VAULT_TOKEN", token)
 	}
 }
+
+func ValidateGetVaultSecretValue(secretPathString string, log *sthingsBase.Logger) (secretValue string) {
+
+	if len(sthingsBase.GetAllRegexMatches(secretPathString, regexPatternVaultSecretPath)) > 0 {
+		vaultAuthType, vaultAuthFound := sthingsCli.VerifyVaultEnvVars()
+		log.Info("⚡️ VAULT CREDENDITALS ⚡️", vaultAuthType)
+
+		VerifyVaultAuthType(vaultAuthType, log, vaultAuthFound)
+		secretValue = sthingsCli.GetVaultSecretValue(secretPathString, os.Getenv("VAULT_TOKEN"))
+		log.Info("SECRET FOUND IN ", secretPathString)
+
+	} else {
+		secretValue = secretPathString
+		log.Info("NO SECRET PATH FOUND - USING LITERAL ", secretValue)
+	}
+
+	return
+}
