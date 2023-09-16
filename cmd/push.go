@@ -40,19 +40,6 @@ var pushCmd = &cobra.Command{
 			os.Exit(3)
 		}
 
-		// if auth == "" {
-		// 	authUserName = os.Getenv("PUSH_USERNAME")
-		// 	authPassword = os.Getenv("PUSH_PASSWORD")
-		// } else if strings.Contains(auth, ":") {
-		// 	authUserName = strings.Split(auth, ":")[0]
-		// 	authPassword = strings.Split(auth, ":")[1]
-		// }
-
-		// if authUserName == "" || authPassword == "" {
-		// 	log.Error(strings.ToUpper(target), " USERNAME OR PASSWORD EMPTY")
-		// 	os.Exit(3)
-		// }
-
 		if target == "git" {
 			fileContent := sthingsBase.ReadFileToVariable(sourceFile)
 
