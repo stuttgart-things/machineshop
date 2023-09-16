@@ -6,34 +6,19 @@ package internal
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
-
-	"gopkg.in/yaml.v3"
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
-// SHOULD BE MOVED TO STHINGS-CLI!
-func ReadYamlFile(yamlFileContent []byte) (yamlStructure map[string]interface{}) {
+const regexPatternVaultSecretPath = `.+/data/.+:.+`
 
-	yamlStructure = make(map[string]interface{})
-	data := make(map[interface{}]interface{})
+func VerifyReadKeyValues(templateValues []string, log *sthingsBase.Logger, enableVault bool) map[string]interface{} {
 
-	err := yaml.Unmarshal(yamlFileContent, &data)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for k, v := range data {
-		yamlStructure[fmt.Sprintf("%v", k)] = fmt.Sprintf("%v", v)
-	}
-
-	return
-}
-
-func VerifyReadKeyValues(templateValues []string, log *sthingsBase.Logger) map[string]interface{} {
+	vaultAuthType, vaultAuthFound := sthingsCli.VerifyVaultEnvVars()
+	log.Info("⚡️ VAULT CREDENDITALS ⚡️", vaultAuthType)
 
 	templateData := make(map[string]interface{})
 
@@ -50,6 +35,19 @@ func VerifyReadKeyValues(templateValues []string, log *sthingsBase.Logger) map[s
 			// IF VALUE IS BASE64 ENDCODED THIS IS NEEDED TO PATCH THE STRING BACK IF = ARE INCLUDED
 			values = []string{values[0], strings.Join(values[1:], "=")}
 
+			// CHECK FOR VAULT KV
+			if len(sthingsBase.GetAllRegexMatches(values[1], regexPatternVaultSecretPath)) > 0 && enableVault {
+				log.Info("VAULT PATH FOUND")
+				VerifyVaultAuthType(vaultAuthType, log, vaultAuthFound)
+				secretValue := sthingsCli.GetVaultSecretValue(values[1], os.Getenv("VAULT_TOKEN"))
+
+				if secretValue == "" {
+					log.Error("VAULT SECRET DOES NOT EXIST ", values[1])
+				}
+
+				values[1] = secretValue
+			}
+
 			// CHECK FOR EMPTY KEY
 			if strings.TrimSpace(values[0]) == "" {
 				fmt.Println("no key for value", strings.TrimSpace(values[1]), "defined. exiting")
@@ -61,8 +59,27 @@ func VerifyReadKeyValues(templateValues []string, log *sthingsBase.Logger) map[s
 
 		}
 	} else {
-		log.Warn("no values defined..")
+		log.Warn("NO VALUES DEFINED..")
 	}
 
 	return templateData
+}
+
+func VerifyVaultAuthType(vaultAuthType string, log *sthingsBase.Logger, vaultAuthFound bool) {
+
+	if vaultAuthType == "approle" && vaultAuthFound {
+		client, err := sthingsCli.CreateVaultClient()
+
+		if err != nil {
+			log.Error(err, "token creation (by approle) not working")
+		}
+
+		token, err := client.GetVaultTokenFromAppRole()
+
+		if err != nil {
+			log.Error(err, "token creation (by approle) not working")
+		}
+
+		os.Setenv("VAULT_TOKEN", token)
+	}
 }

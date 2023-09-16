@@ -65,7 +65,7 @@ var renderCmd = &cobra.Command{
 				defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
 				log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
 				fmt.Println(defaultsFile)
-				defaultVariables = internal.ReadYamlFile([]byte(defaultsFile))
+				defaultVariables = sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsFile))
 			} else {
 				log.Info("NO DEFAULTS FILE FROM GIT DEFINED")
 			}
@@ -92,7 +92,7 @@ var renderCmd = &cobra.Command{
 					defaultsFile = sthingsBase.ReadFileToVariable(defaultsPath)
 					log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
 					fmt.Println(defaultsFile)
-					defaultVariables = internal.ReadYamlFile([]byte(defaultsFile))
+					defaultVariables = sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsFile))
 
 				} else {
 					log.Error("LOCAL DEFAULTS FILE NOT FOUND : ", defaultsPath)
@@ -109,9 +109,8 @@ var renderCmd = &cobra.Command{
 
 		// READ VALUES (IF DEFINED)
 		if len(templateValues) > 0 {
-			flagVariables = internal.VerifyReadKeyValues(templateValues, log)
+			flagVariables = internal.VerifyReadKeyValues(templateValues, log, true)
 			fmt.Println("VALUES", flagVariables)
-			// log.SayWithField("reading values..", "values", flagVariables)
 		} else {
 			log.Warn("NO VALUES DEFINED")
 		}
@@ -124,6 +123,7 @@ var renderCmd = &cobra.Command{
 		if forceRenderOption {
 			renderOption = "missingkey=zero"
 		}
+
 		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, "{{", "}}", variables)
 		if err != nil {
 			fmt.Println(err)

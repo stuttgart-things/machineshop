@@ -35,21 +35,7 @@ var getCmd = &cobra.Command{
 		vaultAuthType, vaultAuthFound := sthingsCli.VerifyVaultEnvVars()
 		log.Info("⚡️ VAULT CREDENDITALS ⚡️", vaultAuthType)
 
-		if vaultAuthType == "approle" && vaultAuthFound {
-			client, err := sthingsCli.CreateVaultClient()
-
-			if err != nil {
-				log.Error(err, "token creation (by approle) not working")
-			}
-
-			token, err := client.GetVaultTokenFromAppRole()
-
-			if err != nil {
-				log.Error(err, "token creation (by approle) not working")
-			}
-
-			os.Setenv("VAULT_TOKEN", token)
-		}
+		internal.VerifyVaultAuthType(vaultAuthType, log, vaultAuthFound)
 
 		// GET SECRET VALUE
 		secretValue := sthingsCli.GetVaultSecretValue(secretPath, os.Getenv("VAULT_TOKEN"))

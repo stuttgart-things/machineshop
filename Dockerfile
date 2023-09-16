@@ -21,4 +21,5 @@ RUN CGO_ENABLED=0 go build -buildvcs=false -o /bin/machineShop\
 FROM eu.gcr.io/stuttgart-things/sthings-alpine:3.11.4-alpine3.18
 LABEL maintainer="Patrick Hermann patrick.hermann@sva.de"
 
+RUN apk add gawk
 COPY --from=builder /bin/machineShop /bin/machineShop
