@@ -28,6 +28,11 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 		log.Error("NO WRITE PERMISSIONS! ", binDir)
 	} else {
 
+		// CREATE TMP DL FOLDER
+		sthingsBase.CreateNestedDirectoryStructure(tmpDownloadDir, 0600)
+		log.Info("CREATED TMP DOWNLOAD DIR ", tmpDownloadDir)
+
+		// DOWNLOAD + INSTALL BINARIES
 		for _, binaryProfile := range allConfig.BinaryProfile {
 
 			for _, selectedProfile := range selectedInstallProfiles {
@@ -58,40 +63,46 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 
 						// DOWNLOAD ARCHIVE
 						log.Info("DOWNLOADING! ", url)
-						sthingsCli.DownloadFileWithProgressBar(url, tmpDownloadDir)
 
-						// EXTRACT (IF BINARY IS ARCHIVED)
-						if strings.Contains(url, ".zip") {
-							sthingsCli.UnZipArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name)
-							tmpBinPath = tmpDownloadDir + "/" + name + "/" + binName
-						} else if strings.Contains(url, ".tar.gz") {
-							sthingsCli.ExtractTarGzArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name, 0700)
-							tmpBinPath = tmpDownloadDir + "/" + name + "/" + binName
+						if sthingsCli.CheckUrlAvailability(url) {
+
+							sthingsCli.DownloadFileWithProgressBar(url, tmpDownloadDir)
+
+							// EXTRACT (IF BINARY IS ARCHIVED)
+							if strings.Contains(url, ".zip") {
+								sthingsCli.UnZipArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name)
+								tmpBinPath = tmpDownloadDir + "/" + name + "/" + binName
+							} else if strings.Contains(url, ".tar.gz") {
+								sthingsCli.ExtractTarGzArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name, 0700)
+								tmpBinPath = tmpDownloadDir + "/" + name + "/" + binName
+							} else {
+								tmpBinPath = tmpDownloadDir + "/" + binName
+							}
+
+							destinationBinPath := binDir + "/" + name
+
+							// VERIFY IF BIN EXISTS ALREADY
+							binExists, _ := sthingsBase.VerifyIfFileOrDirExists(destinationBinPath, "file")
+
+							if binExists { // ADD OVERWRITE OPTION
+								sthingsBase.DeleteFile(destinationBinPath)
+								log.Warn("EXISTING BINARY DELETED ", destinationBinPath)
+							}
+
+							// MOVE BINARY
+							sthingsBase.MoveRenameFileOnFS(tmpBinPath, destinationBinPath)
+							log.Info("MOVING ", tmpBinPath+" TO "+destinationBinPath)
+
+							// CHANGE BINARY PERMISSION TO EXECUTE
+							sthingsBase.SetUnixFilePermissions(destinationBinPath, 0755)
+							log.Info("CHANGING PERMISSIONS TO EXECUTABLE OF ", destinationBinPath)
+
+							// DELETE ARCHIVE/EXTRACTFOLDER
+							sthingsBase.RemoveNestedFolder(tmpDownloadDir + "/" + name)
+							log.Info("REMOVING ", tmpDownloadDir+"/"+name)
 						} else {
-							tmpBinPath = tmpDownloadDir + "/" + binName
+							log.Error("URL NOT REACHABLE! ", url)
 						}
-
-						destinationBinPath := binDir + "/" + name
-
-						// VERIFY IF BIN EXISTS ALREADY
-						binExists, _ := sthingsBase.VerifyIfFileOrDirExists(destinationBinPath, "file")
-
-						if binExists { // ADD OVERWRITE OPTION
-							sthingsBase.DeleteFile(destinationBinPath)
-							log.Warn("EXISTING BINARY DELETED ", destinationBinPath)
-						}
-
-						// MOVE BINARY
-						sthingsBase.MoveRenameFileOnFS(tmpBinPath, destinationBinPath)
-						log.Info("MOVING ", tmpBinPath+" TO "+destinationBinPath)
-
-						// CHANGE BINARY PERMISSION TO EXECUTE
-						sthingsBase.SetUnixFilePermissions(destinationBinPath, 0755)
-						log.Info("CHANGING PERMISSIONS TO EXECUTABLE OF ", destinationBinPath)
-
-						// DELETE ARCHIVE/EXTRACTFOLDER
-						sthingsBase.RemoveNestedFolder(tmpDownloadDir + "/" + name)
-						log.Info("REMOVING ", tmpDownloadDir+"/"+name)
 
 					}()
 
