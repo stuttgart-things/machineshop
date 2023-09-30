@@ -24,9 +24,12 @@ type Profile struct {
 	ScriptProfile []map[string]Script  `mapstructure:"script"`
 }
 
-func SelectInstallProfiles(yamlFile string) (selectedInstallProfiles []string, allConfig Profile) {
+func SelectInstallProfiles(yamlFile string) (selectedBinariesProfiles, selectedScriptProfiles []string, allConfig Profile) {
 
 	allKeys := []string{}
+	allBinaries := []string{}
+	allScripts := []string{}
+
 	allConfig = sthingsCli.ReadInlineYamlToObject([]byte(yamlFile), allConfig).(Profile)
 
 	// ITERATE OVER INSTALL BINARIES
@@ -34,6 +37,7 @@ func SelectInstallProfiles(yamlFile string) (selectedInstallProfiles []string, a
 
 		for key := range binaryProfile {
 			allKeys = append(allKeys, key)
+			allBinaries = append(allBinaries, key)
 		}
 
 	}
@@ -43,11 +47,22 @@ func SelectInstallProfiles(yamlFile string) (selectedInstallProfiles []string, a
 
 		for key := range scriptProfile {
 			allKeys = append(allKeys, key)
+			allScripts = append(allScripts, key)
 		}
 
 	}
 
-	selectedInstallProfiles = sthingsCli.AskMultiSelectQuestion("SELECT TO INSTALL:", allKeys)
+	log.Info("FOUND BINARY PROFILES", len(allBinaries))
+	log.Info("FOUND SCRIPT PROFILES", len(allScripts))
+
+	if len(allBinaries) >= 0 {
+		selectedBinariesProfiles = sthingsCli.AskMultiSelectQuestion("SELECT BINARIES TO INSTALL:", allBinaries)
+	}
+
+	if len(allScripts) >= 0 {
+		selectedScriptProfiles = sthingsCli.AskMultiSelectQuestion("SELECT SCRIPTS TO INSTALL:", allScripts)
+	}
+
 	return
 }
 

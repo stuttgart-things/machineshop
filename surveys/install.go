@@ -5,6 +5,7 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package surveys
 
 import (
+	"fmt"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -15,12 +16,63 @@ import (
 )
 
 var (
-	log            = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
-	tmpDownloadDir = "/tmp/machineShop"
-	wg             sync.WaitGroup
+	log              = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
+	wg               sync.WaitGroup
+	bashScriptHeader = "#!/bin/bash\n"
 )
 
-func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin string) {
+func RenderInstallScript(selectedScriptProfiles []string, allConfig Profile, scriptDir string) {
+
+	// CREATE TMP DL FOLDER
+	sthingsBase.CreateNestedDirectoryStructure(scriptDir, 0600)
+	log.Info("CREATED TMP SCRIPT DIR ", scriptDir)
+
+	for _, scriptProfile := range allConfig.ScriptProfile {
+
+		for _, selectedProfile := range selectedScriptProfiles {
+
+			// GET ALL VARS FROM TEMPLATE
+			scriptTemplate := scriptProfile[selectedProfile].Script
+			allTemplateVariablesAndDefaults, _, _, _ := sthingsBase.GetVariablesAndDefaultsFromTemplate(scriptTemplate, "curly")
+			log.Info("ALL VARS ", allTemplateVariablesAndDefaults)
+
+			// RENDER URL IF TEMPLATE ULR CONTAINS AT LEAST ONE VARIABLE
+			script := bashScriptHeader + scriptTemplate
+			if len(allTemplateVariablesAndDefaults) >= 1 {
+				renderedScript, error := sthingsBase.RenderTemplateInline(string(scriptTemplate), "missingkey=error", "{{", "}}", allTemplateVariablesAndDefaults)
+				if error != nil {
+					log.Error("ERROR WHILE RENDERING", error)
+				}
+				script = bashScriptHeader + string(renderedScript)
+			}
+
+			// OUTPUT HANDLING
+			log.Info("RENDERED SCRIPT ", script)
+			scriptOutputPath := scriptDir + "/" + selectedProfile + ".sh"
+			scriptAlreadyExists, _ := sthingsBase.VerifyIfFileOrDirExists(scriptOutputPath, "file")
+
+			if scriptAlreadyExists {
+				sthingsBase.DeleteFile(scriptOutputPath)
+				log.Warn("EXISTING SCRIPT DELETED ", scriptOutputPath)
+			}
+
+			if sthingsBase.WriteDataToFile(scriptOutputPath, script) {
+				log.Info("SCRIPT WRITTEN TO ", scriptDir+"/"+selectedProfile)
+			} else {
+				log.Info("WRITING SCRIPT TO DIR FAILED ", scriptDir+"/"+selectedProfile)
+			}
+
+			// EXECUTING SghCRIPT
+			log.Info("EXECUTING SCRIPT ", scriptDir+"/"+selectedProfile)
+			fmt.Println(sthingsBase.ExecuteBashScript(scriptOutputPath))
+
+		}
+
+	}
+
+}
+
+func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, tmpDownloadDir, bin string) {
 
 	binDir := sthingsCli.AskSingleInputQuestion("BIN DIR:", bin)
 
@@ -52,7 +104,6 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 						renderedURL, _ := sthingsBase.RenderTemplateInline(string(url), "missingkey=zero", "{{", "}}", allTemplateVariablesAndDefaults)
 						url = string(renderedURL)
 					}
-					// CHECK IF URL IS REACHABLE/VALID
 					// ADD OVERWIRTE OPTION
 					// CHANGE VERSION FOR USING v PREFIX
 
@@ -61,10 +112,11 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 
 						var tmpBinPath string
 
-						// DOWNLOAD ARCHIVE
-						log.Info("DOWNLOADING! ", url)
-
+						// CHECK IF URL IS REACHABLE/VALID
 						if sthingsCli.CheckUrlAvailability(url) {
+
+							// DOWNLOAD ARCHIVE
+							log.Info("DOWNLOADING! ", url)
 
 							sthingsCli.DownloadFileWithProgressBar(url, tmpDownloadDir)
 
@@ -78,7 +130,6 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, bin st
 							} else {
 								tmpBinPath = tmpDownloadDir + "/" + binName
 							}
-
 							destinationBinPath := binDir + "/" + name
 
 							// VERIFY IF BIN EXISTS ALREADY
