@@ -32,6 +32,7 @@ tasks:
     deps: [lint, test]
     cmds:
       - go install -ldflags="-X {{ .MODULE }}/cmd.version=v{{ .UPDATED_TAG_VERSION }} -X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
+      -
       - "{{ .PROJECT_NAME }}"
 
   build-image:

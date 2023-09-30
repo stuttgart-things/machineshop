@@ -29,6 +29,7 @@ var installCmd = &cobra.Command{
 		profile, _ := cmd.LocalFlags().GetString("profile")
 		source, _ := cmd.LocalFlags().GetString("source")
 		bin, _ := cmd.LocalFlags().GetString("bin")
+		tmpDownloadDir, _ := cmd.LocalFlags().GetString("tmp")
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/INSTALL")
@@ -52,18 +53,27 @@ var installCmd = &cobra.Command{
 			}
 
 		} else {
-			log.Error("SOURCE CAN BE ONLY: GIT OR LOCAL", source)
+			log.Error("SOURCE: GIT OR LOCAL ONLY", source)
 			os.Exit(3)
 		}
 
 		// GET TO BE INSTALLED BINS + START INSTALL SURVEY
-		selectedInstallProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
-		surveys.InstallBinaries(selectedInstallProfiles, allConfig, bin)
+		selectedBinariesProfiles, selectedScriptProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
+
+		if len(selectedBinariesProfiles) > 0 {
+			surveys.InstallBinaries(selectedBinariesProfiles, allConfig, tmpDownloadDir, bin)
+		}
+
+		if len(selectedScriptProfiles) > 0 {
+			surveys.RenderInstallScript(selectedScriptProfiles, allConfig, tmpDownloadDir)
+		}
+
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(installCmd)
+	installCmd.Flags().String("tmp", "/tmp/machineShop", "temporary machineShop dir")
 	installCmd.Flags().String("bin", "/usr/bin", "target dir for installing binary files")
 	installCmd.Flags().String("source", "git", "source of profile: git or local")
 	installCmd.Flags().String("profile", "tests/install.yaml", "path to install profile")

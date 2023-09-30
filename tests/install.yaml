@@ -16,4 +16,4 @@ binary:
 script:
   - hello:
       script: |
-        echo hello
+        echo hello {{ or .ghVersion "2.34.0" }}
