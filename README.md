@@ -11,7 +11,9 @@ git based CLI interface for managing configuration as code
 ## STATUS
 * 60% FEATURES DONE 
 
-<details><summary><b>INSTALLATION</b></summary>
+## INSTALLATION
+
+<details><summary><b>BY RELEASE</b></summary>
 
 ```bash
 # LINUX x86_64
