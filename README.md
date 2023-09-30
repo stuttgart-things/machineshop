@@ -2,14 +2,20 @@
 
 git based CLI interface for managing configuration as code
 
-## STATUS
-early evil
+## FEATURES
+* RENDER TEMPLATES w/ DEFAULTS AND PARAMETERS (RENDER)
+* INSTALL MULTIPLE BINARIES FROM WEB SOURCES AT ONCE/IN PARALLEL (INSTALL)
+* RENDER + EXECUTE MULTIPLE SCRIPTS (INSTALL)
+* RETRIEVE SECRETS FROM VAULT (GET)
 
-## BINARY INSTALLATION
+## STATUS
+* 60% FEATURES DONE 
+
+<details><summary><b>INSTALLATION</b></summary>
 
 ```bash
 # LINUX x86_64
-VERSION=0.1.43
+VERSION=0.1.48
 wget https://github.com/stuttgart-things/machineShop/releases/download/${VERSION}/machineShop_Linux_x86_64.tar.gz
 tar xvfz machineShop_Linux_x86_64.tar.gz
 sudo mv machineShop /usr/bin/machineShop
@@ -18,9 +24,8 @@ sudo chmod +x /usr/bin/machineShop
 machineShop version
 ```
 
-## FEATURES
-* Render Templates w/ defaults and inline values (RENDER)
-* Retrieve secrets from vault (GET)
+</details>
+
 
 ## USAGE EXAMPLES
 
