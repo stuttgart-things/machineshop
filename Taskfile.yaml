@@ -86,3 +86,33 @@ tasks:
       - goreleaser release --skip-publish --snapshot --clean
       - goreleaser release --clean
       - rm -rf ./dist
+
+  branch:
+    desc: Create branch from main
+    cmds:
+      - git checkout main
+      - git branch
+      - git pull
+      - |
+        echo "Enter to be crated (remote) branch:"
+        read BRANCH_NAME;
+        git checkout -b ${BRANCH_NAME}
+        git push origin ${BRANCH_NAME}
+
+  pull-request:
+    desc: Create pull request into main
+    cmds:
+      - task: git-push
+      - gh pr create -t "pr" -b "pr body"
+
+  delete-branch:
+    desc: Delete branch from origin
+    cmds:
+      - git checkout main
+      - git branch
+      - git pull
+      - |
+        echo "Enter to be deleted (remote) branch:"
+        read BRANCH_NAME;
+        git branch -d ${BRANCH_NAME}
+        git push origin -d ${BRANCH_NAME}
