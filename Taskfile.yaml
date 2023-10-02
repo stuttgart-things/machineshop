@@ -64,6 +64,8 @@ tasks:
       - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
       - git push
 
+# git push --set-upstream origin GENERATE-HEADER
+
   tag:
     desc: Commit, push & tag the module
     deps: [lint, test]
@@ -103,7 +105,7 @@ tasks:
     desc: Create pull request into main
     cmds:
       - task: git-push
-      - gh pr create -t "pr" -b "pr body"
+      - gh pr create -t "pr" -b "pr body" #gh pr create -t "pr" -b "added git tasks to taskfile"
 
   delete-branch:
     desc: Delete branch from origin
