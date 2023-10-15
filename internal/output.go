@@ -18,6 +18,7 @@ var (
 	logger = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
 )
 
+// MAKE DYNAMIC
 func PrintBanner(logFilePath, gitPath, gitRepository, version, date, cmd string) {
 
 	ptermLogo, _ := pterm.DefaultBigText.WithLetters(
