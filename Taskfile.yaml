@@ -102,7 +102,7 @@ tasks:
     desc: Create pull request into main
     cmds:
       - task: git-push
-      - gh pr create -t "pr" -b "pr body" #gh pr create -t "pr" -b "added git tasks to taskfile"
+      - gh pr create -t "pr" -b "created pr for ${BRANCH_NAME} branch into main"
 
   delete-branch:
     desc: Delete branch from origin
