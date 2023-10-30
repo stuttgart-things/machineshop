@@ -64,14 +64,12 @@ tasks:
       - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
       - git push
 
-# git push --set-upstream origin GENERATE-HEADER
-
   tag:
     desc: Commit, push & tag the module
     deps: [lint, test]
     cmds:
-      - task: git-push
       - rm -rf dist
+      - task: git-push
       - go mod tidy
       - git pull --tags
       - git tag -a {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
