@@ -31,7 +31,9 @@ machineShop version
 
 ## USAGE EXAMPLES
 
-<details><summary><b>RENDER</b></summary>
+### RENDER
+
+<details><summary><b>GIT</b></summary>
 
 ```bash
 machineShop render --source git \
@@ -42,6 +44,20 @@ machineShop render --source git \
 ```
 
 </details>
+
+<details><summary><b>LOCAL</b></summary>
+
+```bash
+machineShop render \
+--source local \
+--template ../golang/machineShop/tests/template-square.yaml \
+--brackets square \
+--output stdout \
+--defaults /home/sthings/projects/stuttgart-things/packer/environments/labul-pve.yaml
+```
+
+</details>
+
 
 <details><summary><b>GET</b></summary>
 
