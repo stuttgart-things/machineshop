@@ -11,11 +11,16 @@ import (
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
 	billy "github.com/go-git/go-billy/v5"
+	"github.com/spf13/cobra"
 	"github.com/stuttgart-things/machineShop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
-
-	"github.com/spf13/cobra"
 )
+
+type TemplateBracket struct {
+	begin        string `mapstructure:"begin"`
+	end          string `mapstructure:"end"`
+	regexPattern string `mapstructure:"regex-pattern"`
+}
 
 var (
 	templateFile     string
@@ -23,6 +28,10 @@ var (
 	repo             billy.Filesystem
 	defaultVariables = make(map[string]interface{})
 	flagVariables    = make(map[string]interface{})
+	brackets         = map[string]TemplateBracket{
+		"curly":  TemplateBracket{"{{", "}}", `\{\{(.*?)\}\}`},
+		"square": TemplateBracket{"[[", "]]", `\[\[(.*?)\]\]`},
+	}
 )
 
 // renderCmd represents the render command
@@ -43,17 +52,23 @@ var renderCmd = &cobra.Command{
 		templateValues, _ := cmd.Flags().GetStringSlice("values")
 		forceRenderOption, _ := cmd.LocalFlags().GetBool("force")
 		b64DecodeOption, _ := cmd.LocalFlags().GetBool("b64")
+		bracketFormat, _ := cmd.LocalFlags().GetString("brackets")
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/RENDER")
 
-		// fmt.Println(source, templatePath, defaultsPath)
+		// Verify Bracket Format
+		_, bracketFormatExists := brackets[bracketFormat]
+		if !bracketFormatExists {
+			log.Warn("GIVEN BRACKET FORMAT DOES NOT EXIST - GOING TO DEFAULT ", bracketFormat)
+			bracketFormat = "curly"
+		}
+
+		log.Info("BRACKET FORMAT: ", bracketFormat)
 		log.Info("TEMPLATE-PATH: ", templatePath)
 		log.Info("DEFAULTS: ", defaultsPath)
 		log.Info("OUTPUT-FORMAT: ", outputFormat)
 		log.Info("DESTINATION-PATH: ", destinationPath+"\n")
-
-		// GET REPO + READ TEMPLATE + DEFAULTS
 
 		// HANDLE SOURCE: GIT FOR TEMPLATE + DEFAULTS
 		if source == "git" {
@@ -63,9 +78,19 @@ var renderCmd = &cobra.Command{
 			// READ DEFAULTS (IF DEFINED)
 			if defaultsPath != "" {
 				defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
+
+				log.Error("HERE!")
+				log.Error("HERE!")
+				log.Error("HERE!")
+
 				log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
 				fmt.Println(defaultsFile)
 				defaultVariables = sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsFile))
+
+				log.Error("HERE2!")
+				log.Error("HERE2!")
+				log.Error("HERE2!")
+
 			} else {
 				log.Info("NO DEFAULTS FILE FROM GIT DEFINED")
 			}
@@ -93,7 +118,6 @@ var renderCmd = &cobra.Command{
 					log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
 					fmt.Println(defaultsFile)
 					defaultVariables = sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsFile))
-
 				} else {
 					log.Error("LOCAL DEFAULTS FILE NOT FOUND : ", defaultsPath)
 					os.Exit(3)
@@ -124,7 +148,7 @@ var renderCmd = &cobra.Command{
 			renderOption = "missingkey=zero"
 		}
 
-		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, "{{", "}}", variables)
+		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, variables)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -140,9 +164,27 @@ func init() {
 	renderCmd.Flags().String("source", "git", "source of profile: git or local")
 	renderCmd.Flags().String("template", "tests/template.yaml", "path to to be rendered template")
 	renderCmd.Flags().String("defaults", "", "path to defaults template file")
+	renderCmd.Flags().String("brackets", "curly", "template bracket format - curly|square")
 	renderCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
 	renderCmd.Flags().String("destination", "", "path to output (if output file)")
 	renderCmd.Flags().Bool("force", false, "force rendering by missing keys")
 	renderCmd.Flags().StringSlice("values", []string{}, "templating values")
 	renderCmd.Flags().Bool("b64", false, "decode base64 for output")
 }
+
+// func ReadYamlKeyValuesFromFile(yamlFileContent []byte) (yamlStructure map[string]interface{}) {
+
+// 	yamlStructure = make(map[string]interface{})
+// 	data := make(map[interface{}]interface{})
+
+// 	err := yamlv3.Unmarshal(yamlFileContent, &data)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+
+// 	for k, v := range data {
+// 		yamlStructure[fmt.Sprintf("%v", k)] = fmt.Sprintf("%v", v)
+// 	}
+
+// 	return
+// }
