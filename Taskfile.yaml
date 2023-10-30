@@ -84,7 +84,6 @@ tasks:
       - unset GITLAB_TOKEN
       - goreleaser healthcheck
       - goreleaser check
-      # - "sed -i 's:^\[DEV\]\:.*$:\[DEV\]\: v0.1.1:g' README.md"
       - goreleaser release --skip-publish --snapshot --clean
       - goreleaser release --clean
       - rm -rf ./dist
