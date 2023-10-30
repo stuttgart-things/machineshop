@@ -44,7 +44,12 @@ func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, 
 	if err != nil {
 		return fmt.Errorf("Could not create new file: %w", err)
 	}
-	newFile.Write(fileContent)
+
+	_, err = newFile.Write(fileContent)
+	if err != nil {
+		return fmt.Errorf("Could not create new file: %w", err)
+	}
+
 	newFile.Close()
 
 	// DELETE file

@@ -9,7 +9,7 @@ git based CLI interface for managing configuration as code
 * RETRIEVE SECRETS FROM VAULT (GET)
 
 ## STATUS
-* 60% FEATURES DONE 
+* 60% FEATURES DONE
 
 ## INSTALLATION
 
@@ -37,7 +37,7 @@ machineShop version
 machineShop render --source git \
 --git https://github.com/stuttgart-things/stuttgart-things.git \
 --defaults packer/environments/labul-vsphere.yaml \
---template packer/os/ubuntu23.hcl \
+--template packer/os/ubuntu23-vsphere.pkr.tpl.hcl \
 --output stdout
 ```
 

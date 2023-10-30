@@ -5,6 +5,7 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/stuttgart-things/machineShop/internal"
@@ -32,15 +33,34 @@ var pushCmd = &cobra.Command{
 		destinationPath, _ := cmd.LocalFlags().GetString("destination")
 
 		// VERIFY IF SOURCE FILE IS EXISTING
-		sourceExists, _ := sthingsBase.VerifyIfFileOrDirExists(sourceFile, "file")
-		if sourceExists {
-			log.Info("SOURCE FOUND : ", sourceFile)
+		if sourceFile != "" {
+			sourceExists, _ := sthingsBase.VerifyIfFileOrDirExists(sourceFile, "file")
+			if sourceExists {
+				log.Info("SOURCE FOUND : ", sourceFile)
+			} else {
+				log.Error("SOURCE NOT FOUND : ", sourceFile)
+				os.Exit(3)
+			}
 		} else {
-			log.Error("SOURCE NOT FOUND : ", sourceFile)
+			log.Error("SOURCE UNDEFINED")
 			os.Exit(3)
 		}
 
-		if target == "git" {
+		switch target {
+
+		case "s3":
+			fmt.Println("s3")
+			// VERIFY S3 ENV VARS
+			// MINIO_URL
+			// ACCESS_KEY_ID
+			// SECRET_ACCESS_KEY
+			// SECURE
+
+			// sourceFile
+			// destinationPath e.g. bucket:filepath/objectname
+
+		case "git":
+
 			fileContent := sthingsBase.ReadFileToVariable(sourceFile)
 
 			gitUser = internal.ValidateGetVaultSecretValue(gitUser, log)
