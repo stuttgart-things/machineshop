@@ -1,0 +1,18 @@
+---
+profile:
+  defaults: tests/default.yaml
+  repository: https://github.com/stuttgart-things/stuttgart-things.git
+  environment: labul-pve labul-vsphere
+
+templates:
+  - vm:
+      template: tests/vm-template.yaml
+      defaultTargetDir: clusters/{{ lab }}/{{ cloud }}
+  - provisioning:
+      template: tests/provisoning-template.yaml
+      defaultTargetDir: clusters/{{ lab }}/{{ cloud }}
+
+binaries:
+  - decksman:
+      url: https://artifacts.tiab.labda.sva.de/decksman/decksman-{{ or .decksmanVersion "0.8.296" }}.zip
+      bin: decksman
