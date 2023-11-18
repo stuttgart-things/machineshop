@@ -67,17 +67,12 @@ var flowCmd = &cobra.Command{
 		}
 
 		readInProfile := sthingsBase.ReadFileToVariable(profilePath)
-		// keys := ReadKeysFromYamlDict("environment", "tests/workflow", "yaml")
-		// fmt.Println(keys)
-		// GET ENVIRONMENTS
 
 		templateFile := sthingsBase.ReadFileToVariable(templatePath)
 
 		defaultVariables := sthingsCli.ReadYamlKeyValuesFromFile([]byte(readInProfile))
 		fmt.Println(defaultVariables)
 
-		// hello := defaultVariables["environment"]
-		// fmt.Println(hello)
 		hello := defaultVariables["environment"]
 		fmt.Println(hello)
 
