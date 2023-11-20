@@ -9,32 +9,32 @@ import (
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
+	"golang.org/x/exp/maps"
 
 	"github.com/spf13/cobra"
 )
 
 var (
-	templatePath = "tests/template.yaml"
-	renderOption = "missingkey=zero"
+	templatePath   = "tests/template.yaml"
+	renderOption   = "missingkey=zero"
+	templateConfig Default
+	templateKeys   = make(map[string]int)
 )
 
 type Profile struct {
-	Defaults    string `mapstructure:"defaults"`
-	Repository  string `mapstructure:"repository"`
-	Environment string `mapstructure:"environment"`
+	Defaults    []string `mapstructure:"defaults"`
+	Repository  string   `mapstructure:"repository"`
+	Environment []string `mapstructure:"environment"`
 }
 
 type Default struct {
-	DefaultProfile Profile `mapstructure:"profile"`
+	DefaultProfile  Profile               `mapstructure:"profile"`
+	TemplateProfile []map[string]Template `mapstructure:"templates"`
 }
 
-type Binary struct {
-	Url string `mapstructure:"url"`
-	Bin string `mapstructure:"bin"`
-}
-
-type Config struct {
-	BinaryProfile []map[string]Binary `mapstructure:"binaries"`
+type Template struct {
+	TemplatePath     string `mapstructure:"template"`
+	DefaultTargetDir string `mapstructure:"defaultTargetDir"`
 }
 
 // flowCmd represents the flow command
@@ -47,52 +47,40 @@ var flowCmd = &cobra.Command{
 
 		// READ FLAGS
 		profilePath, _ := cmd.LocalFlags().GetString("profile")
-		var config Config
-		var config1 Default
-		m := make(map[string]int)
 
 		// READ PROFILE
-		log.Info("LOCAL PROFILE FOUND : ", profilePath)
+		templateConfig = sthingsCli.ReadYamlToObject(profilePath, ".yaml", templateConfig).(Default)
+		fmt.Println(templateConfig.DefaultProfile.Defaults)
+		fmt.Println(templateConfig.DefaultProfile.Repository)
 
-		config1 = sthingsCli.ReadYamlToObject(profilePath, ".yaml", config1).(Default)
-		fmt.Println(config1.DefaultProfile.Defaults)
+		for i, config := range templateConfig.TemplateProfile {
 
-		config = sthingsCli.ReadYamlToObject(profilePath, ".yaml", config).(Config)
-
-		for i, config := range config.BinaryProfile {
-
-			for binary := range config {
-				m[binary] = i
+			for template := range config {
+				templateKeys[template] = i
 			}
 		}
 
-		readInProfile := sthingsBase.ReadFileToVariable(profilePath)
+		log.Info("LOCAL PROFILE READ : ", profilePath)
 
-		templateFile := sthingsBase.ReadFileToVariable(templatePath)
+		selectedTemplates := sthingsCli.AskMultiSelectQuestion("SELECT TO BE RENDERED TEMPLATE(S):", maps.Keys(templateKeys))
+		fmt.Println(selectedTemplates)
+
+		selectedDefaults := sthingsCli.AskMultiSelectQuestion("SELECT TO BE USED DEFAULT(S):", templateConfig.DefaultProfile.Environment)
+		fmt.Println(selectedDefaults)
+
+		readInProfile := sthingsBase.ReadFileToVariable(profilePath)
 
 		defaultVariables := sthingsCli.ReadYamlKeyValuesFromFile([]byte(readInProfile))
 		fmt.Println(defaultVariables)
 
-		hello := defaultVariables["environment"]
-		fmt.Println(hello)
+		// renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, brackets["curly"].begin, brackets["curly"].end, defaultVariables)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
 
-		// sthingsCli.AskMultiSelectQuestion("SELECT BINARIES TO INSTALL:", bla)
+		// fmt.Println(string(renderedTemplate))
 
-		// bla = defaultVariables["environment"].(string)
-
-		// s := strings.Split(hello.(string), "")
-		// fmt.Println(s)
-
-		// sthingsCli.AskMultiSelectQuestion("SELECT BINARIES TO INSTALL:", strings.Split(hello, ""))
-
-		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, brackets["curly"].begin, brackets["curly"].end, defaultVariables)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		fmt.Println(string(renderedTemplate))
-
-		sthingsBase.WriteDataToFile("./hello.yaml", string(renderedTemplate))
+		// sthingsBase.WriteDataToFile("./hello.yaml", string(renderedTemplate))
 
 	},
 }
