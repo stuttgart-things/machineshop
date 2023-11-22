@@ -464,8 +464,8 @@ github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7 h1:nVo
 github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7/go.mod h1:RhH+7myjNLGs/BFeYO5U7ekmM7OsymsIOUN/DkewR3g=
 github.com/stuttgart-things/sthingsBase v0.1.31 h1:CQJy4c2Np9ykRa/5p703Fcx2bVA+2willTOJSG0v7vk=
 github.com/stuttgart-things/sthingsBase v0.1.31/go.mod h1:W5FmSsDZBfm1wfD/RO91N/nbB8ACGbC4eBBd1ALqIx8=
-github.com/stuttgart-things/sthingsCli v0.1.72 h1:IvTNoKQnSO6BxfBpwwpp82wWCBc64NWXXd7zqbFlRbU=
-github.com/stuttgart-things/sthingsCli v0.1.72/go.mod h1:4R6ldRRjyv73bz6QxhFz8sBV512VppndEl/jWNrkzVM=
+github.com/stuttgart-things/sthingsCli v0.1.75 h1:QwA6H9w9NlV9pHyTk3HIN4SRhLBLL7iUZ8isG6wNs+M=
+github.com/stuttgart-things/sthingsCli v0.1.75/go.mod h1:4R6ldRRjyv73bz6QxhFz8sBV512VppndEl/jWNrkzVM=
 github.com/subosito/gotenv v1.4.2 h1:X1TuBLAMDFbaTAChgCBLu3DU3UPyELpnF2jjJ2cz/S8=
 github.com/subosito/gotenv v1.4.2/go.mod h1:ayKnFf/c6rvx/2iiLrJUk1e6plDbT3edrFNGqEflhK0=
 github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5/go.mod h1:ncp9v5uamzpCO7NfCPTXjqaC+bZgJeR0sMTm6dMHP7U=

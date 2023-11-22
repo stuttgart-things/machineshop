@@ -1,9 +1,9 @@
 ---
 profile:
+  repository: https://github.com/stuttgart-things/stuttgart-things.git
   defaults:
     - tests/default.yaml
     - tests/labul-pve.yaml
-  repository: https://github.com/stuttgart-things/stuttgart-things.git
 
 templates:
   - build-vm-terraform:

@@ -18,6 +18,7 @@ var (
 	templateConfig Default
 	templateKeys   = make(map[string]int)
 	allDefaults    map[string]interface{}
+	globalValues   map[string]interface{}
 )
 
 type Profile struct {
@@ -48,8 +49,6 @@ var flowCmd = &cobra.Command{
 
 		// READ PROFILE
 		templateConfig = sthingsCli.ReadYamlToObject(profilePath, ".yaml", templateConfig).(Default)
-		// fmt.Println(templateConfig.DefaultProfile.Defaults)
-		// fmt.Println(templateConfig.DefaultProfile.Repository)
 
 		// READ TEMPLATE KEYS
 		for i, config := range templateConfig.TemplateProfile {
@@ -60,10 +59,7 @@ var flowCmd = &cobra.Command{
 
 		log.Info("LOCAL PROFILE READ : ", profilePath)
 
-		// SELECT TEMPLATES
-		// selectedTemplates := sthingsCli.AskMultiSelectQuestion("SELECT TO BE RENDERED TEMPLATE(S):", maps.Keys(templateKeys))
-		// log.Info("SELECTED TO BE USED ACTIONS: ", selectedTemplates)
-		selectedDefaults := sthingsCli.AskMultiSelectQuestion("SELECT TO BE USED DEFAULT(S):", templateConfig.DefaultProfile.Defaults)
+		selectedDefaults := sthingsCli.AskMultiSelectQuestion("SELECT DEFAULT FILE(S):", templateConfig.DefaultProfile.Defaults)
 
 		// READ DEFAULTS
 		for _, defaultsFile := range selectedDefaults {
@@ -77,38 +73,28 @@ var flowCmd = &cobra.Command{
 		for _, templateKeys := range templateConfig.TemplateProfile {
 
 			for _, i := range templateKeys {
-				fmt.Println(i.TemplatePath)
+				log.Info("RENDERING TEMPLATE: ", i.TemplatePath)
+
+				// LOAD TEMPLATE
+				templateKey := sthingsCli.GetYamlStringKey("template", i.TemplatePath, ".yaml")
+				defaultsKey := sthingsCli.GetYamlStringKey("defaults", i.TemplatePath, ".yaml")
+
+				// LOAD FILE DEFAULTS
+				templateDefaults := sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsKey))
+				log.Info("INLINE DEFAULTS FROM TEMPLATE: ", templateDefaults)
+
+				allDefaults = sthingsBase.MergeMaps(allDefaults, templateDefaults)
+				log.Info("MERGED/ALL DEFAULTS: ", allDefaults)
+
+				renderedTemplate, globalValues := sthingsCli.RenderTemplateSurvey(templateKey, allDefaults)
+				fmt.Println(renderedTemplate)
+
+				allDefaults = sthingsBase.MergeMaps(allDefaults, globalValues)
+				fmt.Println(allDefaults)
+
+				sthingsBase.WriteDataToFile("/tmp/hello.yaml", string(renderedTemplate))
 			}
 		}
-
-		// LOAD TEMPLATE
-		templateKey := sthingsCli.GetYamlStringKey("template", "tests/maverick", ".yaml")
-		defaultsKey := sthingsCli.GetYamlStringKey("defaults", "tests/maverick", ".yaml")
-
-		// fmt.Println(templateKey)
-
-		// LOAD FILE DEFAULTS
-		fmt.Println(defaultsKey)
-		templateDefaults := sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsKey))
-		log.Info("DEFAULTS FROM FILE: ", templateDefaults)
-
-		allDefaults = sthingsBase.MergeMaps(allDefaults, templateDefaults)
-		log.Info("ALL DEFAULTS: ", allDefaults)
-
-		renderedTemplate, globalValues := sthingsCli.RenderTemplateSurvey(templateKey, allDefaults)
-		fmt.Println(renderedTemplate)
-		fmt.Println(globalValues)
-
-		// GetYamlStringKey
-		// renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, brackets["curly"].begin, brackets["curly"].end, defaultVariables)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-
-		// fmt.Println(string(renderedTemplate))
-
-		sthingsBase.WriteDataToFile("/tmp/hello.yaml", string(renderedTemplate))
-
 	},
 }
 
