@@ -3,16 +3,12 @@ profile:
   defaults:
     - tests/default.yaml
     - tests/labul-pve.yaml
-
   repository: https://github.com/stuttgart-things/stuttgart-things.git
-  environment:
-    - labul-pve
-    - labul-vsphere
 
 templates:
-  - vm:
+  - build-vm-terraform:
       template: tests/vm-template.yaml
       defaultTargetDir: clusters/{{ lab }}/{{ cloud }}
-  - provisioning:
+  - provision-machine-ansible:
       template: tests/provisoning-template.yaml
       defaultTargetDir: clusters/{{ lab }}/{{ cloud }}

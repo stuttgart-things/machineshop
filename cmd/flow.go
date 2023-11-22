@@ -7,11 +7,9 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
-	"golang.org/x/exp/maps"
-
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -19,12 +17,12 @@ var (
 	renderOption   = "missingkey=zero"
 	templateConfig Default
 	templateKeys   = make(map[string]int)
+	allDefaults    map[string]interface{}
 )
 
 type Profile struct {
-	Defaults    []string `mapstructure:"defaults"`
-	Repository  string   `mapstructure:"repository"`
-	Environment []string `mapstructure:"environment"`
+	Defaults   []string `mapstructure:"defaults"`
+	Repository string   `mapstructure:"repository"`
 }
 
 type Default struct {
@@ -50,11 +48,11 @@ var flowCmd = &cobra.Command{
 
 		// READ PROFILE
 		templateConfig = sthingsCli.ReadYamlToObject(profilePath, ".yaml", templateConfig).(Default)
-		fmt.Println(templateConfig.DefaultProfile.Defaults)
-		fmt.Println(templateConfig.DefaultProfile.Repository)
+		// fmt.Println(templateConfig.DefaultProfile.Defaults)
+		// fmt.Println(templateConfig.DefaultProfile.Repository)
 
+		// READ TEMPLATE KEYS
 		for i, config := range templateConfig.TemplateProfile {
-
 			for template := range config {
 				templateKeys[template] = i
 			}
@@ -62,17 +60,46 @@ var flowCmd = &cobra.Command{
 
 		log.Info("LOCAL PROFILE READ : ", profilePath)
 
-		selectedTemplates := sthingsCli.AskMultiSelectQuestion("SELECT TO BE RENDERED TEMPLATE(S):", maps.Keys(templateKeys))
-		fmt.Println(selectedTemplates)
+		// SELECT TEMPLATES
+		// selectedTemplates := sthingsCli.AskMultiSelectQuestion("SELECT TO BE RENDERED TEMPLATE(S):", maps.Keys(templateKeys))
+		// log.Info("SELECTED TO BE USED ACTIONS: ", selectedTemplates)
+		selectedDefaults := sthingsCli.AskMultiSelectQuestion("SELECT TO BE USED DEFAULT(S):", templateConfig.DefaultProfile.Defaults)
 
-		selectedDefaults := sthingsCli.AskMultiSelectQuestion("SELECT TO BE USED DEFAULT(S):", templateConfig.DefaultProfile.Environment)
-		fmt.Println(selectedDefaults)
+		// READ DEFAULTS
+		for _, defaultsFile := range selectedDefaults {
+			log.Info("READ DEFAULTS FROM: ", defaultsFile)
+			defaults := sthingsCli.ReadYamlKeyValuesFromFile([]byte(sthingsBase.ReadFileToVariable(defaultsFile)))
+			log.Info("DEFAULTS: ", defaults)
+			allDefaults = sthingsBase.MergeMaps(allDefaults, defaults)
+		}
+		log.Info("ALL DEFAULTS: ", allDefaults)
 
-		readInProfile := sthingsBase.ReadFileToVariable(profilePath)
+		for _, templateKeys := range templateConfig.TemplateProfile {
 
-		defaultVariables := sthingsCli.ReadYamlKeyValuesFromFile([]byte(readInProfile))
-		fmt.Println(defaultVariables)
+			for _, i := range templateKeys {
+				fmt.Println(i.TemplatePath)
+			}
+		}
 
+		// LOAD TEMPLATE
+		templateKey := sthingsCli.GetYamlStringKey("template", "tests/maverick", ".yaml")
+		defaultsKey := sthingsCli.GetYamlStringKey("defaults", "tests/maverick", ".yaml")
+
+		// fmt.Println(templateKey)
+
+		// LOAD FILE DEFAULTS
+		fmt.Println(defaultsKey)
+		templateDefaults := sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsKey))
+		log.Info("DEFAULTS FROM FILE: ", templateDefaults)
+
+		allDefaults = sthingsBase.MergeMaps(allDefaults, templateDefaults)
+		log.Info("ALL DEFAULTS: ", allDefaults)
+
+		renderedTemplate, globalValues := sthingsCli.RenderTemplateSurvey(templateKey, allDefaults)
+		fmt.Println(renderedTemplate)
+		fmt.Println(globalValues)
+
+		// GetYamlStringKey
 		// renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, brackets["curly"].begin, brackets["curly"].end, defaultVariables)
 		// if err != nil {
 		// 	fmt.Println(err)
@@ -80,7 +107,7 @@ var flowCmd = &cobra.Command{
 
 		// fmt.Println(string(renderedTemplate))
 
-		// sthingsBase.WriteDataToFile("./hello.yaml", string(renderedTemplate))
+		sthingsBase.WriteDataToFile("/tmp/hello.yaml", string(renderedTemplate))
 
 	},
 }
