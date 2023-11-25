@@ -118,17 +118,23 @@ var flowCmd = &cobra.Command{
 				templateDefaults := sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsKey))
 				log.Info("INLINE DEFAULTS FROM TEMPLATE: ", templateDefaults)
 
+				// MERGE DEFAULT FILES
 				allDefaults = sthingsBase.MergeMaps(allDefaults, templateDefaults)
 				log.Info("MERGED/ALL DEFAULTS: ", allDefaults)
 
+				// RENDER TEMPLATE
 				renderedTemplate, globalValues := sthingsCli.RenderTemplateSurvey(templateKey, allDefaults)
+				log.Info("ALL GLOBAL VALUES: ", globalValues)
 				fmt.Println(renderedTemplate)
 
+				// MERGE DEFAULT FILES W/ CACHED GLOABLS FROM PREVIOUS RENDERING RUN
 				allDefaults = sthingsBase.MergeMaps(allDefaults, globalValues)
-				fmt.Println(allDefaults)
 
-				selectedOuputDir := sthingsCli.AskMultiSelectQuestion("SELECT OUTPUT DIR:", []string{"/tmp", workspaceDir})
-				sthingsBase.WriteDataToFile(selectedOuputDir+"/"+templateKeys+".yaml", string(renderedTemplate))
+				selectedOuputDir := sthingsCli.AskSingleSelectQuestion("SELECT OUTPUT DIR:", []string{"/tmp", workspaceDir})
+				sthingsBase.WriteDataToFile(selectedOuputDir+"/"+"hello.yaml", string(renderedTemplate))
+
+				log.Info("RENDERED FILE WAS WRITTEN TO: ", selectedOuputDir+"/"+sthingsCli.AskSingleInputQuestion("Filename", ""))
+
 			}
 		}
 	},
