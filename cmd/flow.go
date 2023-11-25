@@ -107,12 +107,12 @@ var flowCmd = &cobra.Command{
 		// RENDER TEMPLATES
 		for _, templateKeys := range templateConfig.TemplateProfile {
 
-			for _, i := range templateKeys {
-				log.Info("RENDERING TEMPLATE: ", i.TemplatePath)
+			for _, template := range templateKeys {
+				log.Info("RENDERING TEMPLATE: ", template.TemplatePath)
 
 				// LOAD TEMPLATE
-				templateKey := sthingsCli.GetYamlStringKey("template", i.TemplatePath, ".yaml")
-				defaultsKey := sthingsCli.GetYamlStringKey("defaults", i.TemplatePath, ".yaml")
+				templateKey := sthingsCli.GetYamlStringKey("template", template.TemplatePath, ".yaml")
+				defaultsKey := sthingsCli.GetYamlStringKey("defaults", template.TemplatePath, ".yaml")
 
 				// LOAD FILE DEFAULTS
 				templateDefaults := sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsKey))
@@ -127,7 +127,8 @@ var flowCmd = &cobra.Command{
 				allDefaults = sthingsBase.MergeMaps(allDefaults, globalValues)
 				fmt.Println(allDefaults)
 
-				sthingsBase.WriteDataToFile("/tmp/hello.yaml", string(renderedTemplate))
+				selectedOuputDir := sthingsCli.AskMultiSelectQuestion("SELECT OUTPUT DIR:", []string{"/tmp", workspaceDir})
+				sthingsBase.WriteDataToFile(selectedOuputDir+"/"+templateKeys+".yaml", string(renderedTemplate))
 			}
 		}
 	},
