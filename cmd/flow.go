@@ -61,19 +61,20 @@ var flowCmd = &cobra.Command{
 			// CLONE REPOSITORY
 			repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 
-			// GET PROFILE TO FS
+			// STORE PROFILE ON FS
 			profileFile := sthingsCli.ReadFileContentFromGitRepo(repo, profilePath)
 			sthingsBase.WriteDataToFile(workspaceDir+filepath.Base(profilePath), string(profileFile))
-			log.Info("CREATED PROFILE ON WORKSPACE: ", profilePath)
+			profilePath = workspaceDir + filepath.Base(profilePath)
+			log.Info("CREATED PROFILE FILE ON WORKSPACE: ", profilePath)
 
-			// GET DEFAULTS TO FS
+			// STORE DEFAULTS ON FS
 			allDefaultFiles, _ := sthingsCli.GetFileListFromGitRepository(defaultsDir, repo)
 			fmt.Println(allDefaultFiles)
 
 			for _, file := range allDefaultFiles {
 				defaultFile := sthingsCli.ReadFileContentFromGitRepo(repo, defaultsDir+file)
 				sthingsBase.WriteDataToFile(workspaceDir+file, defaultFile)
-				log.Info("CREATED DEFAULT FILE ON WORKSPACE: ", profilePath)
+				log.Info("CREATED DEFAULT FILE ON WORKSPACE: ", workspaceDir+file)
 			}
 		}
 
@@ -92,6 +93,9 @@ var flowCmd = &cobra.Command{
 
 		// READ DEFAULTS
 		for _, defaultsFile := range selectedDefaults {
+			if source == "git" {
+				defaultsFile = defaultsDir + filepath.Base(defaultsFile)
+			}
 			log.Info("READ DEFAULTS FROM: ", defaultsFile)
 
 			defaults = sthingsCli.ReadYamlKeyValuesFromFile([]byte(sthingsBase.ReadFileToVariable(defaultsFile)))
