@@ -93,10 +93,12 @@ var flowCmd = &cobra.Command{
 
 		// READ DEFAULTS
 		for _, defaultsFile := range selectedDefaults {
+
 			if source == "git" {
-				defaultsFile = defaultsDir + filepath.Base(defaultsFile)
+				defaultsFile = workspaceDir + filepath.Base(defaultsFile)
 			}
-			log.Info("READ DEFAULTS FROM: ", defaultsFile)
+
+			log.Info("READING DEFAULTS FROM: ", defaultsFile)
 
 			defaults = sthingsCli.ReadYamlKeyValuesFromFile([]byte(sthingsBase.ReadFileToVariable(defaultsFile)))
 			log.Info("DEFAULTS: ", defaults)
