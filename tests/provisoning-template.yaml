@@ -1,3 +1,8 @@
+
+# boolean surveys yes-no
+# multiselect survey + rendering list
+# set already defined value without asking
+
 defaults: |
   resourceNamespace: tektoncd namespace|tektoncd
   tektonPipelineRun: name of pipleinerun|var+resourceName
