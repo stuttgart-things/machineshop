@@ -13,27 +13,27 @@ template: |
   apiVersion: machineshop.sthings.tiab.ssc.sva.de/v1beta1
   kind: Terraform
   metadata:
-    name: "{{ call .SingleInputSurvey "resourceName" }}"
-    namespace: "{{ call .SingleInputSurvey "resourceNamespace" }}"
+    name: {{ call .SingleInputSurvey "resourceName" }}
+    namespace: {{ call .SingleInputSurvey "resourceNamespace" }}
     labels:
       app.kubernetes.io/name: terraform
       app.kubernetes.io/part-of: machine-shop-operator
       app.kubernetes.io/created-by: machine-shop-operator
   spec:
     variables:
-      - vm_name="{{ call .SingleInputSurvey "vmName" }}"
+      - vm_name=pve-{{ call .SingleInputSurvey "vmName" }}"
       - vm_count={{ call .SingleSelectSurvey "countVMs" }}
       - vm_num_cpus={{ call .SingleSelectSurvey "numCPUs" }}
       - vm_memory={{ call .SingleSelectSurvey "vmMemory" }}
-      - vm_template="{{ call .SingleSelectSurvey "vmTemplate" }}"
+      - vm_template={{ call .SingleSelectSurvey "vmTemplate" }}"
       - pve_network="{{ call .SingleSelectSurvey "vmNetwork" }}"
       - pve_datastore="v3700"
       - vm_disk_size="128G"
       - pve_folder_path="stuttgart-things"
-      - pve_cluster_node="sthings-pve1"
+      - pve_cluster_node="{{ call .SingleSelectSurvey "clusterNode" }}"
     module:
-      - moduleName="{{ call .SingleInputSurvey "moduleName" }}"
-      - backendKey="{{ call .SingleInputSurvey "backendKey" }}".tfstate
+      - moduleName={{ call .SingleInputSurvey "moduleName" }}
+      - backendKey={{ call .SingleInputSurvey "backendKey" }}.tfstate
       - moduleSourceUrl=https://artifacts.tiab.labda.sva.de/modules/proxmox-vm.zip
       - backendEndpoint=https://artifacts.tiab.labda.sva.de
       - backendRegion=main

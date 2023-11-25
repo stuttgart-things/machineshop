@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
@@ -16,6 +17,7 @@ var (
 	templatePath   = "tests/template.yaml"
 	renderOption   = "missingkey=zero"
 	templateConfig Default
+	defaults       = make(map[string]interface{})
 	templateKeys   = make(map[string]int)
 	allDefaults    map[string]interface{}
 	globalValues   map[string]interface{}
@@ -46,6 +48,34 @@ var flowCmd = &cobra.Command{
 
 		// READ FLAGS
 		profilePath, _ := cmd.LocalFlags().GetString("profile")
+		source, _ := cmd.LocalFlags().GetString("source")
+		workspaceDir, _ := cmd.LocalFlags().GetString("workspace")
+		defaultsDir, _ := cmd.LocalFlags().GetString("defaults")
+
+		// READ CONFIG
+		if source == "git" {
+			// GET REPO + READ PROFILE FILE
+			sthingsBase.CreateNestedDirectoryStructure(workspaceDir, 0777)
+			log.Info("CREATED WORKSPACE DIR: ", workspaceDir)
+
+			// CLONE REPOSITORY
+			repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
+
+			// GET PROFILE TO FS
+			profileFile := sthingsCli.ReadFileContentFromGitRepo(repo, profilePath)
+			sthingsBase.WriteDataToFile(workspaceDir+filepath.Base(profilePath), string(profileFile))
+			log.Info("CREATED PROFILE ON WORKSPACE: ", profilePath)
+
+			// GET DEFAULTS TO FS
+			allDefaultFiles, _ := sthingsCli.GetFileListFromGitRepository(defaultsDir, repo)
+			fmt.Println(allDefaultFiles)
+
+			for _, file := range allDefaultFiles {
+				defaultFile := sthingsCli.ReadFileContentFromGitRepo(repo, defaultsDir+file)
+				sthingsBase.WriteDataToFile(workspaceDir+file, defaultFile)
+				log.Info("CREATED DEFAULT FILE ON WORKSPACE: ", profilePath)
+			}
+		}
 
 		// READ PROFILE
 		templateConfig = sthingsCli.ReadYamlToObject(profilePath, ".yaml", templateConfig).(Default)
@@ -58,13 +88,13 @@ var flowCmd = &cobra.Command{
 		}
 
 		log.Info("LOCAL PROFILE READ : ", profilePath)
-
 		selectedDefaults := sthingsCli.AskMultiSelectQuestion("SELECT DEFAULT FILE(S):", templateConfig.DefaultProfile.Defaults)
 
 		// READ DEFAULTS
 		for _, defaultsFile := range selectedDefaults {
 			log.Info("READ DEFAULTS FROM: ", defaultsFile)
-			defaults := sthingsCli.ReadYamlKeyValuesFromFile([]byte(sthingsBase.ReadFileToVariable(defaultsFile)))
+
+			defaults = sthingsCli.ReadYamlKeyValuesFromFile([]byte(sthingsBase.ReadFileToVariable(defaultsFile)))
 			log.Info("DEFAULTS: ", defaults)
 			allDefaults = sthingsBase.MergeMaps(allDefaults, defaults)
 		}
@@ -93,6 +123,7 @@ var flowCmd = &cobra.Command{
 				fmt.Println(allDefaults)
 
 				sthingsBase.WriteDataToFile("/tmp/hello.yaml", string(renderedTemplate))
+
 			}
 		}
 	},
@@ -100,6 +131,8 @@ var flowCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(flowCmd)
-	flowCmd.Flags().String("profile", "tests/workflow.yaml", "path to to be used profile")
-
+	flowCmd.Flags().String("profile", "machineShop/workflows/build-vm-provision.yaml", "path to to be used profile")
+	flowCmd.Flags().String("source", "git", "source of profile: git or local")
+	flowCmd.Flags().String("workspace", "/tmp/machineShopFlow/", "dir for tmp files")
+	flowCmd.Flags().String("defaults", "machineShop/defaults/", "defaults dir")
 }
