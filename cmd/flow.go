@@ -51,6 +51,7 @@ var flowCmd = &cobra.Command{
 		source, _ := cmd.LocalFlags().GetString("source")
 		workspaceDir, _ := cmd.LocalFlags().GetString("workspace")
 		defaultsDir, _ := cmd.LocalFlags().GetString("defaults")
+		templatesDir, _ := cmd.LocalFlags().GetString("templates")
 
 		// READ CONFIG FROM GIT REPO
 		if source == "git" {
@@ -75,12 +76,22 @@ var flowCmd = &cobra.Command{
 				sthingsBase.WriteDataToFile(workspaceDir+file, defaultFile)
 				log.Info("CREATED DEFAULT FILE ON WORKSPACE: ", workspaceDir+file)
 			}
+
+			// STORE TEMPLATES ON FS
+			allTemplateFiles, _ := sthingsCli.GetFileListFromGitRepository(templatesDir, repo)
+			for _, file := range allTemplateFiles {
+				templateFile := sthingsCli.ReadFileContentFromGitRepo(repo, templatesDir+file)
+				sthingsBase.WriteDataToFile(workspaceDir+file, templateFile)
+				log.Info("CREATED TEMPLATE FILE ON WORKSPACE: ", workspaceDir+file)
+			}
+
 		}
 
 		// READ PROFILE FILE
 		templateConfig = sthingsCli.ReadYamlToObject(profilePath, ".yaml", templateConfig).(Default)
 		log.Info("LOCAL PROFILE READ IN: ", profilePath)
 		for i, config := range templateConfig.TemplateProfile {
+
 			for template := range config {
 				templateKeys[template] = i
 			}
@@ -89,7 +100,7 @@ var flowCmd = &cobra.Command{
 		// SELECT DEFAULTS
 		selectedDefaults := sthingsCli.AskMultiSelectQuestion("SELECT DEFAULT FILE(S):", templateConfig.DefaultProfile.Defaults)
 
-		// READ DEFAULTS
+		// READ DEFAULTS FROM FILES
 		for _, defaultsFile := range selectedDefaults {
 
 			if source == "git" {
@@ -102,6 +113,13 @@ var flowCmd = &cobra.Command{
 			log.Info("DEFAULTS: ", defaults)
 			allDefaults = sthingsBase.MergeMaps(allDefaults, defaults)
 		}
+
+		// READ DEFAULTS FROM WORKFLOW
+		defaultsKeyWorkflow := sthingsCli.GetYamlStringKey("defaults", profilePath, ".yaml")
+		defaultsWorkflow := sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsKeyWorkflow))
+		log.Info("INLINE DEFAULTS FROM WORKFLOW: ", defaultsWorkflow)
+
+		allDefaults = sthingsBase.MergeMaps(allDefaults, defaultsWorkflow)
 		log.Info("ALL DEFAULTS: ", allDefaults)
 
 		// RENDER TEMPLATES
@@ -109,6 +127,9 @@ var flowCmd = &cobra.Command{
 
 			for _, template := range templateKeys {
 				log.Info("RENDERING TEMPLATE: ", template.TemplatePath)
+
+				renderedTemplatePath, _ := sthingsCli.RenderTemplateSurvey(template.TemplatePath, allDefaults)
+				template.TemplatePath = renderedTemplatePath
 
 				// LOAD TEMPLATE
 				templateKey := sthingsCli.GetYamlStringKey("template", template.TemplatePath, ".yaml")
@@ -130,10 +151,11 @@ var flowCmd = &cobra.Command{
 				// MERGE DEFAULT FILES W/ CACHED GLOABLS FROM PREVIOUS RENDERING RUN
 				allDefaults = sthingsBase.MergeMaps(allDefaults, globalValues)
 
-				selectedOuputDir := sthingsCli.AskSingleSelectQuestion("SELECT OUTPUT DIR:", []string{"/tmp", workspaceDir})
-				sthingsBase.WriteDataToFile(selectedOuputDir+"/"+"hello.yaml", string(renderedTemplate))
+				selectedOutputDir := sthingsCli.AskSingleSelectQuestion("SELECT OUTPUT DIR:", []string{"/tmp", workspaceDir})
 
-				log.Info("RENDERED FILE WAS WRITTEN TO: ", selectedOuputDir+"/"+sthingsCli.AskSingleInputQuestion("Filename", ""))
+				sthingsBase.WriteDataToFile(selectedOutputDir+"/"+"hello.yaml", string(renderedTemplate))
+
+				log.Info("RENDERED FILE WAS WRITTEN TO: ", selectedOutputDir+"/"+sthingsCli.AskSingleInputQuestion("Filename", ""))
 
 			}
 		}
@@ -146,4 +168,5 @@ func init() {
 	flowCmd.Flags().String("source", "git", "source of profile: git or local")
 	flowCmd.Flags().String("workspace", "/tmp/machineShopFlow/", "dir for tmp files")
 	flowCmd.Flags().String("defaults", "machineShop/defaults/", "defaults dir")
+	flowCmd.Flags().String("templates", "machineShop/templates/", "templates dir")
 }
