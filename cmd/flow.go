@@ -20,7 +20,7 @@ var (
 	defaults       = make(map[string]interface{})
 	templateKeys   = make(map[string]int)
 	allDefaults    map[string]interface{}
-	globalValues   map[string]interface{}
+	globalValues   = make(map[string]interface{})
 )
 
 type Profile struct {
@@ -123,7 +123,6 @@ var flowCmd = &cobra.Command{
 		allDefaults = sthingsBase.MergeMaps(allDefaults, defaultsWorkflow)
 		log.Info("ALL DEFAULTS: ", allDefaults)
 
-		print('\n')
 		log.Info("WORKFLOW: ", templateConfig.DefaultProfile.Name)
 
 		// RENDER TEMPLATES
@@ -162,6 +161,7 @@ var flowCmd = &cobra.Command{
 				log.Info("RENDERED FILE WAS WRITTEN TO: ", selectedOutputDir+"/"+sthingsCli.AskSingleInputQuestion("Filename", ""))
 
 			}
+
 		}
 	},
 }
