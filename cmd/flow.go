@@ -24,6 +24,7 @@ var (
 )
 
 type Profile struct {
+	Name       string   `mapstructure:"name"`
 	Defaults   []string `mapstructure:"defaults"`
 	Repository string   `mapstructure:"repository"`
 }
@@ -121,6 +122,9 @@ var flowCmd = &cobra.Command{
 
 		allDefaults = sthingsBase.MergeMaps(allDefaults, defaultsWorkflow)
 		log.Info("ALL DEFAULTS: ", allDefaults)
+
+		print('\n')
+		log.Info("WORKFLOW: ", templateConfig.DefaultProfile.Name)
 
 		// RENDER TEMPLATES
 		for _, templateKeys := range templateConfig.TemplateProfile {
