@@ -109,7 +109,6 @@ tasks:
         read BRANCH_NAME;
         git checkout -b ${BRANCH_NAME}
         git push origin ${BRANCH_NAME}
-      - git branch
 
   pull-request:
     desc: Create pull request into main
