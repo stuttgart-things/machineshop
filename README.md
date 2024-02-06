@@ -31,6 +31,22 @@ machineShop version
 
 ## USAGE EXAMPLES
 
+### PUSH
+
+<details><summary><b>GIT</b></summary>
+
+```bash
+export MINIO_ACCESS_KEY=sthings
+export MINIO_SECRET_KEY=<PASSWORD>
+export MINIO_ADDR=artifacts.automation.sthings-vsphere.labul.sva.de
+export MINIO_SECURE=true
+
+machineShop push \
+--target minio \
+--source pod.yaml \
+--destination manifests:pod-example.yaml # <BUCKET>:<OBECTNAME>
+```
+
 ### RENDER
 
 <details><summary><b>GIT</b></summary>
@@ -62,6 +78,7 @@ machineShop render \
 <details><summary><b>GET</b></summary>
 
 ### REQUIREMENT: VAULT APPROLE EXPORTS
+
 ```bash
 export VAULT_NAMESPACE=root
 export VAULT_ROLE_ID=1d42d7e7-8c14-e5f9-801d-b3ecef416616
