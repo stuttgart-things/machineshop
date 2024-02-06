@@ -26,7 +26,7 @@ type Profile struct {
 
 func SelectInstallProfiles(yamlFile string) (selectedBinariesProfiles, selectedScriptProfiles []string, allConfig Profile) {
 
-	allKeys := []string{}
+	// allKeys := []string{}
 	allBinaries := []string{}
 	allScripts := []string{}
 
@@ -36,7 +36,7 @@ func SelectInstallProfiles(yamlFile string) (selectedBinariesProfiles, selectedS
 	for _, binaryProfile := range allConfig.BinaryProfile {
 
 		for key := range binaryProfile {
-			allKeys = append(allKeys, key)
+			// allKeys = append(allKeys, key)
 			allBinaries = append(allBinaries, key)
 		}
 
@@ -46,7 +46,7 @@ func SelectInstallProfiles(yamlFile string) (selectedBinariesProfiles, selectedS
 	for _, scriptProfile := range allConfig.ScriptProfile {
 
 		for key := range scriptProfile {
-			allKeys = append(allKeys, key)
+			// allKeys = append(allKeys, key)
 			allScripts = append(allScripts, key)
 		}
 

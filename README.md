@@ -47,6 +47,9 @@ machineShop push \
 --destination manifests:pod-example.yaml # <BUCKET>:<OBECTNAME>
 ```
 
+</details>
+
+
 ### RENDER
 
 <details><summary><b>GIT</b></summary>

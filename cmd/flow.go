@@ -14,13 +14,13 @@ import (
 )
 
 var (
-	templatePath   = "tests/template.yaml"
-	renderOption   = "missingkey=zero"
+	// templatePath   = "tests/template.yaml"
+	// renderOption   = "missingkey=zero"
 	templateConfig Default
 	defaults       = make(map[string]interface{})
 	templateKeys   = make(map[string]int)
 	allDefaults    map[string]interface{}
-	globalValues   = make(map[string]interface{})
+	// globalValues   = make(map[string]interface{})
 )
 
 type Profile struct {

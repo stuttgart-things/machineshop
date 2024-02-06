@@ -122,8 +122,12 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, tmpDow
 
 							// EXTRACT (IF BINARY IS ARCHIVED)
 							if strings.Contains(url, ".zip") {
-								sthingsCli.UnZipArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name)
-								tmpBinPath = tmpDownloadDir + "/" + name + "/" + binName
+								err := sthingsCli.UnZipArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name)
+
+								if err != nil {
+									tmpBinPath = tmpDownloadDir + "/" + name + "/" + binName
+								}
+
 							} else if strings.Contains(url, ".tar.gz") {
 								sthingsCli.ExtractTarGzArchive(tmpDownloadDir+"/"+filepath.Base(url), tmpDownloadDir+"/"+name, 0700)
 								tmpBinPath = tmpDownloadDir + "/" + name + "/" + binName
