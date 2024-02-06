@@ -1,6 +1,5 @@
 ---
-version: "3"
-
+version: 3
 vars:
   PROJECT_NAME:
     sh: echo ${PWD##*/}
