@@ -66,22 +66,12 @@ tasks:
       - go mod tidy
       - go test -v
 
-  git-push:
-    desc: Commit & push the module
-    cmds:
-      - go mod tidy
-      - git pull
-      - git config advice.addIgnoredFile false
-      - git add *
-      - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
-      - git push origin -u {{ .BRANCH }}
-
   tag:
     desc: Commit, push & tag the module
     deps: [lint, test]
     cmds:
       - rm -rf dist
-      - task: git-push
+      - task: commit
       - go mod tidy
       - git pull --tags
       - git tag -a {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}-{{ .BRANCH }}'
@@ -109,12 +99,31 @@ tasks:
         read BRANCH_NAME;
         git checkout -b ${BRANCH_NAME}
         git push origin ${BRANCH_NAME}
+      - git branch
+      - git branch --set-upstream-to=origin/main ${BRANCH_NAME}
 
-  pull-request:
+  pr:
     desc: Create pull request into main
     cmds:
-      - task: git-push
-      - gh pr create -t "pr" -b "created pr for ${BRANCH_NAME} branch into main"
+      - task: commit
+      - gh pr create -t "{{ .BRANCH }}" -b "{{ .BRANCH }} branch into main"
+      - sleep 20s
+      - gh pr checks $(gh pr list | grep "^[^#;]" | awk '{print $1}') --watch
+      - gh pr merge $(gh pr list | grep "^[^#;]" | awk '{print $1}') --auto --rebase --delete-branch
+      - git checkout main && git pull
+
+  commit:
+    desc: Commit + push code into branch
+    cmds:
+      - git pull
+      - |
+        echo "ENTER COMMIT MESSAGE"
+        read COMMIT_MESSAGE;
+        git add cmd/*
+        git add .github/workflows/*
+        git add modules/*
+        git commit -am "$(echo ${COMMIT_MESSAGE})"
+        git push origin -u {{ .BRANCH }}
 
   delete-branch:
     desc: Delete branch from origin
