@@ -5,8 +5,8 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
-	"fmt"
 	"os"
+	"strings"
 
 	"github.com/stuttgart-things/machineShop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
@@ -18,6 +18,7 @@ import (
 
 var (
 	commitMessage = "pushed w/ machineShop CLI"
+	minioLocation = "us-east-1"
 )
 
 // pushCmd represents the push command
@@ -33,51 +34,64 @@ var pushCmd = &cobra.Command{
 		destinationPath, _ := cmd.LocalFlags().GetString("destination")
 
 		// VERIFY IF SOURCE FILE IS EXISTING
-		if sourceFile != "" {
-			sourceExists, _ := sthingsBase.VerifyIfFileOrDirExists(sourceFile, "file")
-			if sourceExists {
-				log.Info("SOURCE FOUND : ", sourceFile)
-			} else {
-				log.Error("SOURCE NOT FOUND : ", sourceFile)
-				os.Exit(3)
+		internal.ValidateSourceFile(sourceFile)
+
+		if destinationPath != "" {
+
+			switch target {
+
+			case "minio":
+
+				log.Info("PUSHING TO MINIO S3")
+				log.Info("MINIO URL: ", os.Getenv("MINIO_ADDR"))
+				log.Info("SOURCE: ", sourceFile)
+				log.Info("TARGET: ", destinationPath)
+
+				clientCreated, minioClient := sthingsCli.CreateMinioClient()
+
+				if !clientCreated {
+					log.Error("MINIO CLIENT CAN NOT BE CREATED")
+					os.Exit(3)
+				} else {
+					log.Info("MINIO CLIENT CREATED")
+
+					destination := strings.Split(destinationPath, ":")
+					bucket := destination[0]
+					objectName := destination[1]
+
+					log.Info("BUCKET: ", bucket)
+					log.Info("OBJECT: ", objectName)
+
+					sthingsCli.CreateMinioBucket(minioClient, bucket, minioLocation)
+					uploaded, fileSize := sthingsCli.UploadObjectToMinioBucket(minioClient, bucket, sourceFile, objectName)
+
+					if uploaded {
+						log.Info("SUCCESSFULLY UPLOADED OF SIZE: ", fileSize)
+					}
+				}
+
+			case "git":
+
+				fileContent := sthingsBase.ReadFileToVariable(sourceFile)
+
+				gitUser = internal.ValidateGetVaultSecretValue(gitUser, log)
+				gitToken = internal.ValidateGetVaultSecretValue(gitToken, log)
+
+				// GET SECRET VALUE
+				gitAuth := sthingsCli.CreateGitAuth(gitUser, gitToken)
+
+				if sthingsCli.AddCommitFileToGitRepository(gitRepository, gitBranch, gitAuth, []byte(fileContent), destinationPath, commitMessage) {
+					log.Info("PUSH OF FILE ", sourceFile+" SUCCESSFUL")
+
+				} else {
+					log.Error("PUSH OF FILE ", sourceFile+" NOT SUCCESSFUL")
+				}
+
 			}
+
 		} else {
-			log.Error("SOURCE UNDEFINED")
-			os.Exit(3)
+			log.Error("DESTINATION PATH SEEMS SO BE EMPTY")
 		}
-
-		switch target {
-
-		case "s3":
-			fmt.Println("s3")
-			// VERIFY S3 ENV VARS
-			// MINIO_URL
-			// ACCESS_KEY_ID
-			// SECRET_ACCESS_KEY
-			// SECURE
-
-			// sourceFile
-			// destinationPath e.g. bucket:filepath/objectname
-
-		case "git":
-
-			fileContent := sthingsBase.ReadFileToVariable(sourceFile)
-
-			gitUser = internal.ValidateGetVaultSecretValue(gitUser, log)
-			gitToken = internal.ValidateGetVaultSecretValue(gitToken, log)
-
-			// GET SECRET VALUE
-			gitAuth := sthingsCli.CreateGitAuth(gitUser, gitToken)
-
-			if sthingsCli.AddCommitFileToGitRepository(gitRepository, gitBranch, gitAuth, []byte(fileContent), destinationPath, commitMessage) {
-				log.Info("PUSH OF FILE ", sourceFile+" SUCCESSFUL")
-
-			} else {
-				log.Error("PUSH OF FILE ", sourceFile+" NOT SUCCESSFUL")
-			}
-
-		}
-
 	},
 }
 

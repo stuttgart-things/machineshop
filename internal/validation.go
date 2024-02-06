@@ -13,6 +13,10 @@ import (
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
+var (
+	log = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
+)
+
 const regexPatternVaultSecretPath = `.+/data/.+:.+`
 
 func VerifyReadKeyValues(templateValues []string, log *sthingsBase.Logger, enableVault bool) map[string]interface{} {
@@ -100,4 +104,21 @@ func ValidateGetVaultSecretValue(secretPathString string, log *sthingsBase.Logge
 	}
 
 	return
+}
+
+func ValidateSourceFile(sourceFile string) {
+
+	if sourceFile != "" {
+		sourceExists, _ := sthingsBase.VerifyIfFileOrDirExists(sourceFile, "file")
+		if sourceExists {
+			log.Info("SOURCE FOUND : ", sourceFile)
+		} else {
+			log.Error("SOURCE NOT FOUND : ", sourceFile)
+			os.Exit(3)
+		}
+	} else {
+		log.Error("SOURCE UNDEFINED")
+		os.Exit(3)
+	}
+
 }

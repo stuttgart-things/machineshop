@@ -119,8 +119,8 @@ tasks:
         echo "ENTER COMMIT MESSAGE"
         read COMMIT_MESSAGE;
         git add cmd/*
+        git add internal/*
         git add .github/workflows/*
-        git add modules/*
         git commit -am "$(echo ${COMMIT_MESSAGE})"
         git push origin -u {{ .BRANCH }}
 
