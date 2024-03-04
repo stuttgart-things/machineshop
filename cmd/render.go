@@ -12,7 +12,7 @@ import (
 
 	billy "github.com/go-git/go-billy/v5"
 	"github.com/spf13/cobra"
-	"github.com/stuttgart-things/machineShop/internal"
+	"github.com/stuttgart-things/machineshop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 

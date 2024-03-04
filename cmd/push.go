@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/stuttgart-things/machineShop/internal"
+	"github.com/stuttgart-things/machineshop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"

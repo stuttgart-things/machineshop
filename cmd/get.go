@@ -7,7 +7,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/stuttgart-things/machineShop/internal"
+	"github.com/stuttgart-things/machineshop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/spf13/cobra"
