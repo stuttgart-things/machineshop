@@ -16,7 +16,7 @@ COPY . .
 
 RUN go mod tidy
 RUN CGO_ENABLED=0 go build -buildvcs=false -o /bin/machineShop\
-    -ldflags="-X ${MODULE}/cmd.version=v${VERSION} -X ${MODULE}/cmd.date=${BUILD_DATE} -X ${MODULE}/cmd.commit=${COMMIT}"
+    -ldflags="-X ${MODULE}/cmd.version=${VERSION} -X ${MODULE}/cmd.date=${BUILD_DATE} -X ${MODULE}/cmd.commit=${COMMIT}"
 
 FROM eu.gcr.io/stuttgart-things/sthings-alpine:3.12.0-alpine3.18
 
