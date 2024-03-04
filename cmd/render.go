@@ -79,17 +79,9 @@ var renderCmd = &cobra.Command{
 			if defaultsPath != "" {
 				defaultsFile = sthingsCli.ReadFileContentFromGitRepo(repo, defaultsPath)
 
-				log.Error("HERE!")
-				log.Error("HERE!")
-				log.Error("HERE!")
-
 				log.Info("LOADED DEFAULTS FILE FROM: ", defaultsPath)
 				fmt.Println(defaultsFile)
 				defaultVariables = sthingsCli.ReadYamlKeyValuesFromFile([]byte(defaultsFile))
-
-				log.Error("HERE2!")
-				log.Error("HERE2!")
-				log.Error("HERE2!")
 
 			} else {
 				log.Info("NO DEFAULTS FILE FROM GIT DEFINED")
@@ -171,20 +163,3 @@ func init() {
 	renderCmd.Flags().StringSlice("values", []string{}, "templating values")
 	renderCmd.Flags().Bool("b64", false, "decode base64 for output")
 }
-
-// func ReadYamlKeyValuesFromFile(yamlFileContent []byte) (yamlStructure map[string]interface{}) {
-
-// 	yamlStructure = make(map[string]interface{})
-// 	data := make(map[interface{}]interface{})
-
-// 	err := yamlv3.Unmarshal(yamlFileContent, &data)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	for k, v := range data {
-// 		yamlStructure[fmt.Sprintf("%v", k)] = fmt.Sprintf("%v", v)
-// 	}
-
-// 	return
-// }

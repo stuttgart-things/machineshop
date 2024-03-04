@@ -63,7 +63,8 @@ func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, 
 	fmt.Println(w.Status())
 
 	// git add $filePath
-	w.Add(filePath)
+	added, _ := w.Add(filePath)
+	fmt.Println(added)
 	// w.Remove(filePath2)
 	// Run git status after the file has been added adding to the worktree
 	fmt.Println("STATUUUS")
