@@ -8,9 +8,9 @@ import (
 	"fmt"
 
 	"github.com/stuttgart-things/machineShop/surveys"
+	"github.com/stuttgart-things/machineshop/internal"
 
 	"github.com/spf13/cobra"
-	"github.com/stuttgart-things/machineshop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 

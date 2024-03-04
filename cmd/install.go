@@ -8,8 +8,8 @@ import (
 	"os"
 
 	"github.com/stuttgart-things/machineShop/surveys"
-
 	"github.com/stuttgart-things/machineshop/internal"
+
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 

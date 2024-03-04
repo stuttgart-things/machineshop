@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/stuttgart-things/machineshop/internal"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
 	billy "github.com/go-git/go-billy/v5"
 	"github.com/spf13/cobra"
-	"github.com/stuttgart-things/machineshop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
