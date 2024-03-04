@@ -7,8 +7,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/stuttgart-things/machineShop/surveys"
 	"github.com/stuttgart-things/machineshop/internal"
+	"github.com/stuttgart-things/machineshop/surveys"
 
 	"github.com/spf13/cobra"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
