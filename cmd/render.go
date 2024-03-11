@@ -7,6 +7,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/stuttgart-things/machineshop/internal"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
@@ -133,6 +134,16 @@ var renderCmd = &cobra.Command{
 
 		// MERGE DEFAULTS + VALUES
 		variables := sthingsBase.MergeMaps(defaultVariables, flagVariables)
+
+		// CHECK FOR YAML LIST CONTENT
+		for key, values := range variables {
+
+			listContent, isList := sthingsBase.GetRegexSubMatch(values.(string), `\[(.*?)\]`)
+			if isList {
+				fmt.Println(key + " IS A LIST!")
+				variables[key] = strings.Split(listContent, " ")
+			}
+		}
 
 		// RENDER TEMPLATE
 		renderOption := "missingkey=error"

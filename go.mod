@@ -7,7 +7,6 @@ require (
 	github.com/go-git/go-git/v5 v5.8.1
 	github.com/pterm/pterm v0.12.62
 	github.com/spf13/cobra v1.7.0
-	github.com/stuttgart-things/machineShop v1.7.0
 	github.com/stuttgart-things/sthingsBase v0.1.31
 	github.com/stuttgart-things/sthingsCli v0.1.85
 	go.hein.dev/go-version v0.1.0
@@ -115,6 +114,7 @@ require (
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/crypto v0.16.0 // indirect
+	golang.org/x/exp v0.0.0-20230315142452-642cacee5cc0 // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
