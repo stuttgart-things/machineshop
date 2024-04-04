@@ -17,8 +17,8 @@ git based CLI interface for managing configuration as code
 
 ```bash
 # LINUX x86_64
-VERSION=0.1.48
-wget https://github.com/stuttgart-things/machineShop/releases/download/${VERSION}/machineShop_Linux_x86_64.tar.gz
+VERSION=v1.7.0
+wget https://github.com/stuttgart-things/machineshop/releases/download/${VERSION}/machineShop_Linux_x86_64.tar.gz
 tar xvfz machineShop_Linux_x86_64.tar.gz
 sudo mv machineShop /usr/bin/machineShop
 rm -rf LICENSE README.md
