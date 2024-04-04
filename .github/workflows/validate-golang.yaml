@@ -17,7 +17,7 @@ jobs:
     with:
       module-name: machineshop
       environment-name: k8s
-      runs-on: arc-runner-scale-set-machineshop
+      runs-on: ghr-machineshop-sthings-cicd
       golint-version: v1.55
       golang-version: "1.21.5"
       accept-linterrors: true
