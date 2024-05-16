@@ -1,11 +1,13 @@
 module github.com/stuttgart-things/machineshop
 
-go 1.20
+go 1.21
+
+toolchain go1.22.3
 
 require (
 	github.com/go-git/go-billy/v5 v5.5.0
 	github.com/go-git/go-git/v5 v5.12.0
-	github.com/pterm/pterm v0.12.62
+	github.com/pterm/pterm v0.12.79
 	github.com/spf13/cobra v1.7.0
 	github.com/stuttgart-things/sthingsBase v0.1.35
 	github.com/stuttgart-things/sthingsCli v0.1.92
@@ -13,9 +15,9 @@ require (
 )
 
 require (
-	atomicgo.dev/cursor v0.1.1 // indirect
+	atomicgo.dev/cursor v0.2.0 // indirect
 	atomicgo.dev/keyboard v0.2.9 // indirect
-	atomicgo.dev/schedule v0.0.2 // indirect
+	atomicgo.dev/schedule v0.1.0 // indirect
 	cloud.google.com/go/compute v1.23.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/iam v1.1.2 // indirect
@@ -82,7 +84,7 @@ require (
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.1 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
-	github.com/gookit/color v1.5.3 // indirect
+	github.com/gookit/color v1.5.4 // indirect
 	github.com/goware/prefixer v0.0.0-20160118172347-395022866408 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
@@ -111,7 +113,7 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
-	github.com/mattn/go-runewidth v0.0.14 // indirect
+	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mattn/goveralls v0.0.12 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
 	github.com/minio/md5-simd v1.1.2 // indirect
