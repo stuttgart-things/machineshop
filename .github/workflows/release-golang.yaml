@@ -12,7 +12,7 @@ jobs:
     with:
       module-name: machineShop
       environment-name: k8s
-      runs-on: ghr-machineshop-sthings-cicd
+      runs-on: ghr-machineshop-labda-test
       goreleaser-version: v1.23.0
       golang-version: "1.21.5"
     secrets: inherit
