@@ -73,6 +73,9 @@ func getTree(ref *github.Reference) (tree *github.Tree, err error) {
 
 		fmt.Println(soureTarget[0])
 		fmt.Println(soureTarget[1])
+
+		bla, _ := ReadFileToVar(soureTarget[0])
+		fmt.Print(bla)
 	}
 
 	// Load each file into the tree.
