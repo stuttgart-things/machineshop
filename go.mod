@@ -10,7 +10,7 @@ require (
 	github.com/pterm/pterm v0.12.79
 	github.com/spf13/cobra v1.8.0
 	github.com/stuttgart-things/sthingsBase v0.1.37
-	github.com/stuttgart-things/sthingsCli v0.1.94
+	github.com/stuttgart-things/sthingsCli v0.1.98
 	go.hein.dev/go-version v0.1.0
 )
 
