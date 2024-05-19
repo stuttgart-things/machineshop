@@ -7,10 +7,11 @@ toolchain go1.22.3
 require (
 	github.com/go-git/go-billy/v5 v5.5.0
 	github.com/go-git/go-git/v5 v5.12.0
+	github.com/google/go-github/v62 v62.0.0
 	github.com/pterm/pterm v0.12.79
 	github.com/spf13/cobra v1.8.0
 	github.com/stuttgart-things/sthingsBase v0.1.35
-	github.com/stuttgart-things/sthingsCli v0.1.92
+	github.com/stuttgart-things/sthingsCli v0.1.96
 	go.hein.dev/go-version v0.1.0
 )
 
@@ -36,7 +37,6 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/ProtonMail/go-crypto v1.0.0 // indirect
-	github.com/acomagu/bufpipe v1.0.4 // indirect
 	github.com/allegro/bigcache/v3 v3.1.0 // indirect
 	github.com/andygrunwald/go-jira v1.16.0 // indirect
 	github.com/atc0005/go-teams-notify/v2 v2.7.1 // indirect
@@ -178,7 +178,6 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
-	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
