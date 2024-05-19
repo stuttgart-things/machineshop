@@ -62,35 +62,26 @@ func getRef() (ref *github.Reference, err error) {
 	return ref, err
 }
 
-// getTree generates the tree to commit based on the given files and the commit
-// of the ref you got in getRef.
+// GETTREE GENERATES THE TREE TO COMMIT BASED ON THE GIVEN FILES AND THE COMMIT
+// OF THE REF YOU GOT IN GETREF.
 func getTree(ref *github.Reference) (tree *github.Tree, err error) {
-	// Create a tree with what to commit.
+
+	// CREATE A TREE WITH WHAT TO COMMIT.
 	entries := []*github.TreeEntry{}
 
 	for _, file := range strings.Split(sourceFiles, ",") {
+
+		// CUT STRING INTO SLICES (SOURCE AND TARGET)
 		soureTarget := strings.Split(file, ":")
+		filePathLocal := soureTarget[0]
+		filePathBranch := soureTarget[1]
 
-		fmt.Println(soureTarget[0])
-		fmt.Println(soureTarget[1])
+		// GET FILE CONTENT
+		fileContent, _ := ReadFileToVar(filePathLocal)
 
-		bla, _ := ReadFileToVar(soureTarget[0])
-		// fmt.Print(bla)
-		// fmt.Print(soureTarget[1])
-
-		entries = append(entries, &github.TreeEntry{Path: github.String(soureTarget[1]), Type: github.String("blob"), Content: github.String(string(bla)), Mode: github.String("100644")})
-
+		// ADD ENTRIES TO GIT TREE
+		entries = append(entries, &github.TreeEntry{Path: github.String(filePathBranch), Type: github.String("blob"), Content: github.String(string(fileContent)), Mode: github.String("100644")})
 	}
-
-	// Load each file into the tree.
-	// for _, fileArg := range strings.Split(sourceFiles, ",") {
-
-	// 	file, content, err := getFileContent(fileArg)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-	// 	entries = append(entries, &github.TreeEntry{Path: github.String("test/" + file), Type: github.String("blob"), Content: github.String(string(content)), Mode: github.String("100644")})
-	// }
 
 	tree, _, err = client.Git.CreateTree(ctx, sourceOwner, sourceRepo, *ref.Object.SHA, entries)
 	return tree, err
