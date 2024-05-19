@@ -69,7 +69,10 @@ func getTree(ref *github.Reference) (tree *github.Tree, err error) {
 	entries := []*github.TreeEntry{}
 
 	for _, file := range strings.Split(sourceFiles, ",") {
-		fmt.Println(file)
+		soureTarget := strings.Split(file, ":")
+
+		fmt.Println(soureTarget[0])
+		fmt.Println(soureTarget[1])
 	}
 
 	// Load each file into the tree.
