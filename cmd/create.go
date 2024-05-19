@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/google/go-github/v62/github"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
@@ -17,30 +18,72 @@ import (
 var client *github.Client
 var ctx = context.Background()
 
+// GET CURRENT TIME
+var now = time.Now()
+var timeString = now.Format("06-01-02-15-04")
+
 // createCmd represents the create command
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create things",
 	Long:  `Create things on remote systems`,
 	Run: func(cmd *cobra.Command, args []string) {
+
 		// FLAGS
 		kind, _ := cmd.LocalFlags().GetString("kind")
+		groupName, _ := cmd.LocalFlags().GetString("group")
+		repositoryName, _ := cmd.LocalFlags().GetString("repository")
+		branchName, _ := cmd.LocalFlags().GetString("branch")
+		baseBranch, _ := cmd.LocalFlags().GetString("base")
+		token, _ := cmd.LocalFlags().GetString("token")
+		files, _ := cmd.Flags().GetStringSlice("files")
+
+		// IF BRANCH IS NOT PROVIDED, CREATE ONE RANDOM NAME
+		if branchName == "" {
+			branchName = "machineshop-" + timeString
+		}
+
+		// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
+		if token == "" {
+			token = os.Getenv("GITHUB_TOKEN")
+		}
+
+		// IF NOT DEFINED IN ENVIRONMENT OR FLAG, EXIT
+		if token == "" {
+			log.Error("GITHUB TOKEN NOT FOUND")
+			os.Exit(3)
+		}
+
+		fmt.Println(files)
 
 		switch kind {
 
 		case "pr":
+			log.Info("CREATING PULL REQUEST")
+			log.Info("GROUP: ", groupName)
+			log.Info("REPOSITORY: ", repositoryName)
+			log.Info("BRANCH: ", branchName)
+			log.Info("BASE-BRANCH: ", baseBranch)
 
-			fmt.Println("HELLO")
-			token := os.Getenv("GITHUB_TOKEN")
-			if token == "" {
-				log.Fatal("UNAUTHORIZED: NO TOKEN PRESENT")
-			}
-
+			// CREATE GITHUB CLIENT
 			client = github.NewClient(nil).WithAuthToken(token)
 
-			// CALL GETREFERENCEOBJECT
-			ref, err := sthingsCli.GetReferenceObject(client, "stuttgart-things", "machineshop", "test", "main")
-			fmt.Println(ref, err)
+			// GET GIT REFERENCE OBJECT
+			ref, err := sthingsCli.GetReferenceObject(client, groupName, repositoryName, branchName, baseBranch)
+			if err != nil {
+				log.Fatalf("UNABLE TO GET/CREATE THE COMMIT REFERENCE: %s\n", err)
+			}
+			if ref == nil {
+				log.Fatalf("NO ERROR WHERE RETURNED BUT THE REFERENCE IS NIL")
+			}
+
+			// CREATE A NEW GIT TREE
+			tree, err := sthingsCli.GetGitTree(client, ref, files, groupName, repositoryName)
+			if err != nil {
+				log.Fatalf("UNABLE TO CREATE THE TREE BASED ON THE PROVIDED FILES: %s\n", err)
+			}
+
+			fmt.Println(tree)
 		}
 
 	},
@@ -49,5 +92,10 @@ var createCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(createCmd)
 	createCmd.Flags().String("kind", "pr", "kind of operation to perform")
-
+	createCmd.Flags().String("group", "stuttgart-things", "name of group")
+	createCmd.Flags().String("repository", "stuttgart-things", "name of repository")
+	createCmd.Flags().String("branch", "", "(to be created) branch name")
+	createCmd.Flags().String("token", "", "github token")
+	createCmd.Flags().String("base", "main", "name of (to be merged) branch")
+	createCmd.Flags().StringSlice("files", []string{}, "files to be created in branch - PATH-LOCAL:PATH-TARGET")
 }

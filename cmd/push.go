@@ -52,6 +52,7 @@ var pushCmd = &cobra.Command{
 				if !clientCreated {
 					log.Error("MINIO CLIENT CAN NOT BE CREATED")
 					os.Exit(3)
+
 				} else {
 					log.Info("MINIO CLIENT CREATED")
 
