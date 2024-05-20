@@ -40,8 +40,10 @@ export GITHUB_TOKEN=<GITHUB_TOKEN>
 
 machineshop create \
 --kind branch \
+--branch hello \
+--repository machineshop \
+--group stuttgart-things \
 --files "Dockerfile:Dockerfile" \
---branch machineshop-24-05-20-19-46
 ```
 
 </details>
@@ -54,7 +56,9 @@ export GITHUB_TOKEN=<GITHUB_TOKEN>
 machineshop create \
 --kind pr \
 --title test2 \
---branch machineshop-24-05-20-19-46
+--branch hello \
+--repository machineshop \
+--group stuttgart-things
 ```
 
 </details>
