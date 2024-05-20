@@ -1,6 +1,7 @@
 /*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+Copyright © 2024 Patrick Hermann patrick.hermann@sva.de
 */
+
 package cmd
 
 import (
@@ -37,17 +38,24 @@ var createCmd = &cobra.Command{
 		baseBranch, _ := cmd.LocalFlags().GetString("base")
 		token, _ := cmd.LocalFlags().GetString("token")
 		files, _ := cmd.Flags().GetStringSlice("files")
+		authorName, _ := cmd.LocalFlags().GetString("author")
+		authorEmail, _ := cmd.LocalFlags().GetString("email")
+		commitMessage, _ := cmd.LocalFlags().GetString("message")
 
 		// IF BRANCH IS NOT PROVIDED, CREATE ONE RANDOM NAME
 		if branchName == "" {
 			branchName = "machineshop-" + timeString
 		}
 
+		// IF COMMIT IS NOT PROVIDED, CREATE ONE RANDOM NAME
+		if commitMessage == "" {
+			commitMessage = "machineshop-" + timeString
+		}
+
 		// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
 		if token == "" {
 			token = os.Getenv("GITHUB_TOKEN")
 		}
-
 		// IF NOT DEFINED IN ENVIRONMENT OR FLAG, EXIT
 		if token == "" {
 			log.Error("GITHUB TOKEN NOT FOUND")
@@ -78,12 +86,17 @@ var createCmd = &cobra.Command{
 			}
 
 			// CREATE A NEW GIT TREE
-			tree, err := sthingsCli.GetGitTree(client, ref, files, groupName, repositoryName)
+			gitTree, err := sthingsCli.GetGitTree(client, ref, files, groupName, repositoryName)
 			if err != nil {
 				log.Fatalf("UNABLE TO CREATE THE TREE BASED ON THE PROVIDED FILES: %s\n", err)
 			}
 
-			fmt.Println(tree)
+			fmt.Println(gitTree)
+
+			// PUSH COMMIT
+			sthingsCli.PushCommit(client, ref, gitTree, groupName, repositoryName, authorName, authorEmail, commitMessage)
+
+			// CREATE PULL REQUEST
 		}
 
 	},
@@ -95,6 +108,9 @@ func init() {
 	createCmd.Flags().String("group", "stuttgart-things", "name of group")
 	createCmd.Flags().String("repository", "stuttgart-things", "name of repository")
 	createCmd.Flags().String("branch", "", "(to be created) branch name")
+	createCmd.Flags().String("author", "machineshop", "author name")
+	createCmd.Flags().String("email", "machineshop@stuttgart-things.com", "author email")
+	createCmd.Flags().String("message", "", "commit message")
 	createCmd.Flags().String("token", "", "github token")
 	createCmd.Flags().String("base", "main", "name of (to be merged) branch")
 	createCmd.Flags().StringSlice("files", []string{}, "files to be created in branch - PATH-LOCAL:PATH-TARGET")

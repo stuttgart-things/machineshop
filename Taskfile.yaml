@@ -133,7 +133,7 @@ tasks:
         echo "ENTER COMMIT MESSAGE"
         read COMMIT_MESSAGE;
         git commit -am "$(echo ${COMMIT_MESSAGE})"
-        git push origin -u {{ .BRANCH }}
+        git push origin HEAD
 
   delete-branch:
     desc: Delete branch from origin
