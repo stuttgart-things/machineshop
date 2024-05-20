@@ -618,6 +618,8 @@ github.com/stuttgart-things/sthingsBase v0.1.35 h1:DmWx6m9R3xAGZfxaKlQLK8rqLKzcl
 github.com/stuttgart-things/sthingsBase v0.1.35/go.mod h1:W5FmSsDZBfm1wfD/RO91N/nbB8ACGbC4eBBd1ALqIx8=
 github.com/stuttgart-things/sthingsBase v0.1.37 h1:jq0WGI4W1vJeykKIXHUunlTlXz0u4R4Xy6IFL+FTj1Q=
 github.com/stuttgart-things/sthingsBase v0.1.37/go.mod h1:W5FmSsDZBfm1wfD/RO91N/nbB8ACGbC4eBBd1ALqIx8=
+github.com/stuttgart-things/sthingsBase v0.1.38 h1:jIXm/+qBYFxx3Heuycv87p23FV9Zmz94yGbKIP4ukQ8=
+github.com/stuttgart-things/sthingsBase v0.1.38/go.mod h1:VAHWgGF7p1/DgITNj5l2KJWhhtt1ujcR5EK9jFWH7Bo=
 github.com/stuttgart-things/sthingsCli v0.1.85 h1:hhcTRnNO3zA7ntcZoIeTkR7hYGe6ek25xOYLyJLgxR4=
 github.com/stuttgart-things/sthingsCli v0.1.85/go.mod h1:TLsYCdqEUzPMbeGsTd9Aery7l3q6OHzCCuoVNUvPLOQ=
 github.com/stuttgart-things/sthingsCli v0.1.92 h1:y55B3TzBW/Oyt37vAAHtkC2jsOJYhQRb8G/6Ar/6JPo=
