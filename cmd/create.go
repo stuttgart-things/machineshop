@@ -41,16 +41,7 @@ var createCmd = &cobra.Command{
 		authorName, _ := cmd.LocalFlags().GetString("author")
 		authorEmail, _ := cmd.LocalFlags().GetString("email")
 		commitMessage, _ := cmd.LocalFlags().GetString("message")
-
-		// IF BRANCH IS NOT PROVIDED, CREATE ONE RANDOM NAME
-		if branchName == "" {
-			branchName = "machineshop-" + timeString
-		}
-
-		// IF COMMIT IS NOT PROVIDED, CREATE ONE RANDOM NAME
-		if commitMessage == "" {
-			commitMessage = branchName
-		}
+		prTitle, _ := cmd.LocalFlags().GetString("title")
 
 		// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
 		if token == "" {
@@ -62,19 +53,33 @@ var createCmd = &cobra.Command{
 			os.Exit(3)
 		}
 
-		fmt.Println(files)
+		// CREATE GITHUB CLIENT
+		client = github.NewClient(nil).WithAuthToken(token)
+
+		log.Info("GROUP: ", groupName)
+		log.Info("REPOSITORY: ", repositoryName)
+		log.Info("BRANCH: ", branchName)
+		log.Info("BASE-BRANCH: ", baseBranch)
 
 		switch kind {
 
-		case "pr":
-			log.Info("CREATING PULL REQUEST")
-			log.Info("GROUP: ", groupName)
-			log.Info("REPOSITORY: ", repositoryName)
-			log.Info("BRANCH: ", branchName)
-			log.Info("BASE-BRANCH: ", baseBranch)
+		case "branch":
 
-			// CREATE GITHUB CLIENT
-			client = github.NewClient(nil).WithAuthToken(token)
+			// IF BRANCH IS NOT PROVIDED, CREATE ONE RANDOM NAME
+			if branchName == "" {
+				branchName = "machineshop-" + timeString
+			}
+
+			// IF COMMIT IS NOT PROVIDED, CREATE ONE RANDOM NAME
+			if commitMessage == "" {
+				commitMessage = branchName
+			}
+
+			log.Info("CREATING BRANCH")
+			log.Info("FILES: ", files)
+			log.Info("AUTHOR: ", authorName)
+			log.Info("EMAIL: ", authorEmail)
+			log.Info("MESSAGE: ", commitMessage)
 
 			// GET GIT REFERENCE OBJECT
 			ref, err := sthingsCli.GetReferenceObject(client, groupName, repositoryName, branchName, baseBranch)
@@ -96,8 +101,34 @@ var createCmd = &cobra.Command{
 			// PUSH COMMIT
 			sthingsCli.PushCommit(client, ref, gitTree, groupName, repositoryName, authorName, authorEmail, commitMessage)
 
+		case "pr":
+			log.Info("CREATING PULL REQUEST")
+
+			// IF KIND EQUALS PR AND TITLE IS NOT PROVIDED
+			if prTitle == "" {
+				log.Error("PULL REQUEST TITLE IS MISSING - EXITING")
+				os.Exit(3)
+			}
+
+			// IF BRANCH IS NOT PROVIDED, CREATE ONE RANDOM NAME
+			if branchName == "" {
+				log.Error("BRANCH NAME IS MISSING - EXITING")
+				os.Exit(3)
+			}
+
+			// CROSS REPOSITORY PULL REQUESTS ARE NOT SUPPURTED YET IN MACHINESHOP (NO USE CASE SO FAR) -
+			// SO WE USE THE SAME REPOSITORY FOR SOURCE AND TARGET FOR NOW
+			sourceRepo := repositoryName
+			prRepo := repositoryName
+			sourceOwner := groupName
+			prRepoOwner := groupName
+			commitBranch := branchName
+			repoBranch := branchName
+			prDescription := prTitle
+			prSubject := prTitle
+
 			// CREATE PULL REQUEST
-			err = sthingsCli.CreatePullRequest(client, commitMessage, groupName, groupName, branchName, repositoryName, repositoryName, branchName, "main", commitMessage)
+			err := sthingsCli.CreatePullRequest(client, prSubject, prRepoOwner, sourceOwner, commitBranch, prRepo, sourceRepo, repoBranch, baseBranch, prDescription)
 			if err != nil {
 				log.Fatalf("UNABLE TO CREATE THE PULL REQUEST: %s\n", err)
 			}
@@ -108,10 +139,11 @@ var createCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(createCmd)
-	createCmd.Flags().String("kind", "pr", "kind of operation to perform")
+	createCmd.Flags().String("kind", "branch", "kind of operation to perform")
 	createCmd.Flags().String("group", "stuttgart-things", "name of group")
 	createCmd.Flags().String("repository", "stuttgart-things", "name of repository")
 	createCmd.Flags().String("branch", "", "(to be created) branch name")
+	createCmd.Flags().String("title", "", "pull request title")
 	createCmd.Flags().String("author", "machineshop", "author name")
 	createCmd.Flags().String("email", "machineshop@stuttgart-things.com", "author email")
 	createCmd.Flags().String("message", "", "commit message")
