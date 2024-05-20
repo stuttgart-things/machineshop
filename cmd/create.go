@@ -127,10 +127,14 @@ var createCmd = &cobra.Command{
 			prDescription := prTitle
 			prSubject := prTitle
 
+			log.Info("PULL-REQUEST TITLE: ", prTitle)
+
 			// CREATE PULL REQUEST
-			err := sthingsCli.CreatePullRequest(client, prSubject, prRepoOwner, sourceOwner, commitBranch, prRepo, sourceRepo, repoBranch, baseBranch, prDescription)
+			err, id := sthingsCli.CreatePullRequest(client, prSubject, prRepoOwner, sourceOwner, commitBranch, prRepo, sourceRepo, repoBranch, baseBranch, prDescription)
 			if err != nil {
 				log.Fatalf("UNABLE TO CREATE THE PULL REQUEST: %s\n", err)
+			} else {
+				fmt.Println(id)
 			}
 		}
 

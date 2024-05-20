@@ -31,6 +31,34 @@ machineShop version
 
 ## USAGE EXAMPLES
 
+### CREATE
+
+<details><summary><b>BRANCH</b></summary>
+
+```bash
+export GITHUB_TOKEN=<GITHUB_TOKEN>
+
+machineshop create \
+--kind branch \
+--files "Dockerfile:Dockerfile" \
+--branch machineshop-24-05-20-19-46
+```
+
+</details>
+
+<details><summary><b>PULL-REQUEST</b></summary>
+
+```bash
+export GITHUB_TOKEN=<GITHUB_TOKEN>
+
+machineshop create \
+--kind pr \
+--title test2 \
+--branch machineshop-24-05-20-19-46
+```
+
+</details>
+
 ### PUSH
 
 <details><summary><b>GIT</b></summary>
