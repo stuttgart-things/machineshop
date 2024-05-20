@@ -49,7 +49,7 @@ var createCmd = &cobra.Command{
 
 		// IF COMMIT IS NOT PROVIDED, CREATE ONE RANDOM NAME
 		if commitMessage == "" {
-			commitMessage = "machineshop-" + timeString
+			commitMessage = branchName
 		}
 
 		// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
@@ -97,6 +97,10 @@ var createCmd = &cobra.Command{
 			sthingsCli.PushCommit(client, ref, gitTree, groupName, repositoryName, authorName, authorEmail, commitMessage)
 
 			// CREATE PULL REQUEST
+			err = sthingsCli.CreatePullRequest(client, commitMessage, groupName, groupName, branchName, repositoryName, repositoryName, branchName, "main", commitMessage)
+			if err != nil {
+				log.Fatalf("UNABLE TO CREATE THE PULL REQUEST: %s\n", err)
+			}
 		}
 
 	},
