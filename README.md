@@ -8,8 +8,6 @@ git based CLI interface for managing configuration as code
 * RENDER + EXECUTE MULTIPLE SCRIPTS (INSTALL)
 * RETRIEVE SECRETS FROM VAULT (GET)
 
-task release TAG=v
-
 ## INSTALLATION
 
 <details><summary><b>BY RELEASE</b></summary>
@@ -23,6 +21,14 @@ sudo mv machineshop /usr/bin/machineshop
 rm -rf LICENSE README.md
 sudo chmod +x /usr/bin/machineshop
 machineshop version
+```
+
+</details>
+
+<details><summary><b>BUILD RELEASE</b></summary>
+
+```bash
+task release TAG=v1.8.0
 ```
 
 </details>
