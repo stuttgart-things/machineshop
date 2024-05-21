@@ -8,9 +8,6 @@ git based CLI interface for managing configuration as code
 * RENDER + EXECUTE MULTIPLE SCRIPTS (INSTALL)
 * RETRIEVE SECRETS FROM VAULT (GET)
 
-## STATUS
-* 60% FEATURES DONE
-
 ## INSTALLATION
 
 <details><summary><b>BY RELEASE</b></summary>
