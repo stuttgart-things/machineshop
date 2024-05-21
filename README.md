@@ -8,6 +8,8 @@ git based CLI interface for managing configuration as code
 * RENDER + EXECUTE MULTIPLE SCRIPTS (INSTALL)
 * RETRIEVE SECRETS FROM VAULT (GET)
 
+task release TAG=v
+
 ## INSTALLATION
 
 <details><summary><b>BY RELEASE</b></summary>
