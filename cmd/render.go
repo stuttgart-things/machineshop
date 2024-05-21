@@ -157,8 +157,12 @@ var renderCmd = &cobra.Command{
 		}
 
 		// HANDLE OUTPUT
-		internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), b64DecodeOption, enableVault)
-
+		if len(renderedTemplate) == 0 {
+            log.Error("RENDERED TEMPLATE IS EMPTY")
+            os.Exit(3)
+        } else {
+            internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), b64DecodeOption, enableVault)
+        }
 	},
 }
 
