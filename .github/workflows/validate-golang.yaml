@@ -13,7 +13,7 @@ on:
 jobs:
   validate-golang:
     name: Valdiate Golang
-    uses: stuttgart-things/stuttgart-things/.github/workflows/validate-golang.yaml@main
+    uses: stuttgart-things/stuttgart-things/.github/workflows/call-golang-validation.yaml@main
     with:
       module-name: machineshop
       environment-name: k8s
