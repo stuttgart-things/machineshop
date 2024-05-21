@@ -25,6 +25,8 @@ machineshop version
 
 </details>
 
+## DEV
+
 <details><summary><b>BUILD RELEASE</b></summary>
 
 ```bash
