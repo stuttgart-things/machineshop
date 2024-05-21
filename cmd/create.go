@@ -17,7 +17,6 @@ import (
 )
 
 var client *github.Client
-var ctx = context.Background()
 
 // GET CURRENT TIME
 var now = time.Now()
