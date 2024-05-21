@@ -38,8 +38,17 @@ tasks:
     cmds:
       - machineShop render --source local --template tests/template.yaml --defaults tests/default.yaml
 
+  ko:
+    desc: Build image w/ KO
+    deps: [lint, test]
+    env:
+      KO_DOCKER_REPO: eu.gcr.io/stuttgart-things/machineshop
+    cmds:
+      - ko build github.com/stuttgart-things/machineshop
+
   build:
     desc: Build code
+    deps: [lint, test]
     cmds:
       - go mod tidy
       - go install
