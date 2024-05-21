@@ -20,7 +20,6 @@ vars:
     sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD) ; fi
   COBRA_VERSION: 1.3.0
 
-
 tasks:
   run:
     desc: Run
@@ -87,14 +86,13 @@ tasks:
       - task: commit
       - go mod tidy
       - git pull --tags
-      - git tag -a {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}-{{ .BRANCH }}'
+      - git tag -a {{ .TAG }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .TAG }}'
       - git push origin --tags
 
   release:
     desc: Relase binaries
     deps: [tag]
     cmds:
-      - unset GITLAB_TOKEN
       - goreleaser healthcheck
       - goreleaser check
       - goreleaser release --skip-publish --snapshot --clean
