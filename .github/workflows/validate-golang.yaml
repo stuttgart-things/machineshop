@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
-      - feature/*
-      - fix/*
+      - 'main'
+      - 'feature/**'
+      - 'fix/*'
   pull_request:
     types: [opened, reopened]
 
@@ -18,7 +18,7 @@ jobs:
       module-name: machineshop
       environment-name: k8s
       runs-on: ghr-machineshop-labda-test
-      golint-version: v1.55
-      golang-version: "1.21.5"
+      golint-version: v1.58.2
+      golang-version: 1.22.3
       accept-linterrors: true
       accept-failedtests: false
