@@ -1,4 +1,4 @@
-# stuttgart-things/machineShop
+# stuttgart-things/machineshop
 
 git based CLI interface for managing configuration as code
 
@@ -18,12 +18,12 @@ git based CLI interface for managing configuration as code
 ```bash
 # LINUX x86_64
 VERSION=v1.7.0
-wget https://github.com/stuttgart-things/machineshop/releases/download/${VERSION}/machineShop_Linux_x86_64.tar.gz
-tar xvfz machineShop_Linux_x86_64.tar.gz
-sudo mv machineShop /usr/bin/machineShop
+wget https://github.com/stuttgart-things/machineshop/releases/download/${VERSION}/machineshop_Linux_x86_64.tar.gz
+tar xvfz machineshop_Linux_x86_64.tar.gz
+sudo mv machineshop /usr/bin/machineshop
 rm -rf LICENSE README.md
-sudo chmod +x /usr/bin/machineShop
-machineShop version
+sudo chmod +x /usr/bin/machineshop
+machineshop version
 ```
 
 </details>
@@ -73,7 +73,7 @@ export MINIO_SECRET_KEY=<PASSWORD>
 export MINIO_ADDR=artifacts.automation.sthings-vsphere.labul.sva.de
 export MINIO_SECURE=true
 
-machineShop push \
+machineshop push \
 --target minio \
 --source pod.yaml \
 --destination manifests:pod-example.yaml # <BUCKET>:<OBECTNAME>
@@ -87,7 +87,7 @@ machineShop push \
 <details><summary><b>GIT</b></summary>
 
 ```bash
-machineShop render --source git \
+machineshop render --source git \
 --git https://github.com/stuttgart-things/stuttgart-things.git \
 --defaults packer/environments/labul-vsphere.yaml \
 --template packer/os/ubuntu23-vsphere.pkr.tpl.hcl \
@@ -99,9 +99,9 @@ machineShop render --source git \
 <details><summary><b>LOCAL</b></summary>
 
 ```bash
-machineShop render \
+machineshop render \
 --source local \
---template ../golang/machineShop/tests/template-square.yaml \
+--template ../golang/machineshop/tests/template-square.yaml \
 --brackets square \
 --output stdout \
 --defaults /home/sthings/projects/stuttgart-things/packer/environments/labul-pve.yaml
@@ -123,11 +123,11 @@ export VAULT_ADDR=https://≤VAULT_ADDR>[:8200]
 
 ### GET SECRET VALUE BY PATH
 ```
-machineShop get --path apps/data/scr:password | tail -n +8
+machineshop get --path apps/data/scr:password | tail -n +8
 
-machineShop get --path apps/data/scr:password --output file --destination /tmp/password.txt
+machineshop get --path apps/data/scr:password --output file --destination /tmp/password.txt
 
-machineShop get --path kubeconfigs/data/dev21:kubeconfig --output file --destination /tmp/dev211 --b64 true
+machineshop get --path kubeconfigs/data/dev21:kubeconfig --output file --destination /tmp/dev211 --b64 true
 ```
 
 </details>
