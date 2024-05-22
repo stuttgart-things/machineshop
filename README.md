@@ -30,11 +30,18 @@ machineshop version
 <details><summary><b>BUILD RELEASE</b></summary>
 
 ```bash
-task release TAG=v1.8.0
+task release TAG=v1.8.0 # EXAMPLE VERSION
 ```
 
 </details>
 
+<details><summary><b>BUILD CONTAINER-IMAGE w/ KO</b></summary>
+
+```bash
+task ko
+```
+
+</details>
 
 ## USAGE EXAMPLES
 
