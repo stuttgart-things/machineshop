@@ -617,6 +617,8 @@ github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7 h1:nVo
 github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7/go.mod h1:RhH+7myjNLGs/BFeYO5U7ekmM7OsymsIOUN/DkewR3g=
 github.com/stuttgart-things/sthingsBase v0.1.38 h1:jIXm/+qBYFxx3Heuycv87p23FV9Zmz94yGbKIP4ukQ8=
 github.com/stuttgart-things/sthingsBase v0.1.38/go.mod h1:VAHWgGF7p1/DgITNj5l2KJWhhtt1ujcR5EK9jFWH7Bo=
+github.com/stuttgart-things/sthingsBase v0.1.39 h1:gDRyAuVY2e+/gFb1yjC2CN8O0U28ixeSSbJ2jPByzHA=
+github.com/stuttgart-things/sthingsBase v0.1.39/go.mod h1:9YbYcRRpiIrY7m1C3JsU22esKj0axN1ds7EbsG7wWrs=
 github.com/stuttgart-things/sthingsCli v0.1.103 h1:0vN/5Zr3KyZciltdF4IQe57R5f0ORdGZXXLj+kQpU+0=
 github.com/stuttgart-things/sthingsCli v0.1.103/go.mod h1:MFgbbICsar2SiZvdqjXeTeCzbU/ofEuzC+VgNDMN4pg=
 github.com/subosito/gotenv v1.4.2 h1:X1TuBLAMDFbaTAChgCBLu3DU3UPyELpnF2jjJ2cz/S8=
@@ -854,6 +856,8 @@ golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.7.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.18.0 h1:DBdB3niSjOA/O0blCZBqDefyWNYveAYMNF1Wum0DYQ4=
 golang.org/x/sys v0.18.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+golang.org/x/sys v0.20.0 h1:Od9JTbYCk261bKm4M/mw7AklTlFYIa0bIp9BgSm1S8Y=
+golang.org/x/sys v0.20.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/term v0.0.0-20210220032956-6a3ed077a48d/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/term v0.0.0-20210615171337-6886f2dfbf5b/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
