@@ -128,7 +128,7 @@ tasks:
     deps: [lint]
     cmds:
       - task: commit
-      - gh auth login
+      - gh auth login --hostname GitHub.com
       - gh pr create -t "{{ .BRANCH }}" -b "{{ .BRANCH }} branch into main"
       - sleep 20s
       - gh pr checks $(gh pr list | grep "^[^#;]" | awk '{print $1}') --watch
