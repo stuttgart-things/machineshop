@@ -128,6 +128,7 @@ tasks:
     deps: [lint]
     cmds:
       - task: commit
+      - unset GITHUB_TOKEN && gh auth login --hostname GitHub.com -p https --web
       - gh pr create -t "{{ .BRANCH }}" -b "{{ .BRANCH }} branch into main"
       - sleep 20s
       - gh pr checks $(gh pr list | grep "^[^#;]" | awk '{print $1}') --watch

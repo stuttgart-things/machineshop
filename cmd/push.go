@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
+Copyright © 2024 Patrick Hermann patrick.hermann@sva.de
 */
 
 package cmd
@@ -11,13 +11,10 @@ import (
 	"github.com/stuttgart-things/machineshop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
-	sthingsBase "github.com/stuttgart-things/sthingsBase"
-
 	"github.com/spf13/cobra"
 )
 
 var (
-	commitMessage = "pushed w/ machineShop CLI"
 	minioLocation = "us-east-1"
 )
 
@@ -71,23 +68,6 @@ var pushCmd = &cobra.Command{
 					}
 				}
 
-			case "git":
-
-				fileContent := sthingsBase.ReadFileToVariable(sourceFile)
-
-				gitUser = internal.ValidateGetVaultSecretValue(gitUser, log)
-				gitToken = internal.ValidateGetVaultSecretValue(gitToken, log)
-
-				// GET SECRET VALUE
-				gitAuth := sthingsCli.CreateGitAuth(gitUser, gitToken)
-
-				if sthingsCli.AddCommitFileToGitRepository(gitRepository, gitBranch, gitAuth, []byte(fileContent), destinationPath, commitMessage) {
-					log.Info("PUSH OF FILE ", sourceFile+" SUCCESSFUL")
-
-				} else {
-					log.Error("PUSH OF FILE ", sourceFile+" NOT SUCCESSFUL")
-				}
-
 			}
 
 		} else {
@@ -100,5 +80,5 @@ func init() {
 	rootCmd.AddCommand(pushCmd)
 	pushCmd.Flags().String("source", "", "source file path")
 	pushCmd.Flags().String("destination", "", "destination path")
-	pushCmd.Flags().String("target", "git", "push target")
+	pushCmd.Flags().String("target", "minio", "push target")
 }
