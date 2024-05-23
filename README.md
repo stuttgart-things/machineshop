@@ -81,7 +81,7 @@ machineshop create \
 
 ### PUSH
 
-<details><summary><b>GIT</b></summary>
+<details><summary><b>MINIO (BUCKET)</b></summary>
 
 ```bash
 export MINIO_ACCESS_KEY=sthings
