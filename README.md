@@ -81,6 +81,8 @@ machineshop create \
 
 ### PUSH
 
+push things to targets
+
 <details><summary><b>MINIO (BUCKET)</b></summary>
 
 ```bash
