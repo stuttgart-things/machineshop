@@ -8,11 +8,11 @@ on:
 jobs:
   release-golang:
     name: Release Golang
-    uses: stuttgart-things/stuttgart-things/.github/workflows/release-golang.yaml@main
+    uses: stuttgart-things/stuttgart-things/.github/workflows/call-golang-release.yaml@main
     with:
       module-name: machineShop
       environment-name: k8s
       runs-on: ghr-machineshop-labda-test
-      goreleaser-version: v1.23.0
-      golang-version: "1.21.5"
+      goreleaser-version: v1.26.2
+      golang-version: 1.22.3
     secrets: inherit
