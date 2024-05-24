@@ -132,14 +132,34 @@ machineshop push \
 
 ### RENDER
 
-<details><summary><b>GIT</b></summary>
+<details><summary><b>EXAMPLE TEMPLATE</b></summary>
 
-```bash
-machineshop render --source git \
---git https://github.com/stuttgart-things/stuttgart-things.git \
---defaults packer/environments/labul-vsphere.yaml \
---template packer/os/ubuntu23-vsphere.pkr.tpl.hcl \
---output stdout
+```yaml
+---
+runs:
+  packagePublishHelmChart:
+    # FLAT VALUE
+    name: package-publish-{{ .chartName }}
+
+# LOOP OVER LIST
+{{ range .food }}
+- {{ . }}{{ end }}
+
+# RANDOM ELEMENT FROM EXISTING LIST
+favoriteFood: {{ .RANDOMfood }}
+```
+
+</details>
+
+<details><summary><b>EXAMPLE DEFAULTS FILE</b></summary>
+
+```yaml
+---
+chartName: helloHelm
+food:
+  - schnitzel
+  - apple
+  - hamburger
 ```
 
 </details>
@@ -157,6 +177,17 @@ machineshop render \
 
 </details>
 
+<details><summary><b>GIT</b></summary>
+
+```bash
+machineshop render --source git \
+--git https://github.com/stuttgart-things/stuttgart-things.git \
+--defaults packer/environments/labul-vsphere.yaml \
+--template packer/os/ubuntu23-vsphere.pkr.tpl.hcl \
+--output stdout
+```
+
+</details>
 
 <details><summary><b>GET</b></summary>
 

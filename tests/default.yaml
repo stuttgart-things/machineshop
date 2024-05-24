@@ -3,3 +3,22 @@ chartName: hello
 namespace: gude
 randomName: true
 hello: this
+
+name: ndre
+ubuntu23PackerMinVersion: 12
+pveProvider: martin
+pveProviderVersion: 25
+
+hello2:
+  - hello
+  - world
+  - goretzka
+  - julian
+
+vmConfig:
+  m:
+    cpu: 6
+    ram: 8192
+  l:
+    cpu: 8
+    ram: 10240
