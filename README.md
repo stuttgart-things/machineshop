@@ -27,6 +27,22 @@ machineshop version
 
 ## DEV
 
+<details><summary><b>CREATE BRANCH</b></summary>
+
+```bash
+task branch
+```
+
+</details>
+
+<details><summary><b>CREATE PULL-REQUEST/MERGE</b></summary>
+
+```bash
+task pr
+```
+
+</details>
+
 <details><summary><b>BUILD RELEASE</b></summary>
 
 ```bash
@@ -95,6 +111,20 @@ machineshop push \
 --target minio \
 --source pod.yaml \
 --destination manifests:pod-example.yaml # <BUCKET>:<OBECTNAME>
+```
+
+</details>
+
+<details><summary><b>MS TEAMS</b></summary>
+
+```bash
+WEBHOOK_URL=https://365sva.webhook...
+
+machineshop push \
+--target teams \
+--source "hello from machineshop cli" \
+--destination ${WEBHOOK_URL} \
+--color blue
 ```
 
 </details>

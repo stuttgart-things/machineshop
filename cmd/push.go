@@ -16,33 +16,56 @@ import (
 
 var (
 	minioLocation = "us-east-1"
+	colors        = map[string]string{
+		"red":    "#FF0000",
+		"green":  "#00FF00",
+		"blue":   "#0000FF",
+		"orange": "#DF813D",
+		"purple": "#726EAD",
+		// Add more colors as needed
+	}
 )
 
 // pushCmd represents the push command
 var pushCmd = &cobra.Command{
 	Use:   "push",
-	Short: "push artifacts",
-	Long:  `push artifacts target external systems`,
+	Short: "push things",
+	Long:  `push things to external systems`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// FLAGS
 		target, _ := cmd.LocalFlags().GetString("target")
-		sourceFile, _ := cmd.LocalFlags().GetString("source")
-		destinationPath, _ := cmd.LocalFlags().GetString("destination")
+		source, _ := cmd.LocalFlags().GetString("source")
+		color, _ := cmd.LocalFlags().GetString("color")
+		destination, _ := cmd.LocalFlags().GetString("destination")
 
-		// VERIFY IF SOURCE FILE IS EXISTING
-		internal.ValidateSourceFile(sourceFile)
-
-		if destinationPath != "" {
+		if destination != "" {
 
 			switch target {
+
+			case "teams":
+
+				if colors[color] == "" {
+					target = "orange"
+				}
+
+				log.Info("PUSHING TO MS TEAMS")
+				log.Info("MESSAGE: ", source)
+				log.Info("MS TEAMS URL: ", destination)
+				log.Info("COLOR: ", color)
+
+				webhook := sthingsCli.MsTeamsWebhook{Title: "Machineshop", Text: source, Color: colors[color], Url: destination}
+				sthingsCli.SendWebhookToTeams(webhook)
 
 			case "minio":
 
 				log.Info("PUSHING TO MINIO S3")
 				log.Info("MINIO URL: ", os.Getenv("MINIO_ADDR"))
-				log.Info("SOURCE: ", sourceFile)
-				log.Info("TARGET: ", destinationPath)
+				log.Info("SOURCE: ", source)
+				log.Info("TARGET: ", destination)
+
+				// VERIFY IF SOURCE FILE IS EXISTING
+				internal.ValidateSourceFile(source)
 
 				clientCreated, minioClient := sthingsCli.CreateMinioClient()
 
@@ -53,7 +76,7 @@ var pushCmd = &cobra.Command{
 				} else {
 					log.Info("MINIO CLIENT CREATED")
 
-					destination := strings.Split(destinationPath, ":")
+					destination := strings.Split(destination, ":")
 					bucket := destination[0]
 					objectName := destination[1]
 
@@ -61,7 +84,7 @@ var pushCmd = &cobra.Command{
 					log.Info("OBJECT: ", objectName)
 
 					sthingsCli.CreateMinioBucket(minioClient, bucket, minioLocation)
-					uploaded, fileSize := sthingsCli.UploadObjectToMinioBucket(minioClient, bucket, sourceFile, objectName)
+					uploaded, fileSize := sthingsCli.UploadObjectToMinioBucket(minioClient, bucket, source, objectName)
 
 					if uploaded {
 						log.Info("SUCCESSFULLY UPLOADED OF SIZE: ", fileSize)
@@ -81,4 +104,5 @@ func init() {
 	pushCmd.Flags().String("source", "", "source file path")
 	pushCmd.Flags().String("destination", "", "destination path")
 	pushCmd.Flags().String("target", "minio", "push target")
+	pushCmd.Flags().String("color", "orange", "color for webhook message")
 }
