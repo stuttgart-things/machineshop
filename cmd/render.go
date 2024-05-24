@@ -140,8 +140,23 @@ var renderCmd = &cobra.Command{
 
 			listContent, isList := sthingsBase.GetRegexSubMatch(values.(string), `\[(.*?)\]`)
 			if isList {
-				fmt.Println(key + " IS A LIST!")
-				variables[key] = strings.Split(listContent, " ")
+				log.Info("FOUND MAP OR A LIST: ", key)
+				fmt.Println(values)
+
+				_, isMap := sthingsBase.GetRegexSubMatch(values.(string), `map\[(.*?)\]`)
+				if isMap {
+					log.Info("FOUND MAP")
+					fmt.Println(values)
+
+				} else {
+					log.Info("FOUND LIST")
+					// GET LIST AS LIST
+					variables[key] = strings.Split(listContent, " ")
+
+					// GET RANDOM (SINGLE) VALUE FROM LIST
+					variables["RANDOM"+key] = sthingsBase.GetRandomPickFromSlice(strings.Split(listContent, " "))
+				}
+
 			}
 		}
 
@@ -158,11 +173,11 @@ var renderCmd = &cobra.Command{
 
 		// HANDLE OUTPUT
 		if len(renderedTemplate) == 0 {
-            log.Error("RENDERED TEMPLATE IS EMPTY")
-            os.Exit(3)
-        } else {
-            internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), b64DecodeOption, enableVault)
-        }
+			log.Error("RENDERED TEMPLATE IS EMPTY")
+			os.Exit(3)
+		} else {
+			internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), b64DecodeOption, enableVault)
+		}
 	},
 }
 
