@@ -617,6 +617,8 @@ github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7 h1:nVo
 github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7/go.mod h1:RhH+7myjNLGs/BFeYO5U7ekmM7OsymsIOUN/DkewR3g=
 github.com/stuttgart-things/sthingsBase v0.1.40 h1:uN/R16HyU3p2LQCDi5/GWzmO/qRQv6z0TY7toVEAsBQ=
 github.com/stuttgart-things/sthingsBase v0.1.40/go.mod h1:9YbYcRRpiIrY7m1C3JsU22esKj0axN1ds7EbsG7wWrs=
+github.com/stuttgart-things/sthingsBase v0.1.41 h1:0aRlEqYilwaJAl9lqv17ZxXXtYAwONw4Rk0X/SLJ+BI=
+github.com/stuttgart-things/sthingsBase v0.1.41/go.mod h1:9YbYcRRpiIrY7m1C3JsU22esKj0axN1ds7EbsG7wWrs=
 github.com/stuttgart-things/sthingsCli v0.1.103 h1:0vN/5Zr3KyZciltdF4IQe57R5f0ORdGZXXLj+kQpU+0=
 github.com/stuttgart-things/sthingsCli v0.1.103/go.mod h1:MFgbbICsar2SiZvdqjXeTeCzbU/ofEuzC+VgNDMN4pg=
 github.com/subosito/gotenv v1.4.2 h1:X1TuBLAMDFbaTAChgCBLu3DU3UPyELpnF2jjJ2cz/S8=

@@ -8,7 +8,7 @@ require (
 	github.com/google/go-github/v62 v62.0.0
 	github.com/pterm/pterm v0.12.79
 	github.com/spf13/cobra v1.8.0
-	github.com/stuttgart-things/sthingsBase v0.1.40
+	github.com/stuttgart-things/sthingsBase v0.1.41
 	github.com/stuttgart-things/sthingsCli v0.1.103
 	go.hein.dev/go-version v0.1.0
 )
