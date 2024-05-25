@@ -65,6 +65,22 @@ task ko
 
 creates things on github
 
+<details><summary><b>REPOSITORY</b></summary>
+
+```bash
+export GITHUB_TOKEN=<GITHUB_TOKEN>
+
+machineshop create \
+--kind repo \
+--group stuttgart-things \
+--repository machineshop2 \
+--message "test repository - machineshop" \
+--private true
+```
+
+</details>
+
+
 <details><summary><b>BRANCH</b></summary>
 
 ```bash
@@ -129,8 +145,9 @@ machineshop push \
 
 </details>
 
-
 ### RENDER
+
+render things from templates from various input sources
 
 <details><summary><b>EXAMPLE TEMPLATE</b></summary>
 
