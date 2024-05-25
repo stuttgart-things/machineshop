@@ -40,6 +40,7 @@ var createCmd = &cobra.Command{
 		authorEmail, _ := cmd.LocalFlags().GetString("email")
 		commitMessage, _ := cmd.LocalFlags().GetString("message")
 		prTitle, _ := cmd.LocalFlags().GetString("title")
+		privateRepository, _ := cmd.LocalFlags().GetBool("private")
 
 		// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
 		if token == "" {
@@ -60,6 +61,26 @@ var createCmd = &cobra.Command{
 		log.Info("BASE-BRANCH: ", baseBranch)
 
 		switch kind {
+
+		case "repo":
+
+			if commitMessage == "" {
+				commitMessage = repositoryName
+			}
+
+			// HARDCODED AUTO INIT FOR NOW
+			autoInit := true
+
+			log.Info("DESCRIPTION: ", commitMessage)
+			log.Info("PRIVATE REPOSITORY: ", privateRepository)
+			log.Info("AUTO INIT: ", autoInit)
+
+			err, repoName := sthingsCli.CreateRepository(client, repositoryName, commitMessage, groupName, privateRepository, autoInit)
+			if err != nil {
+				log.Error("UNABLE TO CREATE REPOSITORY: ", err)
+			} else {
+				log.Info("REPOSITORY CREATED: ", repoName)
+			}
 
 		case "branch":
 
@@ -150,6 +171,7 @@ func init() {
 	createCmd.Flags().String("email", "machineshop@stuttgart-things.com", "author email")
 	createCmd.Flags().String("message", "", "commit message")
 	createCmd.Flags().String("token", "", "github token")
+	createCmd.Flags().Bool("private", false, "private repository")
 	createCmd.Flags().String("base", "main", "name of (to be merged) branch")
 	createCmd.Flags().StringSlice("files", []string{}, "files to be created in branch - PATH-LOCAL:PATH-TARGET")
 }
