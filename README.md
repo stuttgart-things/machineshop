@@ -8,13 +8,13 @@ git based CLI interface for managing configuration as code
 * RENDER + EXECUTE MULTIPLE SCRIPTS (INSTALL)
 * RETRIEVE SECRETS FROM VAULT (GET)
 
-## INSTALLATION
+## DEPLOYMENT
 
-<details><summary><b>BY RELEASE</b></summary>
+<details><summary><b>BINARY BY RELEASE</b></summary>
 
 ```bash
 # LINUX x86_64
-VERSION=v1.7.0
+VERSION=v1.9.0
 wget https://github.com/stuttgart-things/machineshop/releases/download/${VERSION}/machineshop_Linux_x86_64.tar.gz
 tar xvfz machineshop_Linux_x86_64.tar.gz
 sudo mv machineshop /usr/bin/machineshop
@@ -24,6 +24,22 @@ machineshop version
 ```
 
 </details>
+
+<details><summary><b>CONTAINER IMAGE</b></summary>
+
+```bash
+# RUN COMMAND
+sudo nerdctl run ghcr.io/stuttgart-things/machineshop/machineshop-9c3178088556daa12a17db5edcc6b5b7:1.9.10 version
+```
+
+```bash
+# JUMP INTO SHELL
+nerdctl run -it --entrypoint bash \
+ghcr.io/stuttgart-things/machineshop/machineshop-9c3178088556daa12a17db5edcc6b5b7:1.9.10
+```
+
+</details>
+
 
 ## DEV
 
@@ -54,7 +70,7 @@ task release TAG=v1.8.0 # EXAMPLE VERSION
 <details><summary><b>BUILD CONTAINER-IMAGE w/ KO</b></summary>
 
 ```bash
-task ko
+task ko TAG=v1.9.0 # EXAMPLE VERSION
 ```
 
 </details>

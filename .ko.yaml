@@ -1,2 +1,2 @@
 ---
-defaultBaseImage: eu.gcr.io/stuttgart-things/sthings-alpine:3.12.2-alpine3.19
+defaultBaseImage: eu.gcr.io/stuttgart-things/sthings-workflow:1.30.1
