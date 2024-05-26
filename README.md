@@ -96,7 +96,6 @@ machineshop create \
 
 </details>
 
-
 <details><summary><b>BRANCH</b></summary>
 
 ```bash
@@ -222,9 +221,11 @@ machineshop render --source git \
 
 </details>
 
-<details><summary><b>GET</b></summary>
+### GET
 
-### REQUIREMENT: VAULT APPROLE EXPORTS
+get things from systems
+
+<details><summary><b>REQUIREMENT: VAULT APPROLE EXPORTS</b></summary>
 
 ```bash
 export VAULT_NAMESPACE=root
@@ -233,8 +234,11 @@ export VAULT_SECRET_ID=623c991f-dd76-c437-2723-bb2ef5b02d87
 export VAULT_ADDR=https://≤VAULT_ADDR>[:8200]
 ```
 
-### GET SECRET VALUE BY PATH
-```
+</details>
+
+<details><summary><b>GET SECRET VALUE BY PATH</b></summary>
+
+```bash
 machineshop get --path apps/data/scr:password | tail -n +8
 
 machineshop get --path apps/data/scr:password --output file --destination /tmp/password.txt
