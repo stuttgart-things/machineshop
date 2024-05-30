@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/google/go-github/v62/github"
-	sthingsCli "github.com/stuttgart-things/sthingsCli"
-
 	"github.com/spf13/cobra"
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
 var client *github.Client
@@ -41,6 +41,8 @@ var createCmd = &cobra.Command{
 		commitMessage, _ := cmd.LocalFlags().GetString("message")
 		prTitle, _ := cmd.LocalFlags().GetString("title")
 		privateRepository, _ := cmd.LocalFlags().GetBool("private")
+		mergeMethod, _ := cmd.LocalFlags().GetString("merge")
+		prID, _ := cmd.LocalFlags().GetString("id")
 
 		// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
 		if token == "" {
@@ -155,6 +157,18 @@ var createCmd = &cobra.Command{
 			} else {
 				log.Info("PULL-REQUEST CREATED W/ ID: ", pullRequestID)
 			}
+
+		case "merge":
+
+			log.Info("CREATING MERGE REQUEST")
+			log.Info("MERGE: ", commitMessage)
+			log.Info("PR-ID: ", prID)
+			log.Info("MERGE-METHOD : ", mergeMethod)
+
+			prID, _ := cmd.LocalFlags().GetString("id")
+
+			sthingsCli.MergePullRequest(client, repositoryName, groupName, commitMessage, mergeMethod, sthingsBase.ConvertStringToInteger(prID))
+
 		}
 
 	},
@@ -170,6 +184,8 @@ func init() {
 	createCmd.Flags().String("author", "machineshop", "author name")
 	createCmd.Flags().String("email", "machineshop@stuttgart-things.com", "author email")
 	createCmd.Flags().String("message", "", "commit message")
+	createCmd.Flags().String("id", "", "pull reuqest id")
+	createCmd.Flags().String("merge", "merge", "merge methhod rebase")
 	createCmd.Flags().String("token", "", "github token")
 	createCmd.Flags().Bool("private", false, "private repository")
 	createCmd.Flags().String("base", "main", "name of (to be merged) branch")

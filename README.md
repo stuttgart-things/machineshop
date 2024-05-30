@@ -126,6 +126,23 @@ machineshop create \
 
 </details>
 
+<details><summary><b>MERGE</b></summary>
+
+```bash
+export GITHUB_TOKEN=<GITHUB_TOKEN>
+
+machineshop create \
+--kind merge \
+--group stuttgart-things \
+--repository stuttgart-things \
+--message "test" \
+--merge rebase \
+--id 243
+```
+
+</details>
+
+
 ### PUSH
 
 push things to targets
