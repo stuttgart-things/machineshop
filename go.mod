@@ -9,7 +9,7 @@ require (
 	github.com/pterm/pterm v0.12.79
 	github.com/spf13/cobra v1.8.0
 	github.com/stuttgart-things/sthingsBase v0.1.41
-	github.com/stuttgart-things/sthingsCli v0.1.105
+	github.com/stuttgart-things/sthingsCli v0.1.106
 	go.hein.dev/go-version v0.1.0
 )
 
@@ -126,7 +126,7 @@ require (
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/redis/go-redis/v9 v9.5.1 // indirect
+	github.com/redis/go-redis/v9 v9.5.2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect

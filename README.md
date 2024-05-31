@@ -126,6 +126,20 @@ machineshop create \
 
 </details>
 
+<details><summary><b>DELETE</b></summary>
+
+```bash
+export GITHUB_TOKEN=<GITHUB_TOKEN>
+
+machineshop delete \
+--kind branch \
+--branch hello \
+--repository stuttgart-things \
+--group stuttgart-things
+```
+
+</details>
+
 <details><summary><b>MERGE</b></summary>
 
 ```bash

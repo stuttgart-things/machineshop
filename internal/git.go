@@ -27,14 +27,14 @@ func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, 
 		Auth: auth,
 	})
 	if err != nil {
-		return fmt.Errorf("Could not git clone repository %s: %w", repository, err)
+		return fmt.Errorf("could not git clone repository %s: %w", repository, err)
 	}
 	fmt.Println("Repository cloned")
 
 	// Get git default worktree
 	w, err := r.Worktree()
 	if err != nil {
-		return fmt.Errorf("Could not get git worktree: %w", err)
+		return fmt.Errorf("could not get git worktree: %w", err)
 	}
 
 	fmt.Println(w)
@@ -67,7 +67,6 @@ func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, 
 	fmt.Println(added)
 	// w.Remove(filePath2)
 	// Run git status after the file has been added adding to the worktree
-	fmt.Println("STATUUUS")
 	fmt.Println(w.Status())
 
 	// git commit -m $message
@@ -81,7 +80,7 @@ func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, 
 
 	fmt.Println(err)
 	if err != nil {
-		return fmt.Errorf("Could not git push: %w", err)
+		return fmt.Errorf("could not git push: %w", err)
 	}
 	fmt.Println("Remote updated.", filePath)
 
