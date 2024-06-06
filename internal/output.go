@@ -52,10 +52,10 @@ func HandleRenderOutput(outputFormat, destinationPath, renderedTemplate string, 
 	default:
 		logger.Error(outputFormat, "output format not defined")
 	case "stdout":
-		fmt.Println(string(renderedTemplate))
+		fmt.Println(renderedTemplate)
 	case "file":
 		logger.Info("output file written to ", destinationPath)
-		sthingsBase.WriteDataToFile(destinationPath, string(renderedTemplate))
+		sthingsBase.WriteDataToFile(destinationPath, renderedTemplate)
 	}
 
 }
