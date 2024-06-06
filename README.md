@@ -239,6 +239,8 @@ machineshop render --source git \
 
 ### DELETE
 
+delete things on git(hub)
+
 <details><summary><b>BRANCH</b></summary>
 
 ```bash
