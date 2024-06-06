@@ -255,6 +255,21 @@ machineshop delete \
 
 </details>
 
+<details><summary><b>FILES</b></summary>
+
+```bash
+export GITHUB_TOKEN=<GITHUB_TOKEN>
+
+machineshop delete \
+--kind files \
+--branch main \
+--repository stuttgart-things \
+--group stuttgart-things \
+--files ".github/workflows/lint-k8s-manifests.yaml" \
+--user patrick-hermann-sva
+```
+
+</details>
 
 ### GET
 
