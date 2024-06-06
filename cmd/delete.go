@@ -24,22 +24,25 @@ var deleteCmd = &cobra.Command{
 		repositoryName, _ := cmd.LocalFlags().GetString("repository")
 		groupName, _ := cmd.LocalFlags().GetString("group")
 		branchName, _ := cmd.LocalFlags().GetString("branch")
-		token, _ := cmd.LocalFlags().GetString("token")
+		user, _ := cmd.Flags().GetString("user")
+		token, _ := cmd.Flags().GetString("token")
+		filesToRemove, _ := cmd.Flags().GetStringSlice("files")
+		commitMessage, _ := cmd.LocalFlags().GetString("message")
+
+		// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
+		if token == "" {
+			token = os.Getenv("GITHUB_TOKEN")
+		}
+
+		// IF NOT DEFINED IN ENVIRONMENT OR FLAG, EXIT
+		if token == "" {
+			log.Error("GITHUB TOKEN NOT FOUND")
+			os.Exit(3)
+		}
 
 		switch kind {
 
 		case "branch":
-
-			// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
-			if token == "" {
-				token = os.Getenv("GITHUB_TOKEN")
-			}
-
-			// IF NOT DEFINED IN ENVIRONMENT OR FLAG, EXIT
-			if token == "" {
-				log.Error("GITHUB TOKEN NOT FOUND")
-				os.Exit(3)
-			}
 
 			// CREATE GITHUB CLIENT
 			client = github.NewClient(nil).WithAuthToken(token)
@@ -48,6 +51,36 @@ var deleteCmd = &cobra.Command{
 			branchPreFix := "refs/heads/"
 
 			sthingsCli.DeleteBranch(client, repositoryName, groupName, branchPreFix+branchName)
+
+		case "files":
+
+			// IF FILES ARE EMPTY TO NOTHING
+			if len(filesToRemove) != 0 {
+
+				// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
+				if user == "" {
+					user = os.Getenv("GIT_USER")
+				}
+
+				// IF MESSAGE IS EMPTY SET IT TO "DELETED FILES W/ machineshop"
+				if commitMessage == "" {
+					commitMessage = "Deleted files w/ machineshop"
+				}
+
+				// CREATE GIT AUTH
+				auth := sthingsCli.CreateGitAuth(user, token)
+
+				// SET GIT REPO URL
+				gitRepository := "https://github.com/" + groupName + "/" + repositoryName + ".git"
+
+				// DELETE FILES FROM BRANCH
+				sthingsCli.AddCommitFileToGitRepository(gitRepository, branchName, auth, nil, filesToRemove, commitMessage)
+
+			} else {
+				log.Error("FILES TO DELETE NOT PROVIDED")
+				os.Exit(3)
+			}
+
 		}
 
 	},
@@ -60,4 +93,7 @@ func init() {
 	deleteCmd.Flags().String("repository", "stuttgart-things", "name of repository")
 	deleteCmd.Flags().String("branch", "", "(to be deleted) branch name")
 	deleteCmd.Flags().String("token", "", "github token")
+	deleteCmd.Flags().String("user", "", "git user")
+	deleteCmd.Flags().StringSlice("files", []string{}, "files to be deleted")
+	deleteCmd.Flags().String("message", "", "commit message")
 }
