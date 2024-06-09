@@ -11,6 +11,7 @@ import (
 
 	"github.com/stuttgart-things/machineshop/internal"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
+	"gopkg.in/yaml.v2"
 
 	billy "github.com/go-git/go-billy/v5"
 	"github.com/spf13/cobra"
@@ -146,10 +147,23 @@ var renderCmd = &cobra.Command{
 				_, isMap := sthingsBase.GetRegexSubMatch(values.(string), `map\[(.*?)\]`)
 				if isMap {
 					log.Info("FOUND MAP")
-					fmt.Println(values)
+					fmt.Println(key)
+
+					// REED YAML FILE
+					yamlFile, err := os.ReadFile(defaultsPath)
+					if err != nil {
+						fmt.Printf("yamlFile.Get err #%v ", err)
+					}
+					// GET TRANSFORMED VALUES FROM DICT
+					mapValues := sthingsCli.GetYAMLMapValues(yamlFile, key)
+
+					// MERGE W/ VARS
+					variables = sthingsBase.MergeMaps(variables, mapValues)
+					log.Info("MAP VALUES: ", variables)
 
 				} else {
 					log.Info("FOUND LIST")
+
 					// GET LIST AS LIST
 					variables[key] = strings.Split(listContent, " ")
 
@@ -179,6 +193,27 @@ var renderCmd = &cobra.Command{
 			internal.HandleRenderOutput(outputFormat, destinationPath, string(renderedTemplate), b64DecodeOption, enableVault)
 		}
 	},
+}
+
+func GetYAMLMapValues(content []byte, dictName string) (transformedValues map[string]interface{}) {
+
+	obj := make(map[string]interface{})
+	transformedValues = make(map[string]interface{})
+
+	err := yaml.Unmarshal(content, obj)
+	if err != nil {
+		fmt.Printf("UNMARSHALING: %v", err)
+	}
+
+	// ITERATE OVER KEYS AND VALUES
+	for dictKey, subKey := range obj[dictName].(map[interface{}]interface{}) {
+
+		for subKey, value := range subKey.(map[interface{}]interface{}) {
+			transformedValues[dictName+"_"+fmt.Sprint(dictKey)+"_"+fmt.Sprint(subKey)] = fmt.Sprint(value)
+		}
+	}
+
+	return transformedValues
 }
 
 func init() {
