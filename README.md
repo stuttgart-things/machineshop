@@ -195,6 +195,8 @@ runs:
 
 # RANDOM ELEMENT FROM EXISTING LIST
 favoriteFood: {{ .RANDOMfood }}
+cpu: {{ .vmConfig_l_cpu }}
+ram: {{ .vmConfig_m_ram }}
 ```
 
 </details>
@@ -204,10 +206,20 @@ favoriteFood: {{ .RANDOMfood }}
 ```yaml
 ---
 chartName: helloHelm
+
+
 food:
   - schnitzel
   - apple
   - hamburger
+
+vmConfig:
+  m:
+    cpu: 6
+    ram: 8192
+  l:
+    cpu: 8
+    ram: 10240
 ```
 
 </details>

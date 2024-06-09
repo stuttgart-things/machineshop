@@ -4,7 +4,8 @@ runs:
     name: package-publish-{{ .chartName }}
     addRandomDateToRunName: {{ or .randomName "false" }}
     namespace: {{ .namespace }}
-
+cpu: {{ .vmConfig_l_cpu }}
+cpu: {{ .vmConfig_m_ram }}
 namespace: {{ .RANDOMhello2 }}
 
 {{ range .hello2 }}
