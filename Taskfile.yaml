@@ -25,7 +25,7 @@ tasks:
     desc: Run
     deps: [install]
     cmds:
-      - "{{ .PROJECT_NAME }}"
+      - "$GOPATH/bin/machineshop"
 
   install-cobra:
     cmds:
@@ -44,7 +44,7 @@ tasks:
     env:
       KO_DOCKER_REPO: ghcr.io/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }} #scr.cd43.sthings-pve.labul.sva.de/machineshop
     cmds:
-      - ko build github.com/stuttgart-things/machineshop --tags {{ .TAG }} --push
+      - ko build github.com/stuttgart-things/machineshop --push
 
   build:
     desc: Build code
