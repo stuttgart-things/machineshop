@@ -2,6 +2,32 @@
 
 git based CLI interface for managing configuration as code
 
+## TASKS
+
+```bash
+task: Available tasks for this project:
+* branch:              Create branch from main
+* build:               Build code
+* build-image:         Build container image
+* commit:              Commit + push code into branch
+* delete-branch:       Delete branch from origin
+* install:             Install
+* ko:                  Build image w/ KO
+* lint:                Lint
+* pr:                  Create pull request into main
+* release:             Relase binaries
+* run:                 Run
+* tag:                 Commit, push & tag the module
+* test:                Test
+* tests:               Built cli tests
+```
+
+```bash
+task run # will output build version
+task run CMD=push # will run with build command push
+```
+
+
 ## FEATURES
 * RENDER TEMPLATES w/ DEFAULTS AND PARAMETERS (RENDER)
 * INSTALL MULTIPLE BINARIES FROM WEB SOURCES AT ONCE/IN PARALLEL (INSTALL)
