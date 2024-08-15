@@ -22,9 +22,12 @@ task: Available tasks for this project:
 * tests:               Built cli tests
 ```
 
+TASK EXAMPLES
+
 ```bash
 task run # will output build version
 task run CMD=push # will run with build command push
+task release TAG=2.2.9 # will release bins with version 2.2.9
 ```
 
 
