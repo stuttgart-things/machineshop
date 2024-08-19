@@ -20,7 +20,6 @@ func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, 
 	// Init memory storage and fs
 	storer := memory.NewStorage()
 	fs := memfs.New()
-
 	// Clone repo into memfs
 	r, err := git.Clone(storer, fs, &git.CloneOptions{
 		URL:  repository,
@@ -61,7 +60,6 @@ func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, 
 
 	// Run git status before adding the file to the worktree
 	fmt.Println(w.Status())
-
 	// git add $filePath
 	added, _ := w.Add(filePath)
 	fmt.Println(added)
