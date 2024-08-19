@@ -352,7 +352,7 @@ machineshop get --path kubeconfigs/data/dev21:kubeconfig --output file --destina
 <details><summary><b>GET SECRET VALUE BY PATH</b></summary>
 
 ```bash
-machineshop get --system=sops --path=/home/sthings/projects/golang/sops/bla.yaml:age | tail -n +11
+machineshop get --system=sops --path=/home/sthings/projects/golang/sops/bla.yaml:password | tail -n +11
 ```
 
 </details>
