@@ -316,13 +316,23 @@ machineshop delete \
 
 get things from systems
 
-<details><summary><b>REQUIREMENT: VAULT APPROLE EXPORTS</b></summary>
+<details><summary><b>VAULT-REQUIREMENT: VAULT APPROLE EXPORTS</b></summary>
 
 ```bash
 export VAULT_NAMESPACE=root
 export VAULT_ROLE_ID=1d42d7e7-8c14-e5f9-801d-b3ecef416616
 export VAULT_SECRET_ID=623c991f-dd76-c437-2723-bb2ef5b02d87
 export VAULT_ADDR=https://≤VAULT_ADDR>[:8200]
+```
+
+</details>
+
+<details><summary><b>SOPS-REQUIREMENT: AGE_KEY EXPORTS</b></summary>
+
+```bash
+export SOPS_AGE_KEY=AGE-...
+# or
+export SOPS_AGE_KEY_FILE=home/sthings/projects/golang/sops/sops.key
 ```
 
 </details>
@@ -335,6 +345,14 @@ machineshop get --path apps/data/scr:password | tail -n +8
 machineshop get --path apps/data/scr:password --output file --destination /tmp/password.txt
 
 machineshop get --path kubeconfigs/data/dev21:kubeconfig --output file --destination /tmp/dev211 --b64 true
+```
+
+</details>
+
+<details><summary><b>GET SECRET VALUE BY PATH</b></summary>
+
+```bash
+machineshop get --system=sops --path=/home/sthings/projects/golang/sops/bla.yaml:age | tail -n +11
 ```
 
 </details>
