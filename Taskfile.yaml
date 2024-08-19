@@ -20,13 +20,14 @@ vars:
     sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD) ; fi
   COBRA_VERSION: 1.3.0
   CMD: version
+  PARAMETERS: ""
 
 tasks:
   run:
     desc: Run
     deps: [install]
     cmds:
-      - "$GOPATH/bin/machineshop {{ .CMD }}"
+      - "$GOPATH/bin/machineshop {{ .CMD }} {{ .PARAMETERS }}"
 
   install-cobra:
     cmds:
