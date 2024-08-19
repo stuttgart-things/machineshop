@@ -337,7 +337,7 @@ export SOPS_AGE_KEY_FILE=home/sthings/projects/golang/sops/sops.key
 
 </details>
 
-<details><summary><b>GET SECRET VALUE BY PATH</b></summary>
+<details><summary><b>GET VAULT SECRET VALUE BY PATH</b></summary>
 
 ```bash
 machineshop get --path apps/data/scr:password | tail -n +8
@@ -349,7 +349,7 @@ machineshop get --path kubeconfigs/data/dev21:kubeconfig --output file --destina
 
 </details>
 
-<details><summary><b>GET SECRET VALUE BY PATH</b></summary>
+<details><summary><b>GET SOPS SECRET VALUE BY PATH</b></summary>
 
 ```bash
 machineshop get --system=sops --path=/home/sthings/projects/golang/sops/bla.yaml:password | tail -n +11
