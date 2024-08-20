@@ -43,6 +43,7 @@ var createCmd = &cobra.Command{
 		privateRepository, _ := cmd.LocalFlags().GetBool("private")
 		mergeMethod, _ := cmd.LocalFlags().GetString("merge")
 		prID, _ := cmd.LocalFlags().GetString("id")
+		labels, _ := cmd.Flags().GetStringSlice("labels")
 
 		// IF TOKEN IS NOT PROVIDED, TRY TO GET IT FROM ENVIRONMENT
 		if token == "" {
@@ -124,6 +125,7 @@ var createCmd = &cobra.Command{
 
 		case "pr":
 			log.Info("CREATING PULL REQUEST")
+			log.Info("LABELS", labels)
 
 			// IF KIND EQUALS PR AND TITLE IS NOT PROVIDED
 			if prTitle == "" {
@@ -151,7 +153,7 @@ var createCmd = &cobra.Command{
 			log.Info("PULL-REQUEST TITLE: ", prTitle)
 
 			// CREATE PULL REQUEST
-			err, pullRequestID := sthingsCli.CreatePullRequest(client, prSubject, prRepoOwner, sourceOwner, commitBranch, prRepo, sourceRepo, repoBranch, baseBranch, prDescription)
+			err, pullRequestID := sthingsCli.CreatePullRequest(client, prSubject, prRepoOwner, sourceOwner, commitBranch, prRepo, sourceRepo, repoBranch, baseBranch, prDescription, labels)
 			if err != nil {
 				log.Fatalf("UNABLE TO CREATE THE PULL REQUEST: %s\n", err)
 			} else {
@@ -190,4 +192,5 @@ func init() {
 	createCmd.Flags().Bool("private", false, "private repository")
 	createCmd.Flags().String("base", "main", "name of (to be merged) branch")
 	createCmd.Flags().StringSlice("files", []string{}, "files to be created in branch - PATH-LOCAL:PATH-TARGET")
+	createCmd.Flags().StringSlice("labels", []string{}, "labels to be added to pull request")
 }

@@ -150,7 +150,8 @@ machineshop create \
 --title test2 \
 --branch hello \
 --repository machineshop \
---group stuttgart-things
+--group stuttgart-things \
+--labels "release,deploy" # optional
 ```
 
 </details>
