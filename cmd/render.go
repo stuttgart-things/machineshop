@@ -18,6 +18,11 @@ import (
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
+// DEFINE THE STRUCTURE TO MATCH THE YAML FILE
+type InfraConfig struct {
+	Apps map[string]string `yaml:"template"`
+}
+
 type TemplateBracket struct {
 	begin        string `mapstructure:"begin"`
 	end          string `mapstructure:"end"`
@@ -46,6 +51,7 @@ var renderCmd = &cobra.Command{
 
 		// FLAGS
 		source, _ := cmd.LocalFlags().GetString("source")
+		templateKind, _ := cmd.LocalFlags().GetString("kind")
 		gitPath, _ := cmd.LocalFlags().GetString("path")
 		templatePath, _ := cmd.LocalFlags().GetString("template")
 		defaultsPath, _ := cmd.LocalFlags().GetString("defaults")
@@ -55,6 +61,7 @@ var renderCmd = &cobra.Command{
 		forceRenderOption, _ := cmd.LocalFlags().GetBool("force")
 		b64DecodeOption, _ := cmd.LocalFlags().GetBool("b64")
 		bracketFormat, _ := cmd.LocalFlags().GetString("brackets")
+		keys, _ := cmd.Flags().GetStringSlice("keys")
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/RENDER")
@@ -175,16 +182,42 @@ var renderCmd = &cobra.Command{
 		}
 
 		// RENDER TEMPLATE
+		var renderedTemplate []byte
+		var err error
+
 		renderOption := "missingkey=error"
 		if forceRenderOption {
 			renderOption = "missingkey=zero"
 		}
 
-		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, variables)
-		if err != nil {
-			fmt.Println(err)
-		}
+		if templateKind == "multikey" {
 
+			data, err := os.ReadFile(templatePath)
+			if err != nil {
+				log.Fatalf("error: %v", err)
+			}
+
+			var config InfraConfig
+			err = yaml.Unmarshal(data, &config)
+			if err != nil {
+				log.Fatalf("error: %v", err)
+			}
+
+			for key, value := range config.Apps {
+
+				if sthingsBase.CheckForStringInSlice(keys, key) {
+					fmt.Println(value)
+					continue
+				}
+				// $GOPATH/bin/machineshop render --source local --template tests/infra.yaml --kind multikey --keys longhorn
+			}
+
+		} else {
+			renderedTemplate, err = sthingsBase.RenderTemplateInline(templateFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, variables)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 		// HANDLE OUTPUT
 		if len(renderedTemplate) == 0 {
 			log.Error("RENDERED TEMPLATE IS EMPTY")
@@ -219,6 +252,7 @@ func GetYAMLMapValues(content []byte, dictName string) (transformedValues map[st
 func init() {
 	rootCmd.AddCommand(renderCmd)
 	renderCmd.Flags().String("source", "git", "source of profile: git or local")
+	renderCmd.Flags().String("kind", "file", "kind of template: file or multikey")
 	renderCmd.Flags().String("template", "tests/template.yaml", "path to to be rendered template")
 	renderCmd.Flags().String("defaults", "", "path to defaults template file")
 	renderCmd.Flags().String("brackets", "curly", "template bracket format - curly|square")
@@ -226,5 +260,6 @@ func init() {
 	renderCmd.Flags().String("destination", "", "path to output (if output file)")
 	renderCmd.Flags().Bool("force", false, "force rendering by missing keys")
 	renderCmd.Flags().StringSlice("values", []string{}, "templating values")
+	renderCmd.Flags().StringSlice("keys", []string{}, "to be rendered keys - only possible if kind is multikey")
 	renderCmd.Flags().Bool("b64", false, "decode base64 for output")
 }
