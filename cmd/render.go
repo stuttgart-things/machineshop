@@ -61,7 +61,7 @@ var renderCmd = &cobra.Command{
 		forceRenderOption, _ := cmd.LocalFlags().GetBool("force")
 		b64DecodeOption, _ := cmd.LocalFlags().GetBool("b64")
 		bracketFormat, _ := cmd.LocalFlags().GetString("brackets")
-		keys, _ := cmd.Flags().GetStringSlice("keys")
+		templateKey, _ := cmd.LocalFlags().GetString("key")
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/RENDER")
@@ -181,9 +181,7 @@ var renderCmd = &cobra.Command{
 			}
 		}
 
-		// RENDER TEMPLATE
-		var renderedTemplate []byte
-		var err error
+		// GET MULTIKEY TEMPLATE
 
 		renderOption := "missingkey=error"
 		if forceRenderOption {
@@ -205,19 +203,19 @@ var renderCmd = &cobra.Command{
 
 			for key, value := range config.Apps {
 
-				if sthingsBase.CheckForStringInSlice(keys, key) {
-					fmt.Println(value)
+				if templateKey == key {
+					templateFile = value
 					continue
 				}
-				// $GOPATH/bin/machineshop render --source local --template tests/infra.yaml --kind multikey --keys longhorn
 			}
 
-		} else {
-			renderedTemplate, err = sthingsBase.RenderTemplateInline(templateFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, variables)
-			if err != nil {
-				fmt.Println(err)
-			}
 		}
+
+		renderedTemplate, err := sthingsBase.RenderTemplateInline(templateFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, variables)
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		// HANDLE OUTPUT
 		if len(renderedTemplate) == 0 {
 			log.Error("RENDERED TEMPLATE IS EMPTY")
@@ -260,6 +258,6 @@ func init() {
 	renderCmd.Flags().String("destination", "", "path to output (if output file)")
 	renderCmd.Flags().Bool("force", false, "force rendering by missing keys")
 	renderCmd.Flags().StringSlice("values", []string{}, "templating values")
-	renderCmd.Flags().StringSlice("keys", []string{}, "to be rendered keys - only possible if kind is multikey")
+	renderCmd.Flags().String("key", "", "to be rendered keys - only possible if kind is multikey")
 	renderCmd.Flags().Bool("b64", false, "decode base64 for output")
 }
