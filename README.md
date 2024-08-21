@@ -254,13 +254,14 @@ longhorn: |
 #...
 ```
 
+</details>
+
+
 <details><summary><b>EXAMPLE DEFAULTS FILE</b></summary>
 
 ```yaml
 ---
 chartName: helloHelm
-
-
 food:
   - schnitzel
   - apple
