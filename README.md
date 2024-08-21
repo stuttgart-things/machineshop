@@ -303,7 +303,7 @@ machineshop render --source git \
 
 </details>
 
-<details><summary><b>MULTIKEY-YAML</b></summary>
+<details><summary><b>RENDER FROM MULTIKEY YAML TEMPLATE</b></summary>
 
 ```bash
 machineshop render \
