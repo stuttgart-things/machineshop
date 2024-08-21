@@ -231,6 +231,29 @@ ram: {{ .vmConfig_m_ram }}
 
 </details>
 
+<details><summary><b>EXAMPLE MULTIKEY-TEMPLATE</b></summary>
+
+```yaml
+---
+template:
+  nfsCsi: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: nfs-csi
+      namespace: {{ .namespace }}
+    spec:
+      interval: {{ .interval }}
+# ...
+longhorn: |
+    apiVersion: kustomize.toolkit.fluxcd.io/v1
+    kind: Kustomization
+    metadata:
+      name: longhorn
+      namespace: {{ .namespace}}
+#...
+```
+
 <details><summary><b>EXAMPLE DEFAULTS FILE</b></summary>
 
 ```yaml
@@ -279,6 +302,20 @@ machineshop render --source git \
 
 </details>
 
+<details><summary><b>MULTIKEY-YAML</b></summary>
+
+```bash
+machineshop render \
+--source local \
+--template tests/infra.yaml \
+--output stdout \
+--kind multikey \
+--key longhorn \
+--defaults tests/default.yaml
+```
+
+</details>
+
 ### DELETE
 
 delete things on git(hub)
@@ -322,7 +359,7 @@ get things from systems
 ```bash
 export VAULT_NAMESPACE=root
 export VAULT_ROLE_ID=1d42d7e7-8c14-e5f9-801d-b3ecef416616
-export VAULT_SECRET_ID=623c991f-dd76-c437-2723-bb2ef5b02d87
+export VAULT_SECRET_ID=<SECRET>
 export VAULT_ADDR=https://≤VAULT_ADDR>[:8200]
 ```
 
