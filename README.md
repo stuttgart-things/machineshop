@@ -69,7 +69,6 @@ ghcr.io/stuttgart-things/machineshop/machineshop-9c3178088556daa12a17db5edcc6b5b
 
 </details>
 
-
 ## DEV
 
 <details><summary><b>CREATE BRANCH</b></summary>
