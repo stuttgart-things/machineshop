@@ -27,7 +27,7 @@ TASK EXAMPLES
 ```bash
 task run # will output build version
 task run CMD=get PARAMETERS=--system=sops # will run with build command get + parameters
-task release TAG=2.2.9 # will release bins with version 2.2.9
+task release TAG=2.6.1 # will release bins with version 2.2.9
 ```
 
 
