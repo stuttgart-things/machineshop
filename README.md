@@ -1,6 +1,6 @@
 # stuttgart-things/machineshop
 
-git based CLI interface for managing configuration as code.
+git based CLI interface for managing configuration as code
 
 ## TASKS
 
