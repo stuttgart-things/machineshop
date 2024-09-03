@@ -41,7 +41,7 @@ tasks:
     cmds:
       - machineShop render --source local --template tests/template.yaml --defaults tests/default.yaml
 
-  ko:
+  build-ko:
     desc: Build image w/ KO
     deps: [lint, test]
     env:

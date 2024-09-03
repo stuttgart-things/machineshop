@@ -12,7 +12,7 @@ task: Available tasks for this project:
 * commit:              Commit + push code into branch
 * delete-branch:       Delete branch from origin
 * install:             Install
-* ko:                  Build image w/ KO
+* build-ko:            Build image w/ KO
 * lint:                Lint
 * pr:                  Create pull request into main
 * release:             Relase binaries
