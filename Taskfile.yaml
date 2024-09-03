@@ -12,6 +12,7 @@ vars:
     sh: git describe --tags --abbrev=0
   DATE:
     sh: date +"%Y.%m%d.%H%M"
+
   # UPDATED_TAG:
   #   sh: od_tag=$(git describe --tags --abbrev=0 | cut -d "." -f3); new_tag=$((old_tag+1)); echo $new_tag
   # UPDATED_TAG_VERSION:
