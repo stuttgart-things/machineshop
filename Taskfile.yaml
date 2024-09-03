@@ -13,7 +13,7 @@ vars:
   DATE:
     sh: date +"%Y.%m%d.%H%M"
   # UPDATED_TAG:
-  #   sh: old_tag=$(git describe --tags --abbrev=0 | cut -d "." -f3); new_tag=$((old_tag+1)); echo $new_tag
+  #   sh: od_tag=$(git describe --tags --abbrev=0 | cut -d "." -f3); new_tag=$((old_tag+1)); echo $new_tag
   # UPDATED_TAG_VERSION:
   #   sh: t1=$(git describe --tags --abbrev=0 | cut -f1 -d'.'); t2=$(git describe --tags --abbrev=0 | cut -f2 -d'.'); echo $t1.$t2.{{.UPDATED_TAG}}
   BRANCH:

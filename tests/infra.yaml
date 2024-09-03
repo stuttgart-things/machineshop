@@ -5,7 +5,7 @@ template:
     kind: Kustomization
     metadata:
       name: nfs-csi
-      namespace: flux-system
+      namespace: {{ .namespace}}
     spec:
       interval: 1h
       retryInterval: 1m

@@ -21,13 +21,17 @@ import (
 )
 
 type Message struct {
-	Title     string   `json:"title,omitempty"`     // if empty: info
-	Info      string   `json:"info,omitempty"`      // if empty: title
-	Severity  string   `json:"severity,omitempty"`  // default: info
-	Author    string   `json:"author,omitempty"`    // default: unknown
-	Timestamp string   `json:"timestamp,omitempty"` // generate timestamp func
-	System    string   `json:"system,omitempty"`    // default: unknown
-	Tags      []string `json:"tags,omitempty"`      // empty
+	Title           string `json:"title,omitempty"`           // if empty: info
+	Message         string `json:"info,omitempty"`            // if empty: title
+	Severity        string `json:"severity,omitempty"`        // default: info
+	Author          string `json:"author,omitempty"`          // default: unknown
+	Timestamp       string `json:"timestamp,omitempty"`       // generate timestamp func
+	System          string `json:"system,omitempty"`          // default: unknown
+	Tags            string `json:"tags,omitempty"`            // empty
+	AssigneeAddress string `json:"assigneeaddress,omitempty"` // empty
+	AssigneeName    string `json:"assigneename,omitempty"`    // empty
+	Artifacts       string `json:"artifacts,omitempty"`       // empty
+	Url             string `json:"url,omitempty"`             // empty
 }
 
 var (
@@ -46,12 +50,16 @@ var (
 
 	homeRunBodyData = `{
 		"Title": "{{ .Title }}",
-		"Info": "{{ .Info }}",
+		"Info": "{{ .Message }}",
 		"Severity": "{{ .Severity }}",
 		"Author": "{{ .Author }}",
 		"Timestamp": "{{ .Timestamp }}",
 		"System": "{{ .System }}",
-		"Tags": "{{ .Tags }}"
+		"Tags": "{{ .Tags }}",
+		"AssigneeAddress": "{{ .AssigneeAddress }}",
+		"AssigneeName": "{{ .AssigneeName }}",
+		"Artifacts": "{{ .Artifacts }}",
+		"Url": "{{ .Url }}"
 	}`
 )
 
@@ -67,12 +75,16 @@ var pushCmd = &cobra.Command{
 		source, _ := cmd.LocalFlags().GetString("source")
 		color, _ := cmd.LocalFlags().GetString("color")
 		title, _ := cmd.LocalFlags().GetString("title")
-		body, _ := cmd.LocalFlags().GetString("info")
+		body, _ := cmd.LocalFlags().GetString("message")
 		author, _ := cmd.LocalFlags().GetString("author")
 		severity, _ := cmd.LocalFlags().GetString("severity")
 		system, _ := cmd.LocalFlags().GetString("system")
 		destination, _ := cmd.LocalFlags().GetString("destination")
-		tags, _ := cmd.Flags().GetStringSlice("tags")
+		tags, _ := cmd.LocalFlags().GetString("tags")
+		assignee, _ := cmd.LocalFlags().GetString("assignee")
+		assigneeUrl, _ := cmd.LocalFlags().GetString("assigneeUrl")
+		artifacts, _ := cmd.LocalFlags().GetString("artifacts")
+		url, _ := cmd.LocalFlags().GetString("url")
 
 		if destination != "" {
 
@@ -99,13 +111,17 @@ var pushCmd = &cobra.Command{
 
 				log.Info("PUSHING TO HOMERUN")
 				messageBody := Message{
-					Title:     title,
-					Info:      body,
-					Severity:  severity,
-					Author:    author,
-					Timestamp: timestamp,
-					System:    system,
-					Tags:      tags,
+					Title:           title,
+					Message:         body,
+					Severity:        severity,
+					Author:          author,
+					Timestamp:       timestamp,
+					System:          system,
+					Tags:            tags,
+					AssigneeAddress: assigneeUrl,
+					AssigneeName:    assignee,
+					Artifacts:       artifacts,
+					Url:             url,
 				}
 
 				rendered := RenderBody(homeRunBodyData, messageBody)
@@ -204,11 +220,15 @@ func init() {
 	pushCmd.Flags().String("target", "minio", "push target")
 	pushCmd.Flags().String("color", "orange", "color for webhook message")
 	pushCmd.Flags().String("title", "", "title of homerun message")
-	pushCmd.Flags().String("info", "", "homerun message body")
+	pushCmd.Flags().String("message", "", "homerun message body")
 	pushCmd.Flags().String("severity", "info", "homerun message severity")
 	pushCmd.Flags().String("author", "machineShop", "homerun message author")
 	pushCmd.Flags().String("system", "", "homerun message system")
-	pushCmd.Flags().StringSlice("tags", []string{}, "homerun message tags")
+	pushCmd.Flags().String("tags", "", "homerun message tags")
+	pushCmd.Flags().String("assignee", "", "homerun message assignee")
+	pushCmd.Flags().String("assigneeUrl", "", "homerun message assignee url")
+	pushCmd.Flags().String("artifacts", "", "homerun artifacts")
+	pushCmd.Flags().String("url", "", "homerun message url/link")
 }
 
 func RenderBody(templateData string, object interface{}) string {

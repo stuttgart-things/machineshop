@@ -205,6 +205,39 @@ machineshop push \
 
 </details>
 
+<details><summary><b>HOMERUN</b></summary>
+
+```bash
+HOMERUN_URL=https://homerun.homerun-dev.sthings-vsphere.labul.sva.de/generic
+
+machineshop push \
+--destination ${HOMERUN_URL} \
+--target homerun \
+--title "hello" \
+--system shell \
+--message "test sdfsdfslkljh" \
+--tags "shell;linux" \
+--author "machineshop" \
+--severity "INFO"
+
+machineshop push \
+--destination ${HOMERUN_URL} \
+--target homerun \
+--title "hello" \
+--system shell \
+--message "test sdfsdfslkljh" \
+--tags "shell;linux" \
+--author "machineshop" \
+--severity "INFO" \
+--assignee "patrick.hermann" \
+--assigneeUrl "patrick.hermann@sva.de"  \
+--artifacts "INFO" \
+--url "https://github.com/stuttgart-things/stuttgart-things/actions/runs/10639438939"
+```
+
+</details>
+
+
 ### RENDER
 
 render things from templates from various input sources
