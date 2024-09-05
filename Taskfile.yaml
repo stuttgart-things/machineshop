@@ -43,7 +43,7 @@ tasks:
 
   build-ko:
     desc: Build image w/ KO
-    deps: [lint, test]
+    deps: [lint, test, commit]
     env:
       KO_DOCKER_REPO: ghcr.io/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }} #scr.cd43.sthings-pve.labul.sva.de/machineshop
     cmds:

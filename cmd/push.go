@@ -50,7 +50,7 @@ var (
 
 	homeRunBodyData = `{
 		"Title": "{{ .Title }}",
-		"Info": "{{ .Message }}",
+		"Message": "{{ .Message }}",
 		"Severity": "{{ .Severity }}",
 		"Author": "{{ .Author }}",
 		"Timestamp": "{{ .Timestamp }}",
