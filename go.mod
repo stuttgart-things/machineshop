@@ -6,6 +6,7 @@ require (
 	github.com/go-git/go-billy/v5 v5.5.0
 	github.com/go-git/go-git/v5 v5.12.0
 	github.com/google/go-github/v62 v62.0.0
+	github.com/google/go-github/v65 v65.0.0
 	github.com/pterm/pterm v0.12.79
 	github.com/spf13/cobra v1.8.1
 	github.com/stuttgart-things/sthingsBase v0.1.41
