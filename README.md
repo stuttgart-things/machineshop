@@ -1,6 +1,14 @@
 # stuttgart-things/machineshop
 
-git based CLI interface for managing configuration as code
+<div align="center">
+  <p>
+    <img src="https://github.com/stuttgart-things/docs/blob/main/hugo/sthings-train.png" alt="sthings" width="350" />
+  </p>
+  <p>
+    <strong>[məˈʃiːnʃɒp]</strong>- git based CLI interface for managing configuration as code
+
+  </p>
+</div>
 
 ## TASKS
 
