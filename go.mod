@@ -9,7 +9,7 @@ require (
 	github.com/pterm/pterm v0.12.79
 	github.com/spf13/cobra v1.8.1
 	github.com/stuttgart-things/sthingsBase v0.1.41
-	github.com/stuttgart-things/sthingsCli v0.1.115
+	github.com/stuttgart-things/sthingsCli v0.1.124
 	go.hein.dev/go-version v0.1.0
 	gopkg.in/yaml.v2 v2.4.0
 )
@@ -40,6 +40,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProtonMail/go-crypto v1.1.0-alpha.3-proton // indirect
+	github.com/RediSearch/redisearch-go v1.1.1 // indirect
 	github.com/allegro/bigcache/v3 v3.1.0 // indirect
 	github.com/andygrunwald/go-jira v1.16.0 // indirect
 	github.com/atc0005/go-teams-notify/v2 v2.11.0-rc.1 // indirect
