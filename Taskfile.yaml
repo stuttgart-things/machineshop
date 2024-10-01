@@ -12,13 +12,8 @@ vars:
     sh: git describe --tags --abbrev=0
   DATE:
     sh: date +"%Y.%m%d.%H%M"
-
-  # UPDATED_TAG:
-  #   sh: od_tag=$(git describe --tags --abbrev=0 | cut -d "." -f3); new_tag=$((old_tag+1)); echo $new_tag
-  # UPDATED_TAG_VERSION:
-  #   sh: t1=$(git describe --tags --abbrev=0 | cut -f1 -d'.'); t2=$(git describe --tags --abbrev=0 | cut -f2 -d'.'); echo $t1.$t2.{{.UPDATED_TAG}}
   BRANCH:
-    sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD) ; fi
+    sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD); else echo main ; fi
   COBRA_VERSION: 1.3.0
   CMD: version
   PARAMETERS: ""
@@ -140,12 +135,20 @@ tasks:
   commit:
     desc: Commit + push code into branch
     cmds:
+      - rm -rf dist/
+      - git branch --set-upstream-to=origin/{{ .BRANCH }}
       - git pull
       - |
-        echo "ENTER COMMIT MESSAGE"
-        read COMMIT_MESSAGE;
-        git commit -am "$(echo ${COMMIT_MESSAGE})"
-        git push origin HEAD
+        git add *
+        if [[ -n $(git status --porcelain) ]]; then
+          echo "committing changes"
+          echo "ENTER COMMIT MESSAGE"
+          read COMMIT_MESSAGE;
+          git commit --allow-empty -a -m "$(echo ${COMMIT_MESSAGE})"
+        else
+          echo "no changes"
+        fi
+        git push origin -u {{ .BRANCH }}
 
   delete-branch:
     desc: Delete branch from origin
