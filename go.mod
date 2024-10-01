@@ -1,6 +1,6 @@
 module github.com/stuttgart-things/machineshop
 
-go 1.22.5
+go 1.23.1
 
 require (
 	github.com/go-git/go-billy/v5 v5.5.0

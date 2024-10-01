@@ -23,3 +23,10 @@ jobs:
       accept-linterrors: false
       accept-failedtests: false
       timeout-minutes: 15m
+
+  Build-Image:
+    name: Build Image
+    uses: stuttgart-things/stuttgart-things/.github/workflows/call-ko-build.yaml@main
+    with:
+      environment-name: k8s
+      runs-on: docker
