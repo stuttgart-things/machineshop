@@ -1,24 +1,25 @@
 ---
-name: Validate-Golang
+name: Validate & Build clusterbook service
 on:
   workflow_dispatch:
   push:
     branches:
       - 'main'
       - 'feature/**'
-      - 'fix/*'
+      - 'fix/**'
   pull_request:
     types: [opened, reopened]
 
 jobs:
-  validate-golang:
-    name: Valdiate Golang
+  Validate-Golang:
+    name: Valdiate Golang Code
     uses: stuttgart-things/stuttgart-things/.github/workflows/call-golang-validation.yaml@main
     with:
       module-name: machineshop
       environment-name: k8s
-      runs-on: ghr-machineshop-labda-test
-      golint-version: v1.58.2
-      golang-version: 1.22.3
-      accept-linterrors: true
+      runs-on: ghr-machineshop-skyami-cicd
+      golint-version: v1.61.0-alpine
+      golang-version: 1.23.1
+      accept-linterrors: false
       accept-failedtests: false
+      timeout-minutes: 15m
