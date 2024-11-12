@@ -30,12 +30,14 @@ var installCmd = &cobra.Command{
 		source, _ := cmd.LocalFlags().GetString("source")
 		bin, _ := cmd.LocalFlags().GetString("bin")
 		tmpDownloadDir, _ := cmd.LocalFlags().GetString("tmp")
+		binaries, _ := cmd.Flags().GetStringSlice("binaries")
 
 		// PRINT BANNER
 		internal.PrintBanner(logFilePath, gitPath, gitRepository, version, date, "/INSTALL")
 
 		// LOAD PROFILE BASED ON SOURCE
 		if source == "git" {
+
 			// GET REPO + READ PROFILE FILE
 			repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 			profileFile = sthingsCli.ReadFileContentFromGitRepo(repo, profile)
@@ -57,15 +59,27 @@ var installCmd = &cobra.Command{
 			os.Exit(3)
 		}
 
-		// GET TO BE INSTALLED BINS + START INSTALL SURVEY
-		selectedBinariesProfiles, selectedScriptProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
+		// INSTALL BINARIES IF DEFINED
+		if len(binaries) > 0 {
 
-		if len(selectedBinariesProfiles) > 0 {
-			surveys.InstallBinaries(selectedBinariesProfiles, allConfig, tmpDownloadDir, bin)
-		}
+			var allConfig surveys.Profile
+			allConfig = sthingsCli.ReadInlineYamlToObject([]byte(profileFile), allConfig).(surveys.Profile)
 
-		if len(selectedScriptProfiles) > 0 {
-			surveys.RenderInstallScript(selectedScriptProfiles, allConfig, tmpDownloadDir)
+			surveys.InstallBinaries(binaries, allConfig, tmpDownloadDir, bin)
+		} else {
+			// GET TO BE INSTALLED BINS + START INSTALL SURVEY
+			selectedBinariesProfiles, selectedScriptProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
+
+			if len(selectedBinariesProfiles) > 0 {
+
+				binDir := sthingsCli.AskSingleInputQuestion("BIN DIR:", bin)
+				surveys.InstallBinaries(selectedBinariesProfiles, allConfig, tmpDownloadDir, binDir)
+			}
+
+			if len(selectedScriptProfiles) > 0 {
+				surveys.RenderInstallScript(selectedScriptProfiles, allConfig, tmpDownloadDir)
+			}
+
 		}
 
 	},
@@ -76,5 +90,6 @@ func init() {
 	installCmd.Flags().String("tmp", "/tmp/machineShop", "temporary machineShop dir")
 	installCmd.Flags().String("bin", "/usr/bin", "target dir for installing binary files")
 	installCmd.Flags().String("source", "git", "source of profile: git or local")
-	installCmd.Flags().String("profile", "tests/install.yaml", "path to install profile")
+	installCmd.Flags().String("profile", "machineShop/binaries.yaml", "path to install profile")
+	installCmd.Flags().StringSlice("binaries", []string{}, "files to be installed; survey will be skipped if defined")
 }
