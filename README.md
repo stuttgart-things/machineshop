@@ -38,7 +38,6 @@ task run CMD=get PARAMETERS=--system=sops # will run with build command get + pa
 task release TAG=2.6.1 # will release bins with version 2.2.9
 ```
 
-
 ## FEATURES
 * RENDER TEMPLATES w/ DEFAULTS AND PARAMETERS (RENDER)
 * INSTALL MULTIPLE BINARIES FROM WEB SOURCES AT ONCE/IN PARALLEL (INSTALL)
@@ -175,6 +174,18 @@ machineshop create \
 --message "test" \
 --merge rebase \
 --id 243
+```
+
+</details>
+
+### INSTALL
+
+<details><summary><b>INSTALL</b></summary>
+
+```bash
+sudo machineshop install \
+--profile machineShop/binaries.yaml \
+--binaries "sops,flux"
 ```
 
 </details>

@@ -72,14 +72,12 @@ func RenderInstallScript(selectedScriptProfiles []string, allConfig Profile, scr
 
 }
 
-func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, tmpDownloadDir, bin string) {
-
-	binDir := sthingsCli.AskSingleInputQuestion("BIN DIR:", bin)
+func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, tmpDownloadDir, binDir string) {
 
 	if !sthingsBase.CheckForUnixWritePermissions(binDir) {
 		log.Error("NO WRITE PERMISSIONS! ", binDir)
-	} else {
 
+	} else {
 		// CREATE TMP DL FOLDER
 		sthingsBase.CreateNestedDirectoryStructure(tmpDownloadDir, 0600)
 		log.Info("CREATED TMP DOWNLOAD DIR ", tmpDownloadDir)
