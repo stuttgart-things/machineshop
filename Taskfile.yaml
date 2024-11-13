@@ -49,7 +49,7 @@ tasks:
       KO_DOCKER_REPO: "{{ .IMAGE_REPO }}" #scr.cd43.sthings-pve.labul.sva.de/machineshop
     cmds:
       - |
-        BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .KO_REPO }} --push)
+        BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .KO_REPO }} --tags {{ .VERSION }} --publish)
         echo BUILD_IMAGE=${BUILD_IMAGE} >> .env
 
   release-image:
@@ -57,11 +57,9 @@ tasks:
     deps:
       - build-ko
     cmds:
-      - skopeo copy --src-tls-verify=false --dest-tls-verify=false docker://{{ .BUILD_IMAGE }} docker://{{ .RELEASE_IMAGE_GHCR }}
-      - skopeo copy --src-tls-verify=false --dest-tls-verify=false docker://{{ .BUILD_IMAGE }} docker://{{ .RELEASE_IMAGE_GCR }}
+      - skopeo copy --src-tls-verify=false --dest-tls-verify=false docker://{{ .BUILD_IMAGE }} docker://{{ .RELEASE_IMAGE }}
     vars:
-      RELEASE_IMAGE_GHCR: "{{ .RELEASE_REGISTRY }}/{{ .RELEASE_REPOSITORY }}/{{ .PROJECT_NAME }}:{{ .VERSION }}"
-      RELEASE_IMAGE_GCR: "{{ .IMAGE_REPO }}:{{ .VERSION }}"
+      RELEASE_IMAGE: "{{ .RELEASE_REGISTRY }}/{{ .RELEASE_REPOSITORY }}/{{ .PROJECT_NAME }}:{{ .VERSION }}"
 
   build:
     desc: Build code
