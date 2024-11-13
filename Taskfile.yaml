@@ -102,7 +102,7 @@ tasks:
 
   release:
     desc: Relase binaries
-    deps: [tag]
+    #deps: [tag]
     cmds:
       - rm -rf ./dist
       - goreleaser healthcheck
