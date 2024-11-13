@@ -18,6 +18,8 @@ vars:
   CMD: version
   PARAMETERS: ""
 
+dotenv: ['.env', '{{.HOME}}/.env']
+
 tasks:
   run:
     desc: Run
