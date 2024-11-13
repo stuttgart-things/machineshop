@@ -6,6 +6,8 @@ vars:
   REPOSITORY_NAME: stuttgart-things
   MODULE: github.com/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}
   REGISTRY: ghcr.io #eu.gcr.io
+  RELEASE_REGISTRY: eu.gcr.io
+  RELEASE_REPOSITORY: "{{ .REPOSITORY_NAME }}"
   IMAGE_REPO: "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}"
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
@@ -18,6 +20,7 @@ vars:
   COBRA_VERSION: 1.3.0
   CMD: version
   PARAMETERS: ""
+  VERSION: git describe --tags --abbrev=0 2>/dev/null)$( [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ] && echo "-$(git rev-parse --abbrev-ref HEAD)"
 
 dotenv: ['.env', '{{.HOME}}/.env']
 
@@ -48,6 +51,16 @@ tasks:
     cmds:
       - |
         BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .KO_REPO }} --push)
+        echo BUILD_IMAGE=${BUILD_IMAGE} >> .env
+
+  release-image:
+    desc: Release image
+    deps:
+      - build-ko
+    cmds:
+      - skopeo copy --src-tls-verify=false --dest-tls-verify=false docker://{{ .BUILD_IMAGE }} docker://{{ .RELEASE_IMAGE }}
+    vars:
+      RELEASE_IMAGE: "{{ .RELEASE_REGISTRY }}/{{ .RELEASE_REPOSITORY }}/{{ .PROJECT_NAME }}:{{ .VERSION }}"
 
   build:
     desc: Build code
