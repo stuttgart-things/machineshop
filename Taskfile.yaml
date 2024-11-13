@@ -19,11 +19,29 @@ vars:
   CMD: version
   PARAMETERS: ""
   VERSION:
-    sh: git describe --tags --abbrev=0 2>/dev/null$( [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ] && echo "-$(git rev-parse --abbrev-ref HEAD)" )
+    sh: git describe --tags --abbrev=0 2>/dev/null; [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ] && echo "$(git rev-parse --abbrev-ref HEAD)"
 
 dotenv: ['.env', '{{.HOME}}/.env']
 
 tasks:
+
+  dagger-test:
+    desc: Test crossplame modules
+    cmds:
+      - dagger call -m ./{{ .MODULE }} test-version --progress plain
+    vars:
+      MODULE: dagger
+
+  predict:
+    desc: predict new version
+    cmds:
+      - sbot predict version
+
+  version:
+    desc: push new version
+    cmds:
+      - sbot push version
+
   run:
     desc: Run
     deps: [install]
