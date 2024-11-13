@@ -57,9 +57,11 @@ tasks:
     deps:
       - build-ko
     cmds:
-      - skopeo copy --src-tls-verify=false --dest-tls-verify=false docker://{{ .BUILD_IMAGE }} docker://{{ .RELEASE_IMAGE }}
+      - skopeo copy --src-tls-verify=false --dest-tls-verify=false docker://{{ .BUILD_IMAGE }} docker://{{ .RELEASE_IMAGE_GHCR }}
+      - skopeo copy --src-tls-verify=false --dest-tls-verify=false docker://{{ .BUILD_IMAGE }} docker://{{ .RELEASE_IMAGE_GCR }}
     vars:
-      RELEASE_IMAGE: "{{ .RELEASE_REGISTRY }}/{{ .RELEASE_REPOSITORY }}/{{ .PROJECT_NAME }}:{{ .VERSION }}"
+      RELEASE_IMAGE_GHCR: "{{ .RELEASE_REGISTRY }}/{{ .RELEASE_REPOSITORY }}/{{ .PROJECT_NAME }}:{{ .VERSION }}"
+      RELEASE_IMAGE_GCR: "{{ .IMAGE_REPO }}:{{ .VERSION }}"
 
   build:
     desc: Build code
