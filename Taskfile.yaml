@@ -5,6 +5,7 @@ vars:
     sh: echo ${PWD##*/}
   REPOSITORY_NAME: stuttgart-things
   MODULE: github.com/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}
+  IMAGE_REPO: eu.gcr.io/stuttgart-things
   REGISTRY: eu.gcr.io
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
@@ -42,9 +43,11 @@ tasks:
     desc: Build image w/ KO
     deps: [lint, test, commit]
     env:
-      KO_DOCKER_REPO: "{{ .MODULE }}" #scr.cd43.sthings-pve.labul.sva.de/machineshop
+      KO_REPO: "{{ .MODULE }}"
+      KO_DOCKER_REPO: "{{ .IMAGE_REPO }}" #scr.cd43.sthings-pve.labul.sva.de/machineshop
     cmds:
-      - ko build github.com/stuttgart-things/machineshop --push
+      - |
+        BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .KO_REPO }})
 
   build:
     desc: Build code
