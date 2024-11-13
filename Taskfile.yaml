@@ -5,8 +5,8 @@ vars:
     sh: echo ${PWD##*/}
   REPOSITORY_NAME: stuttgart-things
   MODULE: github.com/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}
-  IMAGE_REPO: eu.gcr.io/stuttgart-things
-  REGISTRY: eu.gcr.io
+  REGISTRY: ghcr.io #eu.gcr.io
+  IMAGE_REPO: "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}"
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
   VERSION:
