@@ -49,7 +49,7 @@ tasks:
       KO_DOCKER_REPO: "{{ .IMAGE_REPO }}" #scr.cd43.sthings-pve.labul.sva.de/machineshop
     cmds:
       - |
-        BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .KO_REPO }} --tags {{ .VERSION }} --publish)
+        BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .KO_REPO }} --tags {{ .VERSION }} --push)
         echo BUILD_IMAGE=${BUILD_IMAGE} >> .env
 
   release-image:
