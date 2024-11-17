@@ -24,9 +24,9 @@ jobs:
       accept-failedtests: false
       timeout-minutes: 15m
 
-  Build-Image:
-    name: Build Image
-    uses: stuttgart-things/stuttgart-things/.github/workflows/call-ko-build.yaml@workflow-golang-validation-123-1
-    with:
-      environment-name: k8s
-      runs-on: docker
+  #Build-Image:
+  #  name: Build Image
+  #  uses: stuttgart-things/stuttgart-things/.github/workflows/call-ko-build.yaml@workflow-golang-validation-123-1
+  #  with:
+  #    environment-name: k8s
+  #    runs-on: docker
