@@ -38,6 +38,7 @@ tasks:
       - sbot predict version
 
   version:
+    deps: [build]
     desc: push new version
     cmds:
       - sbot push version
@@ -132,8 +133,9 @@ tasks:
 
   release:
     desc: Relase binaries
-    #deps: [tag]
+    deps: [version]
     cmds:
+      - task: pr
       - rm -rf ./dist
       - goreleaser healthcheck
       - goreleaser check

@@ -406,6 +406,15 @@ machineshop delete \
 
 get things from systems
 
+<details><summary><b>GET IPS FROM CLUSTERBOOK</b></summary>
+
+```bash
+machineshop get --system=ips --destination=clusterbook.rke2.sthings-vsphere.labul.sva.de:443 --path=10.31.103 --output=2
+```
+
+</details>
+
+
 <details><summary><b>VAULT-REQUIREMENT: VAULT APPROLE EXPORTS</b></summary>
 
 ```bash
