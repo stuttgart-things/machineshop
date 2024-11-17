@@ -18,8 +18,8 @@ vars:
   COBRA_VERSION: 1.3.0
   CMD: version
   PARAMETERS: ""
-  VERSION:
-    sh: git describe --tags --abbrev=0 2>/dev/null; [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ] && echo "$(git rev-parse --abbrev-ref HEAD)"
+  # VERSION:
+  #   sh: git describe --tags --abbrev=0 2>/dev/null; [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ] && echo "$(git rev-parse --abbrev-ref HEAD)"
 
 dotenv: ['.env', '{{.HOME}}/.env']
 
