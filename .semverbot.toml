@@ -21,4 +21,3 @@ delimiters = "/"
 
 [modes.git-commit]
 delimiters = "[]"
-
