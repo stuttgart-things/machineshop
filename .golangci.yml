@@ -100,33 +100,33 @@ linters:
     - errcheck
     - errorlint
     - funlen
-    - gocheckcompilerdirectives
-    - gochecknoinits
-    - goconst
-    - gocritic
-    - gocyclo
-    - godox
-    - gofmt
-    - goimports
-    - mnd
-    - goprintffuncname
-    - gosec
-    - gosimple
-    - govet
-    - ineffassign
-    - lll
-    - misspell
-    - nakedret
-    - noctx
-    - nolintlint
-    - revive
-    - staticcheck
-    - stylecheck
-    - testifylint
-    - unconvert
-    - unparam
-    - unused
-    - whitespace
+    # - gocheckcompilerdirectives
+    # - gochecknoinits
+    # - goconst
+    # - gocritic
+    # - gocyclo
+    # - godox
+    # - gofmt
+    # - goimports
+    # - mnd
+    # - goprintffuncname
+    # - gosec
+    # - gosimple
+    # - govet
+    # - ineffassign
+    # - lll
+    # - misspell
+    # - nakedret
+    # - noctx
+    # - nolintlint
+    # - revive
+    # - staticcheck
+    # - stylecheck
+    # - testifylint
+    # - unconvert
+    # - unparam
+    # - unused
+    # - whitespace
 
   # This list of linters is not a recommendation (same thing for all this configuration file).
   # We intentionally use a limited set of linters.

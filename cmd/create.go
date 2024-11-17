@@ -121,7 +121,10 @@ var createCmd = &cobra.Command{
 			fmt.Println(gitTree)
 
 			// PUSH COMMIT
-			sthingsCli.PushCommit(client, ref, gitTree, groupName, repositoryName, authorName, authorEmail, commitMessage)
+			err = sthingsCli.PushCommit(client, ref, gitTree, groupName, repositoryName, authorName, authorEmail, commitMessage)
+			if err != nil {
+				log.Fatalf("UNABLE TO PUSH THE COMMIT: %s\n", err)
+			}
 
 		case "pr":
 			log.Info("CREATING PULL REQUEST")
