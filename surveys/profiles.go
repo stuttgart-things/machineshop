@@ -98,7 +98,10 @@ func SelectReleaseProfiles(yamlFile string) (selectedReleaseProfiles []string, a
 
 	}
 
-	pterm.DefaultTable.WithHasHeader().WithBoxed().WithData(repositoryTable).Render()
+	rendered := pterm.DefaultTable.WithHasHeader().WithBoxed().WithData(repositoryTable).Render()
+	if err := rendered; err != nil {
+		log.Error(err)
+	}
 
 	selectedReleaseProfiles = sthingsCli.AskMultiSelectQuestion("SELECT TO RELEASE:", allKeys)
 

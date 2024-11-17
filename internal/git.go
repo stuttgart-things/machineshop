@@ -68,7 +68,10 @@ func GitCommitFile(repository string, auth *http.BasicAuth, fileContent []byte, 
 	fmt.Println(w.Status())
 
 	// git commit -m $message
-	w.Commit(commitMsg, &git.CommitOptions{})
+	_, commited := w.Commit(commitMsg, &git.CommitOptions{})
+	if commited != nil {
+		return fmt.Errorf("could not git commit: %w", commited)
+	}
 
 	//Push the code to the remote
 	err = r.Push(&git.PushOptions{
