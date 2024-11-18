@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"html/template"
 	"io"
@@ -14,8 +15,11 @@ import (
 	"strings"
 	"time"
 
+	ipservice "github.com/stuttgart-things/clusterbook/ipservice"
+
 	"github.com/stuttgart-things/machineshop/internal"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
+	"google.golang.org/grpc"
 
 	"github.com/spf13/cobra"
 )
@@ -89,6 +93,40 @@ var pushCmd = &cobra.Command{
 		if destination != "" {
 
 			switch target {
+
+			case "ips":
+
+				log.Info("⚡️ CONNECTING TO CLUSTERBOOK ⚡️")
+				log.Info("CLUSTERBOOK SERVER: ", destination)
+				log.Info("IPs: ", artifacts)
+				log.Info("CLUSTER: ", assignee)
+
+				clusterBookServer := destination //"clusterbook.rke2.sthings-vsphere.labul.sva.de:443"
+				secureConnection := "true"
+
+				// SELECT CREDENTIALS BASED ON SECURECONNECTION
+				conn, err := grpc.NewClient(clusterBookServer, internal.GetCredentials(secureConnection))
+				if err != nil {
+					log.Fatalf("DID NOT CONNECT: %v", err)
+				}
+				defer conn.Close()
+
+				c := ipservice.NewIpServiceClient(conn)
+
+				ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+				defer cancel()
+
+				clusterReq := &ipservice.ClusterRequest{
+					IpAddressRange: artifacts,
+					ClusterName:    assignee,
+				}
+
+				clusterRes, err := c.SetClusterInfo(ctx, clusterReq)
+				if err != nil {
+					log.Fatalf("COULD NOT SET CLUSTER INFO: %v", err)
+				}
+
+				log.Printf("CLUSTER STATUS: %s", clusterRes.Status)
 
 			case "homerun":
 
