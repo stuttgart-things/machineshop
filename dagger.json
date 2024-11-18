@@ -1,6 +1,0 @@
-{
-  "name": "machineshop",
-  "sdk": "go",
-  "source": "dagger",
-  "engineVersion": "v0.13.3"
-}
