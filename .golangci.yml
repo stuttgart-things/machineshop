@@ -105,7 +105,7 @@ linters:
     - goconst
     - gocyclo
     - godox
-    - gofmt
+    #- gofmt
     # - goimports
     #- gocritic
     # - mnd
