@@ -17,17 +17,22 @@ task: Available tasks for this project:
 * branch:              Create branch from main
 * build:               Build code
 * build-image:         Build container image
+* build-ko:            Build image w/ KO
+* ci-test:             Test crossplame modules
 * commit:              Commit + push code into branch
+* dagger-ko:           Build image w/ ko
 * delete-branch:       Delete branch from origin
 * install:             Install
-* build-ko:            Build image w/ KO
 * lint:                Lint
 * pr:                  Create pull request into main
+* predict:             predict new version
 * release:             Relase binaries
+* release-image:       Release image
 * run:                 Run
 * tag:                 Commit, push & tag the module
 * test:                Test
 * tests:               Built cli tests
+* version:             push new version
 ```
 
 TASK EXAMPLES
@@ -193,6 +198,18 @@ sudo machineshop install \
 ### PUSH
 
 push things to targets
+
+<details><summary><b>SET IPS TO CLUSTER (w/ CLUSTERBOOK)</b></summary>
+
+```bash
+machineshop push \
+--target=ips \
+--destination=clusterbook.rke2.sthings-vsphere.labul.sva.de:443 \
+--artifacts="10.31.103.9;10.31.103.10" \
+--assignee=app1
+```
+
+</details>
 
 <details><summary><b>MINIO (BUCKET)</b></summary>
 
@@ -409,7 +426,11 @@ get things from systems
 <details><summary><b>GET IPS FROM CLUSTERBOOK</b></summary>
 
 ```bash
-machineshop get --system=ips --destination=clusterbook.rke2.sthings-vsphere.labul.sva.de:443 --path=10.31.103 --output=2
+machineshop get \
+--system=ips \
+--destination=clusterbook.rke2.sthings-vsphere.labul.sva.de:443 \
+--path=10.31.103 \
+--output=2
 ```
 
 </details>

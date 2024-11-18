@@ -100,14 +100,14 @@ linters:
     - errcheck
     - errorlint
     - funlen
-    # - gocheckcompilerdirectives
-    # - gochecknoinits
-    # - goconst
-    # - gocritic
-    # - gocyclo
-    # - godox
-    # - gofmt
+    - gocheckcompilerdirectives
+    #- gochecknoinits
+    - goconst
+    - gocyclo
+    - godox
+    - gofmt
     # - goimports
+    #- gocritic
     # - mnd
     # - goprintffuncname
     # - gosec
