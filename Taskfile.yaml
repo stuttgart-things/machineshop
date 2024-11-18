@@ -24,13 +24,17 @@ vars:
 dotenv: ['.env', '{{.HOME}}/.env']
 
 tasks:
+  dagger-ko:
+    desc: Build image w/ ko
+    cmds:
+      - dagger call -m github.com/stuttgart-things/dagger/go@v0.0.1 ko-build --src ./ --token=env:GITHUB_TOKEN --repo "ghcr.io/stuttgart-things/machineshop" --progress plain
 
-  dagger-test:
+  ci-test:
     desc: Test crossplame modules
     cmds:
       - dagger call -m ./{{ .MODULE }} test-version --progress plain
     vars:
-      MODULE: dagger
+      MODULE: ci
 
   predict:
     desc: predict new version
@@ -41,6 +45,7 @@ tasks:
     deps: [build]
     desc: push new version
     cmds:
+      - sbot release version
       - sbot push version
 
   run:
