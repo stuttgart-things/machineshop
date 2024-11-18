@@ -29,14 +29,21 @@ tasks:
   dagger-ko:
     desc: Build image w/ ko
     cmds:
-      - dagger call -m {{ . DAGGER_GO_MODULE }}@{{ .DAGGER_GO_MODULE_VERSION }} ko-build --src ./ --token=env:GITHUB_TOKEN --repo "{{ .KO_REPO }}" --progress plain
+      - dagger call -m {{ .DAGGER_GO_MODULE }}@{{ .DAGGER_GO_MODULE_VERSION }} ko-build --src ./ --token=env:GITHUB_TOKEN --repo "{{ .KO_REPO }}" --progress plain
     vars:
       KO_REPO: "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}"
 
-  ci-test:
-    desc: Test crossplame modules
+  test-version:
+    desc: Test version cmd
     cmds:
       - dagger call -m ./{{ .MODULE }} test-version --progress plain
+    vars:
+      MODULE: ci
+
+  test-install:
+    desc: Test crossplame modules
+    cmds:
+      - dagger call -m ./{{ .MODULE }} test-install --progress plain
     vars:
       MODULE: ci
 
