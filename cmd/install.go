@@ -5,6 +5,7 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/stuttgart-things/machineshop/internal"
@@ -65,10 +66,14 @@ var installCmd = &cobra.Command{
 			var allConfig surveys.Profile
 			allConfig = sthingsCli.ReadInlineYamlToObject([]byte(profileFile), allConfig).(surveys.Profile)
 
+			fmt.Println("ALL CONFIG", allConfig)
+
 			surveys.InstallBinaries(binaries, allConfig, tmpDownloadDir, bin)
 		} else {
 			// GET TO BE INSTALLED BINS + START INSTALL SURVEY
 			selectedBinariesProfiles, selectedScriptProfiles, allConfig := surveys.SelectInstallProfiles(profileFile)
+
+			fmt.Println("ALL CONFIG", allConfig.BinaryProfile)
 
 			if len(selectedBinariesProfiles) > 0 {
 
