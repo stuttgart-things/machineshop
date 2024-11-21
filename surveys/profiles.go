@@ -11,8 +11,9 @@ import (
 )
 
 type Install struct {
-	Url string `mapstructure:"url"`
-	Bin string `mapstructure:"bin"`
+	Url     string `mapstructure:"url"`
+	Bin     string `mapstructure:"bin"`
+	Version string `mapstructure:"version"`
 }
 
 type Script struct {

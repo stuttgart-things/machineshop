@@ -95,9 +95,14 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, tmpDow
 					name := selectedProfile
 					url := binaryProfile[selectedProfile].Url
 					binName := binaryProfile[selectedProfile].Bin
+					version := binaryProfile[selectedProfile].Version
 
 					// RENDER URL IF TEMPLATE ULR CONTAINS AT LEAST ONE VARIABLE
 					allTemplateVariablesAndDefaults, _, _, _ := sthingsBase.GetVariablesAndDefaultsFromTemplate(url, "curly")
+					allTemplateVariablesAndDefaults["version"] = version
+
+					fmt.Println("ALL VARS", allTemplateVariablesAndDefaults)
+
 					if len(allTemplateVariablesAndDefaults) >= 1 {
 						renderedURL, _ := sthingsBase.RenderTemplateInline(string(url), "missingkey=zero", "{{", "}}", allTemplateVariablesAndDefaults)
 						url = string(renderedURL)
