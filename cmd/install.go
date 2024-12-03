@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
+Copyright © 2024 Patrick Hermann patrick.hermann@sva.de
 */
 
 package cmd
