@@ -148,10 +148,12 @@ tasks:
       - git push origin --tags
 
   release:
-    desc: Relase binaries
+    desc: Release
     cmds:
-      - task: pr
-      - task: version
+      - git checkout main && git pull
+      - task: commit
+      - npx semantic-release --dry-run
+      - npx semantic-release --debug --no-ci
       - rm -rf ./dist
       - goreleaser healthcheck
       - goreleaser check
