@@ -4,7 +4,7 @@ go 1.23.1
 
 require (
 	github.com/go-git/go-billy/v5 v5.6.1
-	github.com/go-git/go-git/v5 v5.12.0
+	github.com/go-git/go-git/v5 v5.13.0
 	github.com/google/go-github/v62 v62.0.0
 	github.com/pterm/pterm v0.12.80
 	github.com/spf13/cobra v1.8.1
@@ -41,7 +41,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.0 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
-	github.com/ProtonMail/go-crypto v1.1.0-alpha.3-proton // indirect
+	github.com/ProtonMail/go-crypto v1.1.3 // indirect
 	github.com/RediSearch/redisearch-go v1.1.1 // indirect
 	github.com/allegro/bigcache/v3 v3.1.0 // indirect
 	github.com/andygrunwald/go-jira v1.16.0 // indirect
@@ -157,7 +157,7 @@ require (
 	github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3 // indirect
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/skeema/knownhosts v1.2.2 // indirect
+	github.com/skeema/knownhosts v1.3.0 // indirect
 	github.com/snowzach/rotatefilehook v0.0.0-20220211133110-53752135082d // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
