@@ -11,6 +11,9 @@ import (
 	"strings"
 	"time"
 
+	kaeffken "github.com/stuttgart-things/kaeffken/modules"
+
+	"github.com/getsops/sops/v3/decrypt"
 	ipservice "github.com/stuttgart-things/clusterbook/ipservice"
 	"github.com/stuttgart-things/machineshop/internal"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
@@ -34,6 +37,8 @@ var getCmd = &cobra.Command{
 		destinationPath, _ := cmd.LocalFlags().GetString("destination")
 		b64DecodeOption, _ := cmd.LocalFlags().GetBool("b64")
 		system, _ := cmd.LocalFlags().GetString("system")
+		ageKey, _ := cmd.LocalFlags().GetString("key")
+		fileFormat, _ := cmd.LocalFlags().GetString("format")
 
 		// START LOGGING
 		log.Info("PATH: ", path)
@@ -97,43 +102,77 @@ var getCmd = &cobra.Command{
 
 			// GET SECRET PARAMETERS
 			secretParameters := strings.Split(path, ":")
-			secretKeyFile := secretParameters[0]
+			decryptedFilePath := secretParameters[0]
 			secretKey := secretParameters[1]
 			log.Info("SECRET KEY: ", secretKey)
 
 			// CHECK IF GIVEN SECRET FILE EXISTS
-			secretFileExists, _ := sthingsBase.VerifyIfFileOrDirExists(secretKeyFile, "file")
+			secretFileExists, _ := sthingsBase.VerifyIfFileOrDirExists(decryptedFilePath, "file")
 			if secretFileExists {
-				log.Info("SECRET FILE DOES NOT EXIST: ", secretKeyFile)
+				log.Info("SECRET FILE DOES NOT EXIST: ", decryptedFilePath)
 			} else {
-				log.Error("SECRET FILE NOT FOUND: ", secretKeyFile)
+				log.Error("SECRET FILE NOT FOUND: ", decryptedFilePath)
 				os.Exit(0)
 			}
 
 			// CHECK FOR SOPS ENV VARS
-			sopsKeyFilePresent := sthingsCli.VerifyEnvVars([]string{"SOPS_AGE_KEY_FILE"})
-			sopsKeyPresent := sthingsCli.VerifyEnvVars([]string{"SOPS_AGE_KEY"})
-			log.Info("SOPS_AGE_KEY_FILE set on env: ", sopsKeyFilePresent)
-			log.Info("SOPS_AGE_KEY      set on env: ", sopsKeyPresent)
+			// CHECK IF AGE KEY IS SET
+			if ageKey != "" {
+				os.Setenv("SOPS_AGE_KEY", ageKey)
+				log.Info("USING AGE KEY: ", ageKey)
+			}
 
-			if sopsKeyPresent || sopsKeyFilePresent {
+			if ageKey == "" && os.Getenv("SOPS_AGE_KEY") == "" {
+				log.Warn("SOPS_AGE_KEY NOT SET")
+				log.Error("AGE KEY NOT SET")
+			}
 
-				// DECRYPT SOPS FILE
-				err, plain := sthingsCli.DecryptSopsFile(secretKeyFile, "yaml")
-				if err != nil {
-					fmt.Println("FAILED TO DECRYPT: %w", err)
-				} else {
+			decryptedFile, err := decrypt.File(decryptedFilePath, fileFormat)
+			if err != nil {
+				log.Error("FAILED TO DECRYPT: ", err)
+			}
 
-					// READ IN DECRYPTED FILE
-					defaultVariables = sthingsCli.ReadYamlKeyValuesFromFile([]byte(plain))
-					// PRINT DECRYPTED KEY
-					fmt.Println(defaultVariables[secretKey])
+			fmt.Println("DECRYPTED FILE: ", string(decryptedFile))
+
+			allDecryptedSecrets := kaeffken.CreateSecretsMap(decryptedFile, nil)
+			log.Info("ALL DECRYPTED SECRETS: ", allDecryptedSecrets)
+
+			// LOOP OVER ALL DECRYPTED SECRETS
+			var secretValueForGivenKey string
+			for key, value := range allDecryptedSecrets {
+
+				if key == secretKey {
+					secretValueForGivenKey = value.(string)
 				}
 
-			} else {
-				log.Error("NO SOPS-KEY FOUND IN ENV")
-				os.Exit(0)
+				log.Info("FOUND KEY: ", key)
 			}
+
+			if secretValueForGivenKey == "" {
+				log.Error("SECRET KEY NOT FOUND: ", secretKey)
+				os.Exit(0)
+			} else {
+				log.Info("SECRET VALUE FOR KEY "+secretKey+": ", secretValueForGivenKey)
+			}
+
+			// if sopsKeyPresent || sopsKeyFilePresent {
+
+			// 	// DECRYPT SOPS FILE
+			// 	err, plain := sthingsCli.DecryptSopsFile(decryptedFile, "yaml")
+			// 	if err != nil {
+			// 		fmt.Println("FAILED TO DECRYPT: %w", err)
+			// 	} else {
+
+			// 		// READ IN DECRYPTED FILE
+			// 		defaultVariables = sthingsCli.ReadYamlKeyValuesFromFile([]byte(plain))
+			// 		// PRINT DECRYPTED KEY
+			// 		fmt.Println(defaultVariables[secretKey])
+			// 	}
+
+			// } else {
+			// 	log.Error("NO SOPS-KEY FOUND IN ENV")
+			// 	os.Exit(0)
+			// }
 		}
 
 	},
@@ -143,8 +182,10 @@ func init() {
 	rootCmd.AddCommand(getCmd)
 	getCmd.Flags().String("auth", "approle", "vault auth method")
 	getCmd.Flags().String("path", "", "path to vault secret")
+	getCmd.Flags().String("key", "", "sops age key")
 	getCmd.Flags().String("system", "vault", "secret system: vault|sops")
 	getCmd.Flags().String("output", "stdout", "output stdout|file")
 	getCmd.Flags().String("destination", "", "path to output (if output file)")
 	getCmd.Flags().Bool("b64", false, "decode base64 for output")
+	getCmd.Flags().String("format", "yaml", "sops file format/extension")
 }

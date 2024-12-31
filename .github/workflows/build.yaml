@@ -1,32 +1,24 @@
 ---
-name: Validate & Build clusterbook service
+name: Build
 on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
       - 'feature/**'
       - 'fix/**'
   pull_request:
     types: [opened, reopened]
 
 jobs:
-  Validate-Golang:
-    name: Valdiate Golang Code
-    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-golang-validation.yaml@go-1.23.1
+  validate-golang:
+    name: Valdiate Golang
+    uses: stuttgart-things/github-workflow-templates/.github/workflows/call-golang-validation.yaml@feature/add-homerun-task-go #go-1.23.1
     with:
-      module-name: machineshop
+      module-name: kaeffken
       environment-name: k8s
       runs-on: ghr-machineshop-skyami-cicd
       golint-version: v1.61.0-alpine
-      golang-version: 1.23.1
+      golang-version: "1.23.1"
       accept-linterrors: true
       accept-failedtests: false
-      timeout-minutes: 15m
-
-  #Build-Image:
-  #  name: Build Image
-  #  uses: stuttgart-things/stuttgart-things/.github/workflows/call-ko-build.yaml@workflow-golang-validation-123-1
-  #  with:
-  #    environment-name: k8s
-  #    runs-on: docker
+    secrets: inherit  #pragma: allowlist secret
