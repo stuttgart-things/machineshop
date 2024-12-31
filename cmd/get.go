@@ -135,7 +135,6 @@ var getCmd = &cobra.Command{
 			fmt.Println("DECRYPTED FILE: ", string(decryptedFile))
 
 			allDecryptedSecrets := kaeffken.CreateSecretsMap(decryptedFile, nil)
-			log.Info("ALL DECRYPTED SECRETS: ", allDecryptedSecrets)
 
 			// LOOP OVER ALL DECRYPTED SECRETS
 			var secretValueForGivenKey string
