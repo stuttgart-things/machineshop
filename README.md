@@ -451,8 +451,14 @@ export VAULT_ADDR=https://≤VAULT_ADDR>[:8200]
 
 ```bash
 export SOPS_AGE_KEY=AGE-...
-# or
-export SOPS_AGE_KEY_FILE=home/sthings/projects/golang/sops/sops.key
+```
+
+</details>
+
+<details><summary><b>GET SOPS SECRET VALUE BY PATH</b></summary>
+
+```bash
+machineshop get --system=sops --path=/home/sthings/projects/golang/sops/bla.yaml:password | tail -n +11
 ```
 
 </details>
@@ -469,13 +475,7 @@ machineshop get --path kubeconfigs/data/dev21:kubeconfig --output file --destina
 
 </details>
 
-<details><summary><b>GET SOPS SECRET VALUE BY PATH</b></summary>
 
-```bash
-machineshop get --system=sops --path=/home/sthings/projects/golang/sops/bla.yaml:password | tail -n +11
-```
-
-</details>
 
 ## LICENSE
 
