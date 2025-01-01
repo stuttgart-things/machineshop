@@ -20,8 +20,9 @@ vars:
   PARAMETERS: ""
   DAGGER_GO_MODULE: github.com/stuttgart-things/dagger/go
   DAGGER_GO_MODULE_VERSION: v0.0.1
-  # VERSION:
-  #   sh: git describe --tags --abbrev=0 2>/dev/null; [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ] && echo "$(git rev-parse --abbrev-ref HEAD)"
+  VERSION:
+    sh: |
+      [ "$(git branch --show-current)" != "main" ] && echo "previewPost-$(git describe --tags --abbrev=0)" || echo $(git describe --tags --abbrev=0)
 
 dotenv: ['.env', '{{.HOME}}/.env']
 
@@ -100,14 +101,14 @@ tasks:
     desc: Install
     deps: [lint, test]
     cmds:
-      - go install -ldflags="-X {{ .MODULE }}/cmd.version={{ .UPDATED_TAG_VERSION }} -X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
+      - go install -ldflags="-X {{ .MODULE }}/cmd.version={{ .VERSION }} -X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
 
   build-image:
     desc: Build container image
     deps: [install]
     cmds:
-      - sudo nerdctl build -t {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .UPDATED_TAG_VERSION }} --build-arg VERSION={{ .UPDATED_TAG_VERSION }} --build-arg BUILD_DATE={{ .DATE }} --build-arg COMMIT={{ .GIT_COMMIT }} .
-      - sudo nerdctl push {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .UPDATED_TAG_VERSION }}
+      - sudo nerdctl build -t {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .VERSION }} --build-arg VERSION={{ .VERSION }} --build-arg BUILD_DATE={{ .DATE }} --build-arg COMMIT={{ .GIT_COMMIT }} .
+      - sudo nerdctl push {{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ lower (.PROJECT_NAME) }}:{{ .VERSION }}
 
   add-cmd:
     deps: [install-cobra]
