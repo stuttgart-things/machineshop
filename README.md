@@ -30,7 +30,7 @@ task: Available tasks for this project:
 * run:                 Run
 * tag:                 Commit, push & tag the module
 * test:                Test
-* test-install:        Test crossplame modules
+* test-install:        Test crossplane modules
 * test-version:        Test version cmd
 * tests:               Built cli tests
 ```
@@ -324,6 +324,34 @@ longhorn: |
 
 </details>
 
+<details><summary><b>EXAMPLE SOPS DECRYPTED (VALUES) FILE</b></summary>
+
+```yaml
+vm_ssh_user: ENC[AES256_GCM,data:2nlFCn5/qA==,iv:+AvMEg1RHFlBqRRNloXNTxTEaUvq1x1tNM4S2liE9is=,tag:2+DvYvHtNSSojg9N7yTKbQ==,type:str]
+vm_ssh_password: ENC[AES256_GCM,data:XGQ+GjNqnhA=,iv:UIO5+4vOiGWOlonBKF4wb0n2Pj9VBngieMfcBDmQdXM=,tag:O44ZDEE7nBtECPRxcQsSuw==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1g438n4lx6h7x7u42q652e9ygzrkkwlul49e8zsmsrfmxm9k3tvcsykhff4
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAraTYrTExhMGV5Y1lYb0g5
+            OWswNUprbDdobTk0N0UyQUZiZmxRWS9wdkRjCmRZMWw3dE1VNjZ5M0xRaGp3NmQ1
+            UVFRQ0hhY3pRV0dmY2YyQ0lFRjFqSk0KLS0tIGdrY1FXYnJNYy8wVW5XcHZENkhV
+            VUxGV09pVllCYXU0dXhlZFdDWXBMRmsKs55x9DeiqsRjLSm+U+BVdsJ6dLeNqeSE
+            xJ/3GQpy/MmyARUzayTSOuzu8URemMaAh7FQbxTf8V7AnMM6Lv+sHQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-01-01T09:47:30Z"
+    mac: ENC[AES256_GCM,data:Nlqp8wiKQbGTzP3UuPlNMp7rmyEcyiGQVsFushGtKpWOAiSudcvZEKPkdFGQz3KJQXVg7KCBK1RqYTo0ZIw6Fwr0cbIEwHFekVSnpEu5p2H0JVDtlpO+clkEZqNi/HVGnIF16cYpNGrnI74tD4DaaS4HAF04OcvAHHBAtmTQhuk=,iv:4q4KQWomb3PxQa8bTHrdNx+02aLeQ/P+RIpf8rifRrc=,tag:UgWmC56SbWe2KiG4IsaJ6A==,type:str]
+    pgp: []
+    unencrypted_suffix: _unencrypted
+    version: 3.8.1
+```
+
+</details>
 
 <details><summary><b>EXAMPLE DEFAULTS FILE</b></summary>
 
@@ -384,6 +412,21 @@ machineshop render \
 ```
 
 </details>
+
+<details><summary><b>RENDER w/ SECRETS FROM SOPS</b></summary>
+
+```bash
+export SOPS_AGE_KEY=AGE-SECRET-KEY-1T22K05UTR...
+
+machineshop render \
+--source local \
+--template tests/infra.yaml \
+--output stdout \
+--secrets secrets1.yaml
+```
+
+</details>
+
 
 ### DELETE
 

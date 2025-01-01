@@ -166,7 +166,6 @@ var renderCmd = &cobra.Command{
 				log.Info("ALL DECRYPTED SECRETS: ", allDecryptedSecrets)
 
 				defaultVariables = sthingsBase.MergeMaps(defaultVariables, allDecryptedSecrets)
-
 			} else {
 				log.Info("NO SOPS ENCRYPTED SECRETS FILE DEFINED")
 			}
