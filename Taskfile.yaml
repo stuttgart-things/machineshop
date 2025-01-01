@@ -148,13 +148,18 @@ tasks:
       - task: commit
       - npx semantic-release --dry-run
       - npx semantic-release --debug --no-ci
+      #- task: goreleaser
+      - task: dagger-ko
+
+  goreleaser:
+    desc: Release bins w/ goreleaser
+    cmds:
       - rm -rf ./dist
       - goreleaser healthcheck
       - goreleaser check
       - goreleaser release --skip=publish --snapshot --clean
       - goreleaser release --clean
       - rm -rf ./dist
-      - task: dagger-ko
 
   branch:
     desc: Create branch from main
