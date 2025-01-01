@@ -597,8 +597,8 @@ github.com/stuttgart-things/clusterbook v0.0.0-20241120123325-b25e952ea9a6 h1:2X
 github.com/stuttgart-things/clusterbook v0.0.0-20241120123325-b25e952ea9a6/go.mod h1:9ndFZ3n7eOAFPDJo+Xm6S/1z12BW3F5kY/NjgupM/c4=
 github.com/stuttgart-things/homerun-library v0.0.0-20241203091353-87840452d0ba h1:8bL4wa4W1Gkqbc4APv8sB41cVKmfhGJbmjipjiO0kWU=
 github.com/stuttgart-things/homerun-library v0.0.0-20241203091353-87840452d0ba/go.mod h1:d63fuCR5jBhEY6TpNr/5HgxNwXgF2TwG6FOESm4g8EA=
-github.com/stuttgart-things/kaeffken v0.2.14 h1:zvbG/068O6oEK6sAh/SELbEwOiooVZUV4ioiVawvvPc=
-github.com/stuttgart-things/kaeffken v0.2.14/go.mod h1:catGgBhzqSC1Ou3POugmtVglT2mvqONTiOVs8p/iO18=
+github.com/stuttgart-things/kaeffken v0.2.16 h1:3Wec89W6/X4bhK1CLj6Rn3F0rZcMCkYiXU0OspTG6Kg=
+github.com/stuttgart-things/kaeffken v0.2.16/go.mod h1:pdntuPqoi7vWCdM/FGPHhVsINnkHF4VJJkDkF2xS8ks=
 github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7 h1:nVooDvBYhBPQysVjbvWP3S1CQgmNG/Vovt+ahmv9Cas=
 github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7/go.mod h1:RhH+7myjNLGs/BFeYO5U7ekmM7OsymsIOUN/DkewR3g=
 github.com/stuttgart-things/sthingsBase v0.1.41 h1:0aRlEqYilwaJAl9lqv17ZxXXtYAwONw4Rk0X/SLJ+BI=
