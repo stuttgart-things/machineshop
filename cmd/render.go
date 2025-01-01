@@ -9,6 +9,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/getsops/sops/v3/decrypt"
+	kaeffken "github.com/stuttgart-things/kaeffken/modules"
 	"github.com/stuttgart-things/machineshop/internal"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	"gopkg.in/yaml.v2"
@@ -32,8 +34,10 @@ type TemplateBracket struct {
 var (
 	templateFile     string
 	defaultsFile     string
+	fileFormat       = "yaml"
 	repo             billy.Filesystem
 	defaultVariables = make(map[string]interface{})
+	sopsSecrets      = make(map[string]interface{})
 	flagVariables    = make(map[string]interface{})
 	brackets         = map[string]TemplateBracket{
 		"curly":  TemplateBracket{"{{", "}}", `\{\{(.*?)\}\}`},
@@ -55,6 +59,8 @@ var renderCmd = &cobra.Command{
 		gitPath, _ := cmd.LocalFlags().GetString("path")
 		templatePath, _ := cmd.LocalFlags().GetString("template")
 		defaultsPath, _ := cmd.LocalFlags().GetString("defaults")
+		ageKey, _ := cmd.LocalFlags().GetString("age")
+		secretsPath, _ := cmd.LocalFlags().GetString("secrets")
 		outputFormat, _ := cmd.LocalFlags().GetString("output")
 		destinationPath, _ := cmd.LocalFlags().GetString("destination")
 		templateValues, _ := cmd.Flags().GetStringSlice("values")
@@ -127,6 +133,44 @@ var renderCmd = &cobra.Command{
 				log.Info("NO DEFAULTS FILE DEFINED")
 			}
 
+			if secretsPath != "" {
+
+				log.Info("SECRETS FILE DEFINED: ", secretsPath)
+
+				// CHECK IF AGE KEY IS SET
+				if ageKey != "" {
+					os.Setenv("SOPS_AGE_KEY", ageKey)
+					log.Info("USING AGE KEY: ", ageKey)
+				}
+
+				if ageKey == "" && os.Getenv("SOPS_AGE_KEY") == "" {
+					log.Warn("SOPS_AGE_KEY NOT SET")
+					log.Error("AGE KEY NOT SET")
+				}
+
+				// CHECK IF GIVEN SECRET FILE EXISTS
+				secretFileExists, _ := sthingsBase.VerifyIfFileOrDirExists(secretsPath, "file")
+				if secretFileExists {
+					log.Info("SECRET FILE DOES EXIST: ", secretsPath)
+				} else {
+					log.Error("SECRET FILE NOT FOUND: ", secretsPath)
+					os.Exit(0)
+				}
+
+				decryptedFile, err := decrypt.File(secretsPath, fileFormat)
+				if err != nil {
+					log.Error("FAILED TO DECRYPT: ", err)
+				}
+
+				allDecryptedSecrets := kaeffken.CreateSecretsMap(decryptedFile, nil)
+				log.Info("ALL DECRYPTED SECRETS: ", allDecryptedSecrets)
+
+				defaultVariables = sthingsBase.MergeMaps(defaultVariables, allDecryptedSecrets)
+
+			} else {
+				log.Info("NO SOPS ENCRYPTED SECRETS FILE DEFINED")
+			}
+
 		} else {
 			log.Error("SOURCE CAN BE ONLY: GIT OR LOCAL", source)
 			os.Exit(3)
@@ -182,7 +226,6 @@ var renderCmd = &cobra.Command{
 		}
 
 		// GET MULTIKEY TEMPLATE
-
 		renderOption := "missingkey=error"
 		if forceRenderOption {
 			renderOption = "missingkey=zero"
@@ -255,6 +298,8 @@ func init() {
 	renderCmd.Flags().String("defaults", "", "path to defaults template file")
 	renderCmd.Flags().String("brackets", "curly", "template bracket format - curly|square")
 	renderCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
+	renderCmd.Flags().String("secrets", "", "sops encryted secrets file")
+	renderCmd.Flags().String("age", "", "sops age key")
 	renderCmd.Flags().String("destination", "", "path to output (if output file)")
 	renderCmd.Flags().Bool("force", false, "force rendering by missing keys")
 	renderCmd.Flags().StringSlice("values", []string{}, "templating values")
