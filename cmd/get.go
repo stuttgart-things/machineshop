@@ -152,26 +152,9 @@ var getCmd = &cobra.Command{
 				os.Exit(0)
 			} else {
 				log.Info("SECRET VALUE FOR KEY "+secretKey+": ", secretValueForGivenKey)
+				fmt.Println(secretValueForGivenKey)
 			}
 
-			// if sopsKeyPresent || sopsKeyFilePresent {
-
-			// 	// DECRYPT SOPS FILE
-			// 	err, plain := sthingsCli.DecryptSopsFile(decryptedFile, "yaml")
-			// 	if err != nil {
-			// 		fmt.Println("FAILED TO DECRYPT: %w", err)
-			// 	} else {
-
-			// 		// READ IN DECRYPTED FILE
-			// 		defaultVariables = sthingsCli.ReadYamlKeyValuesFromFile([]byte(plain))
-			// 		// PRINT DECRYPTED KEY
-			// 		fmt.Println(defaultVariables[secretKey])
-			// 	}
-
-			// } else {
-			// 	log.Error("NO SOPS-KEY FOUND IN ENV")
-			// 	os.Exit(0)
-			// }
 		}
 
 	},

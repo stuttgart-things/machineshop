@@ -52,18 +52,6 @@ tasks:
     vars:
       MODULE: ci
 
-  predict:
-    desc: predict new version
-    cmds:
-      - sbot predict version
-
-  version:
-    deps: [build]
-    desc: push new version
-    cmds:
-      - sbot release version
-      - sbot push version
-
   run:
     desc: Run
     deps: [install]

@@ -18,21 +18,21 @@ task: Available tasks for this project:
 * build:               Build code
 * build-image:         Build container image
 * build-ko:            Build image w/ KO
-* ci-test:             Test crossplame modules
+* check:               Run pre-commit hooks
 * commit:              Commit + push code into branch
 * dagger-ko:           Build image w/ ko
 * delete-branch:       Delete branch from origin
 * install:             Install
 * lint:                Lint
 * pr:                  Create pull request into main
-* predict:             predict new version
-* release:             Relase binaries
+* release:             Release
 * release-image:       Release image
 * run:                 Run
 * tag:                 Commit, push & tag the module
 * test:                Test
+* test-install:        Test crossplame modules
+* test-version:        Test version cmd
 * tests:               Built cli tests
-* version:             push new version
 ```
 
 TASK EXAMPLES
@@ -435,7 +435,6 @@ machineshop get \
 
 </details>
 
-
 <details><summary><b>VAULT-REQUIREMENT: VAULT APPROLE EXPORTS</b></summary>
 
 ```bash
@@ -458,7 +457,8 @@ export SOPS_AGE_KEY=AGE-...
 <details><summary><b>GET SOPS SECRET VALUE BY PATH</b></summary>
 
 ```bash
-machineshop get --system=sops --path=/home/sthings/projects/golang/sops/bla.yaml:password | tail -n +11
+export SOPS_AGE_KEY=AGE-SECRET-KEY-1T22K0..
+machineshop get --system=sops --path=/home/sthings/projects/golang/sops/bla.yaml:password | tail -n +1
 ```
 
 </details>
