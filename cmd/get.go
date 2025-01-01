@@ -98,24 +98,10 @@ var getCmd = &cobra.Command{
 			internal.HandleRenderOutput(output, destinationPath, secretValue, b64DecodeOption, true)
 
 		case "sops":
-			fmt.Println("SOPS")
+			var secretKey string
+			var decryptedFilePath string
+			log.Info("SOPS DECRYPT")
 
-			// GET SECRET PARAMETERS
-			secretParameters := strings.Split(path, ":")
-			decryptedFilePath := secretParameters[0]
-			secretKey := secretParameters[1]
-			log.Info("SECRET KEY: ", secretKey)
-
-			// CHECK IF GIVEN SECRET FILE EXISTS
-			secretFileExists, _ := sthingsBase.VerifyIfFileOrDirExists(decryptedFilePath, "file")
-			if secretFileExists {
-				log.Info("SECRET FILE DOES NOT EXIST: ", decryptedFilePath)
-			} else {
-				log.Error("SECRET FILE NOT FOUND: ", decryptedFilePath)
-				os.Exit(0)
-			}
-
-			// CHECK FOR SOPS ENV VARS
 			// CHECK IF AGE KEY IS SET
 			if ageKey != "" {
 				os.Setenv("SOPS_AGE_KEY", ageKey)
@@ -127,6 +113,25 @@ var getCmd = &cobra.Command{
 				log.Error("AGE KEY NOT SET")
 			}
 
+			// CHECK IF PATH CONTAINS :
+			if !strings.Contains(path, ":") {
+				log.Warn("NO SECRET KEY DEFINED")
+				decryptedFilePath = path
+			} else {
+				decryptedFilePath = strings.Split(path, ":")[0]
+				secretKey = strings.Split(path, ":")[1]
+				log.Info("SECRET KEY: ", secretKey)
+			}
+
+			// CHECK IF GIVEN SECRET FILE EXISTS
+			secretFileExists, _ := sthingsBase.VerifyIfFileOrDirExists(decryptedFilePath, "file")
+			if secretFileExists {
+				log.Info("SECRET FILE DOES NOT EXIST: ", decryptedFilePath)
+			} else {
+				log.Error("SECRET FILE NOT FOUND: ", decryptedFilePath)
+				os.Exit(0)
+			}
+
 			decryptedFile, err := decrypt.File(decryptedFilePath, fileFormat)
 			if err != nil {
 				log.Error("FAILED TO DECRYPT: ", err)
@@ -135,15 +140,14 @@ var getCmd = &cobra.Command{
 			fmt.Println("DECRYPTED FILE: ", string(decryptedFile))
 
 			allDecryptedSecrets := kaeffken.CreateSecretsMap(decryptedFile, nil)
+			log.Info("ALL DECRYPTED SECRETS: ", allDecryptedSecrets)
 
 			// LOOP OVER ALL DECRYPTED SECRETS
 			var secretValueForGivenKey string
 			for key, value := range allDecryptedSecrets {
-
 				if key == secretKey {
 					secretValueForGivenKey = value.(string)
 				}
-
 				log.Info("FOUND KEY: ", key)
 			}
 
