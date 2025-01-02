@@ -5,7 +5,7 @@ go 1.23.1
 require (
 	github.com/getsops/sops/v3 v3.9.3
 	github.com/go-git/go-billy/v5 v5.6.1
-	github.com/go-git/go-git/v5 v5.13.0
+	github.com/go-git/go-git/v5 v5.13.1
 	github.com/google/go-github/v62 v62.0.0
 	github.com/pterm/pterm v0.12.80
 	github.com/spf13/cobra v1.8.1
