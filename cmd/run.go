@@ -65,8 +65,7 @@ var runCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(runCmd)
 	runCmd.Flags().String("tmp", "/tmp/machineShop", "temporary machineShop dir")
-	runCmd.Flags().String("bin", "/usr/bin", "target dir for installing binary files")
 	runCmd.Flags().String("source", "fetch", "source of profile: local or by url fetch. default: fetch.")
 	runCmd.Flags().String("url", "https://raw.githubusercontent.com/stuttgart-things/stuttgart-things/refs/heads/main/machineShop/binaries.yaml", "source of url download")
-	runCmd.Flags().String("profile", "machineShop/binaries.yaml", "path to install profile")
+	runCmd.Flags().String("profile", "profiles/run.yaml", "path to run profile")
 }
