@@ -148,7 +148,7 @@ tasks:
       - task: commit
       - npx semantic-release --dry-run
       - npx semantic-release --debug --no-ci
-      #- task: goreleaser
+      - task: goreleaser
       - task: dagger-ko
 
   goreleaser:
