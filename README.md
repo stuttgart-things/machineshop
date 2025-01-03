@@ -14,6 +14,7 @@
 
 ```bash
 task: Available tasks for this project:
+task: Available tasks for this project:
 * branch:              Create branch from main
 * build:               Build code
 * build-image:         Build container image
@@ -22,6 +23,7 @@ task: Available tasks for this project:
 * commit:              Commit + push code into branch
 * dagger-ko:           Build image w/ ko
 * delete-branch:       Delete branch from origin
+* goreleaser:          Release bins w/ goreleaser
 * install:             Install
 * lint:                Lint
 * pr:                  Create pull request into main
@@ -30,17 +32,9 @@ task: Available tasks for this project:
 * run:                 Run
 * tag:                 Commit, push & tag the module
 * test:                Test
-* test-install:        Test crossplane modules
+* test-install:        Test crossplame modules
 * test-version:        Test version cmd
 * tests:               Built cli tests
-```
-
-TASK EXAMPLES
-
-```bash
-task run # will output build version
-task run CMD=get PARAMETERS=--system=sops # will run with build command get + parameters
-task release TAG=2.6.1 # will release bins with version 2.2.9
 ```
 
 ## FEATURES
@@ -55,7 +49,7 @@ task release TAG=2.6.1 # will release bins with version 2.2.9
 
 ```bash
 # LINUX x86_64
-VERSION=v1.9.0
+VERSION=v2.6.10
 wget https://github.com/stuttgart-things/machineshop/releases/download/${VERSION}/machineshop_Linux_x86_64.tar.gz
 tar xvfz machineshop_Linux_x86_64.tar.gz
 sudo mv machineshop /usr/bin/machineshop
