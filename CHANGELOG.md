@@ -1,3 +1,10 @@
+## [2.6.15](https://github.com/stuttgart-things/machineshop/compare/v2.6.14...v2.6.15) (2025-01-03)
+
+
+### Bug Fixes
+
+* goreleaser ([621a4e1](https://github.com/stuttgart-things/machineshop/commit/621a4e1693708ea24b05efebe3e8fdea5d1a4990))
+
 ## [2.6.14](https://github.com/stuttgart-things/machineshop/compare/v2.6.13...v2.6.14) (2025-01-03)
 
 
