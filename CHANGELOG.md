@@ -1,3 +1,11 @@
+## [2.6.14](https://github.com/stuttgart-things/machineshop/compare/v2.6.13...v2.6.14) (2025-01-03)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/go-git/go-git/v5 to v5.13.1 ([#179](https://github.com/stuttgart-things/machineshop/issues/179)) ([47eb8a7](https://github.com/stuttgart-things/machineshop/commit/47eb8a73de1d63f7ecc9ceedae906afa14765bda))
+* updated go releaser ([5b10dee](https://github.com/stuttgart-things/machineshop/commit/5b10deec0f2db1c858d07c1fb5c7ad34f4e6e0f8))
+
 ## [2.6.13](https://github.com/stuttgart-things/machineshop/compare/v2.6.12...v2.6.13) (2025-01-01)
 
 
