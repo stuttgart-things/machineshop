@@ -5,11 +5,11 @@ Copyright © 2025 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/stuttgart-things/machineshop/internal"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
-	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/spf13/cobra"
 )
@@ -25,6 +25,7 @@ var runCmd = &cobra.Command{
 		source, _ := cmd.LocalFlags().GetString("source")
 		url, _ := cmd.LocalFlags().GetString("url")
 		profile, _ := cmd.LocalFlags().GetString("profile")
+		scripts, _ := cmd.Flags().GetStringSlice("scripts")
 
 		// LOAD PROFILE BASED ON SOURCE
 		switch source {
@@ -36,11 +37,6 @@ var runCmd = &cobra.Command{
 				log.Error("ERROR BY DOWNLOADING: ", err)
 				os.Exit(3)
 			}
-
-		case "git":
-			// GET REPO + READ PROFILE FILE
-			repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
-			profileFile = sthingsCli.ReadFileContentFromGitRepo(repo, profile)
 
 		case "local":
 			// GET LOCAL FILE
@@ -59,6 +55,50 @@ var runCmd = &cobra.Command{
 			os.Exit(3)
 		}
 
+		// PARSE PROFILE
+		runConfig := internal.LoadRunConfig(profileFile)
+
+		// DEBUGGING OUTPUT
+		fmt.Printf("PARSED GLOBALS: %+v\n", runConfig.Globals)
+		for i, entry := range runConfig.Run {
+			fmt.Printf("RUN %d: %+v\n", i+1, entry)
+		}
+
+		fmt.Println("Scripts to be run:", scripts)
+
+		// RUN SURVEY (IF SCRIPTS NOT DEFINED)
+		// internal.CreateRunSurvey(runConfig)
+
+		// LOAD GLOBAL VARS
+
+		// SELECT TO BE RUN SCRIPTS
+		for i, entry := range runConfig.Run {
+
+			if sthingsBase.CheckForStringInSlice(scripts, entry.Name) {
+				fmt.Println("SCRIPT FOUND IN SCRIPTS")
+			}
+
+			// LOAD VARS FROM SCRIPT
+
+			// RENDER SCRIPT
+
+			// WRITE (RENDRED) SCRIPT TO TMP
+
+			// ADD TO LIST OF SCRIPTS TO BE RUN (ONE BIG STRING)
+
+			fmt.Printf("Step %d:\n", i+1)
+			fmt.Printf("  Description: %s\n", entry.Description)
+			fmt.Printf("  Script: %s\n", entry.Script)
+			if entry.Vars != nil {
+				fmt.Println("  Vars:")
+				for key, value := range entry.Vars {
+					fmt.Printf("    %s: %v\n", key, value)
+				}
+			}
+		}
+
+		// RUN SCRIPTS WITH | TEE (LOG)
+
 	},
 }
 
@@ -68,4 +108,5 @@ func init() {
 	runCmd.Flags().String("source", "fetch", "source of profile: local or by url fetch. default: fetch.")
 	runCmd.Flags().String("url", "https://raw.githubusercontent.com/stuttgart-things/stuttgart-things/refs/heads/main/machineShop/binaries.yaml", "source of url download")
 	runCmd.Flags().String("profile", "profiles/run.yaml", "path to run profile")
+	runCmd.Flags().StringSlice("scripts", []string{}, "scripts to be run; survey will be skipped if defined")
 }
