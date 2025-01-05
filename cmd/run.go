@@ -39,7 +39,7 @@ var runCmd = &cobra.Command{
 				os.Exit(3)
 			}
 
-		case "local":
+		case loadFromLocal:
 			// GET LOCAL FILE
 			profileExists, _ := sthingsBase.VerifyIfFileOrDirExists(profile, "file")
 			log.Info("LOCAL PROFILE FOUND : ", profile)
