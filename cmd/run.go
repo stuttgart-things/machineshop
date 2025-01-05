@@ -5,10 +5,10 @@ Copyright © 2025 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/stuttgart-things/machineshop/internal"
+	"github.com/stuttgart-things/machineshop/surveys"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
 	"github.com/spf13/cobra"
@@ -26,6 +26,7 @@ var runCmd = &cobra.Command{
 		url, _ := cmd.LocalFlags().GetString("url")
 		profile, _ := cmd.LocalFlags().GetString("profile")
 		scripts, _ := cmd.Flags().GetStringSlice("scripts")
+		variables, _ := cmd.Flags().GetStringSlice("variables")
 
 		// LOAD PROFILE BASED ON SOURCE
 		switch source {
@@ -55,49 +56,17 @@ var runCmd = &cobra.Command{
 			os.Exit(3)
 		}
 
+		// READ VARIABLES (IF DEFINED)
+		if len(variables) > 0 {
+			flagVariables = internal.VerifyReadKeyValues(variables, log, enableVault)
+			log.Info("VARIABLES", flagVariables)
+		} else {
+			log.Warn("NO VARIABLES DEFINED")
+		}
+
 		// PARSE PROFILE
 		runConfig := internal.LoadRunConfig(profileFile)
-
-		// DEBUGGING OUTPUT
-		fmt.Printf("PARSED GLOBALS: %+v\n", runConfig.Globals)
-		for i, entry := range runConfig.Run {
-			fmt.Printf("RUN %d: %+v\n", i+1, entry)
-		}
-
-		fmt.Println("Scripts to be run:", scripts)
-
-		// RUN SURVEY (IF SCRIPTS NOT DEFINED)
-		// internal.CreateRunSurvey(runConfig)
-
-		// LOAD GLOBAL VARS
-
-		// SELECT TO BE RUN SCRIPTS
-		for i, entry := range runConfig.Run {
-
-			if sthingsBase.CheckForStringInSlice(scripts, entry.Name) {
-				fmt.Println("SCRIPT FOUND IN SCRIPTS")
-			}
-
-			// LOAD VARS FROM SCRIPT
-
-			// RENDER SCRIPT
-
-			// WRITE (RENDRED) SCRIPT TO TMP
-
-			// ADD TO LIST OF SCRIPTS TO BE RUN (ONE BIG STRING)
-
-			fmt.Printf("Step %d:\n", i+1)
-			fmt.Printf("  Description: %s\n", entry.Description)
-			fmt.Printf("  Script: %s\n", entry.Script)
-			if entry.Vars != nil {
-				fmt.Println("  Vars:")
-				for key, value := range entry.Vars {
-					fmt.Printf("    %s: %v\n", key, value)
-				}
-			}
-		}
-
-		// RUN SCRIPTS WITH | TEE (LOG)
+		surveys.RenderInstallScriptNew(runConfig, scripts, flagVariables)
 
 	},
 }
@@ -109,4 +78,5 @@ func init() {
 	runCmd.Flags().String("url", "https://raw.githubusercontent.com/stuttgart-things/stuttgart-things/refs/heads/main/machineShop/binaries.yaml", "source of url download")
 	runCmd.Flags().String("profile", "profiles/run.yaml", "path to run profile")
 	runCmd.Flags().StringSlice("scripts", []string{}, "scripts to be run; survey will be skipped if defined")
+	runCmd.Flags().StringSlice("variables", []string{}, "variables to be used in the scripts")
 }

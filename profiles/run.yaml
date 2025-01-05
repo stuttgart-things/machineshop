@@ -1,7 +1,7 @@
 ---
 globals:
-  golangVersion: "1.17.2"
-  nerdctlVersion: "1.6.0"
+  binDir: "/usr/bin"
+  name: machineshop
 
 run:
   - name: golang
@@ -20,6 +20,14 @@ run:
     vars:
       ageVersion: 1.1.1
 
+  - name: hello
+    description: Test output
+    script: |
+      echo {{ .name }}
+    vars:
+      name: kaeffken
+
+
   - name: azure-cli
     description: Install Azure CLI
     script: |
@@ -34,4 +42,4 @@ run:
       sudo systemctl enable --now containerd
       sudo systemctl enable --now buildkit
     vars:
-      ageVersion: 1.1.1
+      nerdctl: 1.1.1
