@@ -103,7 +103,7 @@ var renderCmd = &cobra.Command{
 			}
 
 			// HANDLE SOURCE:LOCAL FOR TEMPLATE + DEFAULTS
-		} else if source == "local" {
+		} else if source == loadFromLocal {
 			templateExists, _ := sthingsBase.VerifyIfFileOrDirExists(templatePath, "file")
 
 			if templateExists {

@@ -53,7 +53,7 @@ var installCmd = &cobra.Command{
 			repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 			profileFile = sthingsCli.ReadFileContentFromGitRepo(repo, profile)
 
-		case "local":
+		case loadFromLocal:
 			// GET LOCAL FILE
 			profileExists, _ := sthingsBase.VerifyIfFileOrDirExists(profile, "file")
 			log.Info("LOCAL PROFILE FOUND : ", profile)

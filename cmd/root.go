@@ -12,6 +12,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	loadFromLocal = "local"
+)
+
 var (
 	gitRepository string
 	gitUser       string
