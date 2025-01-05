@@ -5,24 +5,6 @@
         ":rebaseStalePrs",
         ":prHourlyLimit1"
     ],
-    "packageRules": [
-        {
-            "description": "Automatically merge minor and patch-level updates",
-            "matchUpdateTypes": [
-                "minor",
-                "patch",
-                "digest"
-            ],
-            "automerge": true,
-            "automergeType": "pr",
-            "automergeStrategy": "fast-forward",
-            "schedule": [
-                "after 10pm every weekday",
-                "before 5am every weekday",
-                "every weekend"
-            ]
-        }
-    ],
     "customManagers": [
         {
             "customType": "regex",
