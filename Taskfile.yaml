@@ -27,6 +27,13 @@ vars:
 dotenv: ['.env', '{{.HOME}}/.env']
 
 tasks:
+  test-run:
+    desc: "Build Bin & Test Run Command"
+    deps:
+      - run
+    cmds:
+      - $GOPATH/bin/machineshop run --source local --profile profiles/run.yaml --scripts hello --variables="name=horst"
+
   check:
     desc: "Run pre-commit hooks"
     cmds:

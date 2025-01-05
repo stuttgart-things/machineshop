@@ -19,6 +19,7 @@ var (
 	log              = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
 	wg               sync.WaitGroup
 	bashScriptHeader = "#!/bin/bash\n"
+	allVars          map[string]interface{}
 )
 
 func RenderInstallScript(selectedScriptProfiles []string, allConfig Profile, scriptDir string) {
