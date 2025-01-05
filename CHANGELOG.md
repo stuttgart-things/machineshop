@@ -1,3 +1,10 @@
+## [2.6.16](https://github.com/stuttgart-things/machineshop/compare/v2.6.15...v2.6.16) (2025-01-05)
+
+
+### Bug Fixes
+
+* removed automerge prs; added newly created run cmd ([64f2d3e](https://github.com/stuttgart-things/machineshop/commit/64f2d3e9a1dc296cc1d043d8cc91253fda3258d4))
+
 ## [2.6.15](https://github.com/stuttgart-things/machineshop/compare/v2.6.14...v2.6.15) (2025-01-03)
 
 
