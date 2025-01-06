@@ -4,6 +4,26 @@ globals:
   name: machineshop
 
 run:
+  - name: buildx
+    description: Install Docker buildx plugin
+    script: |
+      wget https://github.com/docker/buildx/releases/download/v0.19.3/buildx-v{{ .buildxVersion }}.linux-amd64
+      sudo chmod +x buildx-v{{ .buildxVersion }}.linux-amd64
+      sudo mv buildx-v{{ .buildxVersion }}.linux-amd64 /usr/bin/buildx
+    vars:
+      buildxVersion: 0.19.3
+
+  - name: onefetch
+    description: Install Onefetch
+    script: |
+      wget https://github.com/o2sh/onefetch/releases/download/{{ .onefetchVersion }}/onefetch-linux.tar.gz
+      tar xvfz onefetch-linux.tar.gz 
+      sudo chmod +x onefetch
+      sudo mv onefetch /usr/bin/onefetch
+      rm -rf onefetch-linux.tar.gz 
+    vars:
+      onefetchVersion: 2.23.1
+
   - name: golang
     description: Install Golang
     script: |
