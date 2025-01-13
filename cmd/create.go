@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/google/go-github/v62/github"
+	github "github.com/google/go-github/v68/github"
 	"github.com/spf13/cobra"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
@@ -174,6 +174,18 @@ var createCmd = &cobra.Command{
 
 			sthingsCli.MergePullRequest(client, repositoryName, groupName, commitMessage, mergeMethod, sthingsBase.ConvertStringToInteger(prID))
 
+		case "labels":
+
+			log.Info("CREATING/UPDATING LABELS OF PULL REQUEST")
+			log.Info("PR-ID: ", prID)
+			log.Info("TO BE UPDATED LABELS: ", labels)
+
+			updatedLabels, err := sthingsCli.SetPullRequestLabels(client, groupName, repositoryName, sthingsBase.ConvertStringToInteger(prID), labels)
+			if err != nil {
+				log.Fatalf("UNABLE TO SET LABELS: %s\n", err)
+			}
+
+			log.Info("LABELS UPDATED: ", updatedLabels)
 		}
 
 	},

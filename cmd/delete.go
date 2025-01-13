@@ -6,7 +6,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/google/go-github/v62/github"
+	"github.com/google/go-github/v68/github"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/spf13/cobra"
