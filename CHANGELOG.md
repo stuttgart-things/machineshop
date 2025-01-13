@@ -25,7 +25,7 @@
 
 ### Bug Fixes
 
-* **deps:** update module github.com/google/go-github/v62 to v68 ([5386980](https://github.com/stuttgart-things/machineshop/commit/5386980edfc8114d5b7bff3efbd62f13ad061018))
+* **deps:** update module github.com/google/go-github/v68 to v68 ([5386980](https://github.com/stuttgart-things/machineshop/commit/5386980edfc8114d5b7bff3efbd62f13ad061018))
 * **deps:** update module gopkg.in/yaml.v2 to v3 ([e64e3ca](https://github.com/stuttgart-things/machineshop/commit/e64e3caae2fcf5cdcb238c6631849eb64141d443))
 * taskfile version cmd ([feb08fd](https://github.com/stuttgart-things/machineshop/commit/feb08fdcca9ab4b2d0584496e3467fb3741c0692))
 * updated render cmd ([cecf53f](https://github.com/stuttgart-things/machineshop/commit/cecf53f35d4b76142cdd756ed9239c6926e2461b))

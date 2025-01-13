@@ -161,6 +161,23 @@ machineshop create \
 
 </details>
 
+<details><summary><b>LABELS (ON PULL-REQUEST)</b></summary>
+
+all existing labels will be overwritten by the specified / to be upodated.
+
+```bash
+export GITHUB_TOKEN=<GITHUB_TOKEN>
+
+machineshop create \
+--kind labels \
+--group stuttgart-things \
+--repository kaeffken \
+--id 58 \
+--labels app1,deploy
+```
+
+</details>
+
 <details><summary><b>MERGE</b></summary>
 
 ```bash
