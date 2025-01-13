@@ -33,6 +33,14 @@ run:
     vars:
       golangVersion: 1.23.4
 
+  - name: dagger
+    description: Install Dagger
+    script: |
+      curl -fsSL https://dl.dagger.io/dagger/install.sh > /tmp/install-dagger.sh
+      cd &tmp && ./tmp/install-dagger.sh
+      sudo mv /tmp/bin/dagger /usr/bin/dagger
+      sudo chmod +x /usr/bin/dagger
+
   - name: age
     description: Install Age
     script: |
