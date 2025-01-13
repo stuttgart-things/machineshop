@@ -151,12 +151,16 @@ tasks:
   release:
     desc: Release
     cmds:
-      - git checkout main && git pull
       - task: commit
+      - sleep 20s
+      - |
+        RUN_ID=$(gh run list | grep {{ .BRANCH }} | awk '{print $7}')
+        gh run watch ${RUN_ID} --exit-status
+      - task: pr
       - npx semantic-release --dry-run
       - npx semantic-release --debug --no-ci
       - task: goreleaser
-      - task: dagger-ko
+      - task: build-ko
 
   goreleaser:
     desc: Release bins w/ goreleaser
