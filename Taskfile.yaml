@@ -150,6 +150,8 @@ tasks:
 
   release:
     desc: Release
+    deps:
+      - run
     cmds:
       - task: commit
       - sleep 20s
