@@ -1,3 +1,18 @@
+# [2.7.0](https://github.com/stuttgart-things/machineshop/compare/v2.6.16...v2.7.0) (2025-01-13)
+
+
+### Bug Fixes
+
+* **deps:** update module google.golang.org/grpc to v1.69.4 ([77d73b1](https://github.com/stuttgart-things/machineshop/commit/77d73b1205a03ef0a0e4e179191f03cd0f8b2103))
+* **deps:** update module gopkg.in/yaml.v2 to v3 ([17348aa](https://github.com/stuttgart-things/machineshop/commit/17348aa12de75db1ca0d4d45ac149da3daf6d215))
+* removed release cmd ([8f3cf18](https://github.com/stuttgart-things/machineshop/commit/8f3cf182fb2f7a773235bf379976ed1e7b893ae0))
+
+
+### Features
+
+* adde label cmd for prs ([3a07b35](https://github.com/stuttgart-things/machineshop/commit/3a07b359fcea742885bf46e134f8f3fdeebaad48))
+* added create labels for pr cmd ([0c59a82](https://github.com/stuttgart-things/machineshop/commit/0c59a8299c2e167e80b5cc4a0df0bab5aee52b3e))
+
 ## [2.6.16](https://github.com/stuttgart-things/machineshop/compare/v2.6.15...v2.6.16) (2025-01-05)
 
 
