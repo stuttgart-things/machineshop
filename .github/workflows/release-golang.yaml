@@ -33,5 +33,5 @@ jobs:
       environment-name: k8s
       runs-on: ghr-machineshop-labda-test
       goreleaser-version: v1.26.2
-      golang-version: 1.22.3
+      golang-version: 1.23.4
     secrets: inherit
