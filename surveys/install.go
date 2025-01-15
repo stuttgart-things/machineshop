@@ -104,9 +104,13 @@ func InstallBinaries(selectedInstallProfiles []string, allConfig Profile, tmpDow
 
 					fmt.Println("ALL VARS", allTemplateVariablesAndDefaults)
 
+					// RENDER URL AND BINNAME
 					if len(allTemplateVariablesAndDefaults) >= 1 {
 						renderedURL, _ := sthingsBase.RenderTemplateInline(string(url), "missingkey=zero", "{{", "}}", allTemplateVariablesAndDefaults)
 						url = string(renderedURL)
+
+						renderedBinName, _ := sthingsBase.RenderTemplateInline(string(binName), "missingkey=zero", "{{", "}}", allTemplateVariablesAndDefaults)
+						binName = string(renderedBinName)
 					}
 					// ADD OVERWIRTE OPTION
 					// CHANGE VERSION FOR USING v PREFIX

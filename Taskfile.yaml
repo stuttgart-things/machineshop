@@ -211,7 +211,7 @@ tasks:
         if [[ -n $(git status --porcelain) ]]; then
           echo "committing changes"
           echo "ENTER COMMIT MESSAGE"
-          read COMMIT_MESSAGE;
+          COMMIT_MESSAGE=$(echo $(gum choose "feat: {{ .BRANCH }}" "fix: {{ .BRANCH }}" "BREAKING CHANGE: {{ .BRANCH }}"))
           git commit --allow-empty -a -m "$(echo ${COMMIT_MESSAGE})"
         else
           echo "no changes"
