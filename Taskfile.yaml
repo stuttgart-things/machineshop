@@ -26,6 +26,15 @@ vars:
 
 dotenv: ['.env', '{{.HOME}}/.env']
 
+# PRECONDITION TO CHECK IF TOKENS SET OR UNSET FOR RELEASE
+token-precondition: &release
+  - sh: "[[ -n \"${GITHUB_TOKEN}\" ]]"
+    msg: "Error: GITHUB_TOKEN is not set. Please set the environment variable and try again."
+  - sh: "[[ -z \"${GITLAB_TOKEN}\" ]]"
+    msg: "Error: GITLAB_TOKEN is set. Please unset the environment variable and try again."
+  - sh: "[[ $(git rev-parse --abbrev-ref HEAD) != 'main' ]]"
+    msg: "Error: You are on the 'main' branch. Please switch to a different branch and try again."
+
 tasks:
   test-run:
     desc: "Build Bin & Test Run Command"
@@ -150,6 +159,7 @@ tasks:
 
   release:
     desc: Release
+    preconditions: *release
     deps:
       - run
     cmds:
