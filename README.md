@@ -14,7 +14,6 @@
 
 ```bash
 task: Available tasks for this project:
-task: Available tasks for this project:
 * branch:              Create branch from main
 * build:               Build code
 * build-image:         Build container image
