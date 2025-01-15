@@ -1,3 +1,10 @@
+## [2.7.1](https://github.com/stuttgart-things/machineshop/compare/v2.7.0...v2.7.1) (2025-01-15)
+
+
+### Bug Fixes
+
+* fix/install-render-bin ([86080cc](https://github.com/stuttgart-things/machineshop/commit/86080cc15999314ae306d926f4747605d6908170))
+
 # [2.7.0](https://github.com/stuttgart-things/machineshop/compare/v2.6.16...v2.7.0) (2025-01-13)
 
 
