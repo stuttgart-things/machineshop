@@ -9,10 +9,27 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/charmbracelet/huh"
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	"gopkg.in/yaml.v2"
+)
+
+type TemplateBracket struct {
+	begin        string `mapstructure:"begin"`
+	end          string `mapstructure:"end"`
+	regexPattern string `mapstructure:"regex-pattern"`
+}
+
+var (
+	renderOption = "missingkey=error"
+	brackets     = map[string]TemplateBracket{
+		"curly":  {"{{", "}}", `\{\{(.*?)\}\}`},
+		"square": {"[[", "]]", `\[\[(.*?)\]\]`},
+	}
+	bracketFormat = "curly"
 )
 
 // QUESTION STRUCT TO HOLD THE QUESTION DATA FROM YAML
@@ -66,14 +83,24 @@ func LoadQuestionFile(filename, yamlKey string) ([]*Question, error) {
 	return nil, fmt.Errorf("key '%s' not found in YAML file", yamlKey)
 }
 
-func ReadGitProfile(filename string) (HomerunDemo HomerunDemo) {
-
-	if err := ReadYAML(filename, &HomerunDemo); err != nil {
+func ReadProfileFile(filename string, target interface{}) error {
+	// Read and unmarshal the YAML file into the provided target
+	if err := ReadYAML(filename, target); err != nil {
 		fmt.Printf("ERROR READING YAML FILE: %v\n", err)
+		return err
 	}
 
-	return
+	return nil
 }
+
+// func ReadGitProfile(filename string) (HomerunDemo HomerunDemo) {
+
+// 	if err := ReadYAML(filename, &HomerunDemo); err != nil {
+// 		fmt.Printf("ERROR READING YAML FILE: %v\n", err)
+// 	}
+
+// 	return
+// }
 
 // READYAML READS AND PARSES A YAML FILE INTO A PROVIDED STRUCT
 func ReadYAML(filename string, out interface{}) error {
@@ -238,4 +265,77 @@ func RunSurvey(profilePath, surveyKey string) (surveyValues map[string]interface
 	}
 
 	return surveyValues
+}
+
+func RenderAliases(aliases []string, allValues map[string]interface{}) map[string]interface{} {
+
+	fmt.Println("ALL VALUES: ", allValues)
+
+	for _, alias := range aliases {
+
+		// SPLIT ALIAS KEY/VALUE BY :
+		aliasValues := strings.Split(alias, ":")
+
+		// RENDER KEY
+		aliasKey, err := sthingsBase.RenderTemplateInline(aliasValues[0], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		// RENDER VALUE
+		aliasValue, err := sthingsBase.RenderTemplateInline(aliasValues[1], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		// ASSIGN ALIAS TO ALL VALUES
+		key := string(strings.TrimSpace(string(aliasKey)))
+		value := string(strings.TrimSpace(string(aliasValue)))
+
+		allValues[string(key)] = string(value)
+		log.Info("ALIAS ADDED: ", key, ":", string(value))
+	}
+
+	return allValues
+}
+
+func RunSurveyFiles(surveys []string, values map[string]interface{}) map[string]interface{} {
+
+	var allQuestions []*Question
+
+	// LOAD ALL QUESTION FILES
+	for _, questionFile := range surveys {
+
+		// RENDER QUESTION FILE
+		renderedQuestionFilePath, err := sthingsBase.RenderTemplateInline(questionFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, values)
+		if err != nil {
+			log.Error("ERROR RENDERING QUESTION FILE: ", err)
+		}
+
+		log.Info("LOADING QUESTION FILE: ", string(renderedQuestionFilePath))
+
+		questions, _ := LoadQuestionFile(string(renderedQuestionFilePath), "")
+
+		if len(questions) > 0 {
+			log.Info("LOADED QUESTIONS FROM FILE: ", len(questions))
+		} else {
+			log.Warn("NO QUESTIONS FOUND IN FILE: ", string(renderedQuestionFilePath))
+		}
+
+		allQuestions = append(allQuestions, questions...)
+	}
+
+	survey, defaults, err := BuildSurvey(allQuestions)
+	if err != nil {
+		log.Fatalf("ERROR BUILDING SURVEY: %v", err)
+	}
+
+	err = survey.Run()
+	if err != nil {
+		log.Fatalf("ERROR RUNNING SURVEY: %v", err)
+	}
+
+	log.Info("DEFAULTS: ", defaults)
+
+	return defaults
 }

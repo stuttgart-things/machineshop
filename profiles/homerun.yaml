@@ -18,8 +18,17 @@ aliases:
   - "gitlab-survey:git"
   - "github-survey:git"
 
+
+values:
+  - gitlab
+  - github
+
+
 surveys:
   - tests/{{ .system }}-survey.yaml
 
-templates:
-  - "tests/vsphere-vm.tf.tpl:{{ .vmName }}.tf"
+renderInline:
+  gitlab:
+    - "tests/git.tpl"
+  github:
+    - "tests/git.tpl"
