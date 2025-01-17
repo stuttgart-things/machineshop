@@ -1,0 +1,25 @@
+---
+preSurvey:
+  - prompt: "SYSTEM"
+    name: system
+    options:
+      - "github"
+      - "gitlab"
+      - "ansible"
+
+  - prompt: "SEVERITY"
+    name: severity
+    options:
+      - "INFO"
+      - "WARNING"
+      - "ERROR"
+
+aliases:
+  - "gitlab-survey:git"
+  - "github-survey:git"
+
+surveys:
+  - tests/{{ .system }}-survey.yaml
+
+templates:
+  - "tests/vsphere-vm.tf.tpl:{{ .vmName }}.tf"

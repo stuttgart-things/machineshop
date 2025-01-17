@@ -15,9 +15,13 @@ import (
 	"strings"
 	"time"
 
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
+
 	ipservice "github.com/stuttgart-things/clusterbook/ipservice"
 
 	"github.com/stuttgart-things/machineshop/internal"
+	"github.com/stuttgart-things/machineshop/surveys"
+
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 	"google.golang.org/grpc"
 
@@ -128,6 +132,50 @@ var pushCmd = &cobra.Command{
 
 				log.Printf("CLUSTER STATUS: %s", clusterRes.Status)
 
+			case "homerun-demo":
+				fmt.Println("PUSHING TO HOMERUN-DEMO")
+
+				// CREATE map string interface for values
+				values := make(map[string]interface{})
+
+				// READ PROFILE FOR MAY EXISTING PRE-SURVEY
+				preSurvey, _ := surveys.LoadQuestionFile(source, "preSurvey")
+				if len(preSurvey) > 0 {
+					preSurveyQuestions, preSurveyValues, err := surveys.BuildSurvey(preSurvey)
+					if err != nil {
+						log.Fatalf("ERROR BUILDING SURVEY: %v", err)
+					}
+					log.Info("PRE-SURVEY FOUND")
+
+					fmt.Println(preSurvey, preSurveyValues)
+
+					err = preSurveyQuestions.Run()
+					if err != nil {
+						log.Fatalf("ERROR RUNNING SURVEY: %v", err)
+					}
+					values = sthingsBase.MergeMaps(preSurveyValues, values)
+
+				} else {
+					log.Info("NO PRE-SURVEY FOUND")
+				}
+
+				fmt.Println(values)
+
+				// READ + OUTPUT GIT PROFILE
+				gitConfig := surveys.ReadGitProfile(source)
+				fmt.Println(gitConfig)
+
+				fmt.Println(preSurvey)
+
+				// GET PRE-SURVEY AND DEFAULTS
+
+				// renderedTemplateFileName, err := sthingsBase.RenderTemplateInline(templateFilePaths[0], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+				// if err != nil {
+				// 	fmt.Println(err)
+				// }
+
+				// RENDER ALIASES
+
 			case "homerun":
 
 				// GETTING TIMESTAMP
@@ -192,8 +240,8 @@ var pushCmd = &cobra.Command{
 					return
 				}
 
-				fmt.Println("answer status:", resp.Status)
-				fmt.Println("answer body:", string(body))
+				log.Info("ANSWER STATUS: ", resp.Status)
+				log.Info("ANSWER BODY: ", string(body))
 
 			case "teams":
 
