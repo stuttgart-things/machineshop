@@ -135,46 +135,58 @@ var pushCmd = &cobra.Command{
 			case "homerun-demo":
 				fmt.Println("PUSHING TO HOMERUN-DEMO")
 
-				// CREATE map string interface for values
+				// MAP FOR VALUES
 				values := make(map[string]interface{})
 
 				// READ PROFILE FOR MAY EXISTING PRE-SURVEY
-				preSurvey, _ := surveys.LoadQuestionFile(source, "preSurvey")
-				if len(preSurvey) > 0 {
-					preSurveyQuestions, preSurveyValues, err := surveys.BuildSurvey(preSurvey)
-					if err != nil {
-						log.Fatalf("ERROR BUILDING SURVEY: %v", err)
-					}
-					log.Info("PRE-SURVEY FOUND")
+				preSurveyValues := surveys.RunSurvey(source, "preSurvey")
+				values = sthingsBase.MergeMaps(preSurveyValues, values)
 
-					fmt.Println(preSurvey, preSurveyValues)
-
-					err = preSurveyQuestions.Run()
-					if err != nil {
-						log.Fatalf("ERROR RUNNING SURVEY: %v", err)
-					}
-					values = sthingsBase.MergeMaps(preSurveyValues, values)
-
-				} else {
-					log.Info("NO PRE-SURVEY FOUND")
+				// READ PROFILE
+				var demo surveys.HomerunDemo
+				err := surveys.ReadProfileFile(source, &demo)
+				if err != nil {
+					log.Fatalf("Failed to read profile: %v", err)
 				}
+
+				fmt.Println(demo)
+				fmt.Println(values)
+
+				// RENDER ALIASES + MERGE w/ VALUES
+				aliases := surveys.RenderAliases(demo.Aliases, values)
+				values = sthingsBase.MergeMaps(aliases, values)
 
 				fmt.Println(values)
 
-				// READ + OUTPUT GIT PROFILE
-				gitConfig := surveys.ReadGitProfile(source)
-				fmt.Println(gitConfig)
+				values = surveys.RunSurveyFiles(demo.Surveys, values)
+				fmt.Println(values)
 
-				fmt.Println(preSurvey)
+				// LOAD ALL QUESTION FILES
+				// for _, questionFile := range gitConfig.Questions {
 
-				// GET PRE-SURVEY AND DEFAULTS
+				// 	// RENDER QUESTION FILE
+				// 	renderedQuestionFilePath, err := sthingsBase.RenderTemplateInline(questionFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+				// 	if err != nil {
+				// 		log.Error("ERROR RENDERING QUESTION FILE: ", err)
+				// 	}
+				// 	log.Info("LOADING QUESTION FILE: ", string(renderedQuestionFilePath))
 
-				// renderedTemplateFileName, err := sthingsBase.RenderTemplateInline(templateFilePaths[0], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
-				// if err != nil {
-				// 	fmt.Println(err)
+				// 	questions, _ := modules.LoadQuestionFile(string(renderedQuestionFilePath))
+
+				// 	if len(questions) > 0 {
+				// 		log.Info("LOADED QUESTIONS FROM FILE: ", len(questions))
+				// 	} else {
+				// 		log.Warn("NO QUESTIONS FOUND IN FILE: ", string(renderedQuestionFilePath))
+				// 	}
+
+				// 	allQuestions = append(allQuestions, questions...)
 				// }
 
-				// RENDER ALIASES
+				// READ SURVEYS + RUN SURVEYS
+
+				// RENDER THE FIELDS
+
+				// SEND MESSAGE
 
 			case "homerun":
 
