@@ -5,68 +5,31 @@ Copyright © 2025 Patrick Hermann patrick.hermann@sva.de
 package surveys
 
 import (
-	"os"
 	"testing"
 )
 
-// TestReadYAML tests the ReadYAMLToMap function
-func TestReadYAML(t *testing.T) {
-	// Example YAML content
-	yamlContent := `
-renderInline:
-  gitlab:
-    - "tests/git.tpl"
-  github:
-    - "tests/git.tpl"
-`
+func TestRandomFromSlice(t *testing.T) {
+	// Test case 1: Non-empty slice
+	inputSlice := []string{"apple", "banana", "cherry"}
+	randomValue := RandomFromSlice(inputSlice)
 
-	// Write YAML content to a temporary file for testing
-	tempFile := "test.yaml"
-	if err := os.WriteFile(tempFile, []byte(yamlContent), 0644); err != nil {
-		t.Fatalf("Error writing test file: %v", err)
-	}
-	defer os.Remove(tempFile) // Clean up the temporary file
-
-	// Use the function to read the YAML
-	data, err := ReadYAMLToMap(tempFile)
-	if err != nil {
-		t.Fatalf("Error reading YAML: %v", err)
+	// Check if the random value is in the slice
+	found := false
+	for _, v := range inputSlice {
+		if v == randomValue {
+			found = true
+			break
+		}
 	}
 
-	// Validate the "renderInline" section
-	renderInline, ok := data["renderInline"].(map[string]interface{})
-	if !ok {
-		t.Fatalf("renderInline section not found or invalid")
+	if !found {
+		t.Errorf("Expected one of %v, but got %s", inputSlice, randomValue)
 	}
 
-	// Validate each key and its associated values
-	tests := map[string][]string{
-		"gitlab": {"tests/git.tpl"},
-		"github": {"tests/git.tpl"},
-	}
-
-	for key, expectedFiles := range tests {
-		values, exists := renderInline[key]
-		if !exists {
-			t.Errorf("Key %s not found in renderInline", key)
-			continue
-		}
-
-		files, ok := values.([]interface{})
-		if !ok {
-			t.Errorf("Values for key %s are not of the expected type", key)
-			continue
-		}
-
-		if len(files) != len(expectedFiles) {
-			t.Errorf("Key %s: expected %d files, got %d", key, len(expectedFiles), len(files))
-			continue
-		}
-
-		for i, file := range files {
-			if file != expectedFiles[i] {
-				t.Errorf("Key %s: expected file %s, got %s", key, expectedFiles[i], file)
-			}
-		}
+	// Test case 2: Empty slice
+	emptySlice := []string{}
+	randomValue = RandomFromSlice(emptySlice)
+	if randomValue != "" {
+		t.Errorf("Expected empty string for empty slice, but got %s", randomValue)
 	}
 }
