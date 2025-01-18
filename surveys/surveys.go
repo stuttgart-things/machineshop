@@ -357,3 +357,13 @@ func ReadYAMLToMap(filename string) (map[string]interface{}, error) {
 
 	return result, nil
 }
+
+// RandomFromSlice selects a random element from a slice of strings
+func RandomFromSlice(inputSlice []string) string {
+	// Check if the slice is empty
+	if len(inputSlice) == 0 {
+		return "" // Return empty string if the slice is empty
+	}
+	// Generate a random index and return the element
+	return inputSlice[rand.Intn(len(inputSlice))]
+}

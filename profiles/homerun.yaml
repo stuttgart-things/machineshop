@@ -1,11 +1,11 @@
 ---
 preSurvey:
-  - prompt: "SCENARIO"
-    name: scenario
+  - prompt: "SYSTEM"
+    name: system
     options:
-      - "git"
-      - "infrastructure-as-code"
-      - "container"
+      - "github"
+      - "gitlab"
+      - "ansible"
 
   - prompt: "SEVERITY"
     name: severity
@@ -21,6 +21,19 @@ aliases:
   - "gitlab-survey:git"
   - "github-survey:git"
 
+messageTemplate: |
+  Title: {{ randomTitle .Severity }}
+  Message: {{ randomMessage .Severity }}
+  Severity: {{ .Severity }}
+  Author: {{ .Author }}
+  Timestamp: {{ .Timestamp }}
+  System: {{ .System }}
+  Tags: {{ .Tags }}
+  Assignee Address: {{ .AssigneeAddress }}
+  Assignee Name: {{ .AssigneeName }}
+  Artifacts: {{ .Artifacts }}
+  URL: {{ .Url }}
+  Random Tag: {{ random 100 }}
 
 
 # preValues:
