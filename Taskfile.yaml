@@ -221,7 +221,11 @@ tasks:
         if [[ -n $(git status --porcelain) ]]; then
           echo "committing changes"
           echo "ENTER COMMIT MESSAGE"
-          COMMIT_MESSAGE=$(echo $(gum choose "feat: {{ .BRANCH }}" "fix: {{ .BRANCH }}" "BREAKING CHANGE: {{ .BRANCH }}"))
+          COMMIT_MESSAGE=$(echo $(gum choose "feat: {{ .BRANCH }}" "fix: {{ .BRANCH }}" "BREAKING CHANGE: {{ .BRANCH }}" "ENTER CUSTOM COMMIT MESSAGE"))
+          if COMMIT_MESSAGE == "ENTER COMMIT MESSAGE"; then
+            COMMIT_MESSAGE=$(echo $(gum input --placeholder "scope" --value "commit to {{ .BRANCH }}"))
+          fi
+
           git commit --allow-empty -a -m "$(echo ${COMMIT_MESSAGE})"
         else
           echo "no changes"

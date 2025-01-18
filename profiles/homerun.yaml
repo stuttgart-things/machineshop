@@ -1,11 +1,11 @@
 ---
 preSurvey:
-  - prompt: "SYSTEM"
-    name: system
+  - prompt: "SCENARIO"
+    name: scenario
     options:
-      - "github"
-      - "gitlab"
-      - "ansible"
+      - "git"
+      - "infrastructure-as-code"
+      - "container"
 
   - prompt: "SEVERITY"
     name: severity
@@ -14,21 +14,41 @@ preSurvey:
       - "WARNING"
       - "ERROR"
 
+surveys:
+  - tests/{{ .system }}-survey.yaml
+
 aliases:
   - "gitlab-survey:git"
   - "github-survey:git"
 
 
-values:
-  - gitlab
-  - github
+
+# preValues:
+#   git:
+#     systems:
+#       - "github"
+#       - "gitlab"
+#     github-events:
+#       - "PullRequest"
+#       - "Pipeline Run"
+#       - "Issue"
 
 
-surveys:
-  - tests/{{ .system }}-survey.yaml
 
-renderInline:
-  gitlab:
-    - "tests/git.tpl"
-  github:
-    - "tests/git.tpl"
+# scenarios:
+#   github-:
+#     title: |
+#     message:
+#       - "Please fill out the following survey to help us understand your GitLab setup."
+#       - "Please fill out the following survey to help us understand your GitHub setup."
+#     severity: "{{ .severity }}"
+#     author:          author,
+#     timestamp:       timestamp,
+#     system:
+#       - "github"
+#       - "gitlab"
+#     tags:            tags,
+#     assigneeAddress: assigneeUrl,
+#     assigneeName:    assignee,
+#     artifacts:       artifacts,
+#     url:             url,
