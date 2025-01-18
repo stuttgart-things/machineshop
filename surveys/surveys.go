@@ -339,3 +339,21 @@ func RunSurveyFiles(surveys []string, values map[string]interface{}) map[string]
 
 	return defaults
 }
+
+// ReadYAMLToMap reads a YAML file and exports it as a map[string]interface{}
+func ReadYAMLToMap(filename string) (map[string]interface{}, error) {
+	// Read the YAML file
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, fmt.Errorf("error reading file: %v", err)
+	}
+
+	// Parse the YAML into a generic map
+	var result map[string]interface{}
+	err = yaml.Unmarshal(data, &result)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing YAML: %v", err)
+	}
+
+	return result, nil
+}
