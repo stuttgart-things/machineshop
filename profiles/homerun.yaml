@@ -14,27 +14,27 @@ preSurvey:
       - "WARNING"
       - "ERROR"
 
-surveys:
-  - tests/{{ .system }}-survey.yaml
+# surveys:
+#   - tests/{{ .system }}-survey.yaml
 
 aliases:
   - "gitlab-survey:git"
   - "github-survey:git"
 
-messageTemplate: |
-  Title: {{ randomTitle .Severity }}
-  Message: {{ randomMessage .Severity }}
-  Severity: {{ .Severity }}
-  Author: {{ .Author }}
-  Timestamp: {{ .Timestamp }}
-  System: {{ .System }}
-  Tags: {{ .Tags }}
-  Assignee Address: {{ .AssigneeAddress }}
-  Assignee Name: {{ .AssigneeName }}
-  Artifacts: {{ .Artifacts }}
-  URL: {{ .Url }}
-  Random Tag: {{ random 100 }}
+bodyTemplate: |
+  {
+      "System": "{{ .system }}",
+      "Severity": "{{ .severity }}"
+      "Author": "{{ random .authors }}",
+      "Tags": "{{ random .authors }}",
+      "Timestamp": "{{ timestamp }}",
+      "AssigneeName": "{{ random .authors }}",
+  }
 
+authors:
+  - "tom"
+  - "mark"
+  - "travis"
 
 # preValues:
 #   git:

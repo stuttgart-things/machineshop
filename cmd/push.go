@@ -15,6 +15,8 @@ import (
 	"strings"
 	"time"
 
+	"math/rand"
+
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
 	ipservice "github.com/stuttgart-things/clusterbook/ipservice"
@@ -157,10 +159,51 @@ var pushCmd = &cobra.Command{
 				values = sthingsBase.MergeMaps(aliases, values)
 
 				fmt.Println(values)
+				values["authors"] = demo.Authors
 
-				values = surveys.RunSurveyFiles(demo.Surveys, values)
-				fmt.Println(values)
+				// tmp
+				values["whatever"] = []string{"blabla", "this", "that"}
 
+				// values = surveys.RunSurveyFiles(demo.Surveys, values)
+				// fmt.Println(values)
+
+				// READ TEMPLATE TO RENDER
+				funcMap := template.FuncMap{
+					"hello": func(input string) string {
+						return input + " Hello from push"
+					},
+					"random": func(input []string) string {
+						//severities := []string{"INFO", "WARNING", "CRITICAL", "ERROR"}
+						rand.Seed(time.Now().UnixNano())
+						return input[rand.Intn(len(input))]
+					},
+					"timestamp": func() string {
+						dt := time.Now()
+						return dt.Format("01-02-2006 15:04:05")
+					},
+
+					// "randomFromSlice": func(inputSlice []string) string {
+					// 	// Check if the slice is empty
+					// 	if len(inputSlice) == 0 {
+					// 		return "" // Return empty string if the slice is empty
+					// 	}
+
+					// 	rand.Seed(uint64(time.Now().UnixNano()))
+					// 	randomIndex := rand.Intn(len(inputSlice))
+
+					// 	return inputSlice[randomIndex]
+					// },
+				}
+
+				fmt.Println(demo.BodyTemplate)
+
+				rendered, err := surveys.RenderTemplateInlineWithFunctions(funcMap, demo.BodyTemplate, values)
+
+				if err != nil {
+					log.Fatalf("Failed to render template: %v", err)
+				}
+
+				fmt.Println(string(rendered))
 				// LOAD ALL QUESTION FILES
 				// for _, questionFile := range gitConfig.Questions {
 
@@ -346,4 +389,9 @@ func RenderBody(templateData string, object interface{}) string {
 
 	return buf.String()
 
+}
+
+func Hello(input string) string {
+
+	return input + " Hello from push"
 }
