@@ -11,8 +11,8 @@ preSurvey:
     name: severity
     options:
       - "INFO"
-      - "WARNING"
       - "ERROR"
+      - "SUCCESS"
 
 # surveys:
 #   - tests/{{ .system }}-survey.yaml
@@ -22,38 +22,46 @@ aliases:
   - "github-survey:git"
 
 bodyTemplate: |
+  {{ $object := randomUsecase .system .allUsecases }}
+  {{ $verb := getUsecaseVerb $object .system .allUsecases }}
+  {{ $author := random .authors }}
+  {{ $assignee := random .authors }}
   {
       "System": "{{ .system }}",
-      {{ $object := randomUsecase .system .allUsecases }}
-      "Title": "{{ $object }}",
+      "Title": "{{ $object }} {{ $verb }}",
+      "Message": "{{ $object }} {{ textBlock .severity $verb .messageTemplates }}",
       "Severity": "{{ .severity }}"
-      {{ $author := random .authors }}
       "Author": "{{ $author }}",
       "Tags": "{{ random .authors }}",
       "Timestamp": "{{ timestamp }}",
-      {{ $assignee := random .authors }}
       "AssigneeName": "{{ $assignee }}",
       "AssigneeAddress": "{{ getValueFromStringMap $assignee .authorAddresses }}",
   }
 
+messageTemplates:
+  INFO:
+    run: "is running"
+    create: "was created"
+  ERROR:
+    run: "did not run successfully"
+    create: "was not created successfully"
+  SUCCESS:
+    run: "did run successfully"
+    create: "was created successfully"
+
+
 usecases:
   gitlab:
-    - "PullRequest"
-    - "PipelineRun"
-    - "Issue"
+    - "PullRequest:create"
+    - "PipelineRun:run"
+    - "Issue:create"
   github:
-    - "PullRequest"
-    - "WorflowRun"
-    - "Issue"
+    - "MergeRequest:create"
+    - "WorflowRun:run"
+    - "Issue:create"
   ansible:
-    - "PlaybookRun"
-    - "CollecionBuild"
-
-events:
-  PullRequest:
-    title: "PullRequest {{ .objectTitle }} was created on {{ .system }}"
-    message: PullRequest {{ .objectTitle }} was created on {{ .system }} by {{ .author }}
-
+    - "PlaybookRun:run"
+    - "CollecionBuild:run"
 
 authors:
   - "mark:mark@blink182.com"
