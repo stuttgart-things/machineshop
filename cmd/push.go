@@ -159,7 +159,21 @@ var pushCmd = &cobra.Command{
 				values = sthingsBase.MergeMaps(aliases, values)
 
 				fmt.Println(values)
-				values["authors"] = demo.Authors
+
+				// SET VALUES
+
+				// LOOP OVER AUTHORS
+				authorNames := []string{}
+				authorAddresses := make(map[string]string)
+
+				for _, author := range demo.Authors {
+					authors := strings.Split(author, ":")
+					authorNames = append(authorNames, authors[0])
+					authorAddresses[authors[0]] = authors[1]
+				}
+
+				values["authors"] = authorNames
+				values["authorAddresses"] = authorAddresses
 
 				// tmp
 				values["whatever"] = []string{"blabla", "this", "that"}
@@ -180,6 +194,9 @@ var pushCmd = &cobra.Command{
 					"timestamp": func() string {
 						dt := time.Now()
 						return dt.Format("01-02-2006 15:04:05")
+					},
+					"getValueFromStringMap": func(key string, keyValues map[string]string) string {
+						return keyValues[key]
 					},
 
 					// "randomFromSlice": func(inputSlice []string) string {
