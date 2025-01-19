@@ -122,13 +122,14 @@ func ReadYAML(filename string, out interface{}) error {
 
 // HomerunDemo REPRESENTS THE STRUCTURE OF THE YAML FILE
 type HomerunDemo struct {
-	Surveys      []string            `yaml:"surveys"`
-	Templates    []string            `yaml:"templates"`
-	Values       []string            `yaml:"values"`
-	Aliases      []string            `yaml:"aliases"`
-	BodyTemplate string              `yaml:"bodyTemplate"`
-	Authors      []string            `yaml:"authors"`
-	Usecases     map[string][]string `yaml:"usecases"`
+	Surveys          []string                     `yaml:"surveys"`
+	Templates        []string                     `yaml:"templates"`
+	Values           []string                     `yaml:"values"`
+	Aliases          []string                     `yaml:"aliases"`
+	BodyTemplate     string                       `yaml:"bodyTemplate"`
+	Authors          []string                     `yaml:"authors"`
+	Usecases         map[string][]string          `yaml:"usecases"`
+	MessageTemplates map[string]map[string]string `yaml:"messageTemplates"`
 }
 
 // BUILD THE SURVEY FUNCTION WITH THE NEW RANDOM SETUP

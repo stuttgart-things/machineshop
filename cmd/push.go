@@ -172,6 +172,9 @@ var pushCmd = &cobra.Command{
 				values["authors"] = authorNames
 				values["authorAddresses"] = authorAddresses
 				values["allUsecases"] = demo.Usecases
+				values["messageTemplates"] = demo.MessageTemplates
+
+				fmt.Println(demo.MessageTemplates["INFO"]["run"])
 
 				fmt.Println("USECASE", demo.Usecases["gitlab"][1])
 
@@ -187,7 +190,6 @@ var pushCmd = &cobra.Command{
 						return input + " Hello from push"
 					},
 					"random": func(input []string) string {
-						//severities := []string{"INFO", "WARNING", "CRITICAL", "ERROR"}
 						rand.Seed(time.Now().UnixNano())
 						return input[rand.Intn(len(input))]
 					},
@@ -198,23 +200,39 @@ var pushCmd = &cobra.Command{
 					"getValueFromStringMap": func(key string, keyValues map[string]string) string {
 						return keyValues[key]
 					},
+					"textBlock": func(severity string, verb string, template map[string]map[string]string) string {
+						return template[severity][verb]
+					},
 					"randomUsecase": func(system string, usecases map[string][]string) string {
-						//severities := []string{"INFO", "WARNING", "CRITICAL", "ERROR"}
 						rand.Seed(time.Now().UnixNano())
 						systemUsecases := usecases[system]
-						return systemUsecases[rand.Intn(len(systemUsecases))]
+
+						allUsecaseNames := []string{}
+
+						// LOOP OVER USECASES
+						for _, usecase := range systemUsecases {
+							usecasesplit := strings.Split(usecase, ":")
+							allUsecaseNames = append(allUsecaseNames, usecasesplit[0])
+						}
+
+						return allUsecaseNames[rand.Intn(len(allUsecaseNames))]
 					},
-					// "randomFromSlice": func(inputSlice []string) string {
-					// 	// Check if the slice is empty
-					// 	if len(inputSlice) == 0 {
-					// 		return "" // Return empty string if the slice is empty
-					// 	}
+					"getUsecaseVerb": func(usecaseName string, system string, usecases map[string][]string) string {
+						rand.Seed(time.Now().UnixNano())
 
-					// 	rand.Seed(uint64(time.Now().UnixNano()))
-					// 	randomIndex := rand.Intn(len(inputSlice))
+						verb := "Verb not found for usecase: " + usecaseName
+						systemUsecases := usecases[system]
 
-					// 	return inputSlice[randomIndex]
-					// },
+						// LOOP OVER USECASES
+						for _, usecase := range systemUsecases {
+							usecasesplit := strings.Split(usecase, ":")
+							if usecasesplit[0] == usecaseName {
+								verb = usecasesplit[1]
+							}
+						}
+
+						return verb
+					},
 				}
 
 				fmt.Println(demo.BodyTemplate)
