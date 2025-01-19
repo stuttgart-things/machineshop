@@ -151,9 +151,6 @@ var pushCmd = &cobra.Command{
 					log.Fatalf("Failed to read profile: %v", err)
 				}
 
-				fmt.Println(demo)
-				fmt.Println(values)
-
 				// RENDER ALIASES + MERGE w/ VALUES
 				aliases := surveys.RenderAliases(demo.Aliases, values)
 				values = sthingsBase.MergeMaps(aliases, values)
@@ -174,6 +171,9 @@ var pushCmd = &cobra.Command{
 
 				values["authors"] = authorNames
 				values["authorAddresses"] = authorAddresses
+				values["allUsecases"] = demo.Usecases
+
+				fmt.Println("USECASE", demo.Usecases["gitlab"][1])
 
 				// tmp
 				values["whatever"] = []string{"blabla", "this", "that"}
@@ -198,7 +198,12 @@ var pushCmd = &cobra.Command{
 					"getValueFromStringMap": func(key string, keyValues map[string]string) string {
 						return keyValues[key]
 					},
-
+					"randomUsecase": func(system string, usecases map[string][]string) string {
+						//severities := []string{"INFO", "WARNING", "CRITICAL", "ERROR"}
+						rand.Seed(time.Now().UnixNano())
+						systemUsecases := usecases[system]
+						return systemUsecases[rand.Intn(len(systemUsecases))]
+					},
 					// "randomFromSlice": func(inputSlice []string) string {
 					// 	// Check if the slice is empty
 					// 	if len(inputSlice) == 0 {
