@@ -25,16 +25,19 @@ bodyTemplate: |
   {
       "System": "{{ .system }}",
       "Severity": "{{ .severity }}"
-      "Author": "{{ random .authors }}",
+      {{ $author := random .authors }}
+      "Author": "{{ $author }}",
       "Tags": "{{ random .authors }}",
       "Timestamp": "{{ timestamp }}",
-      "AssigneeName": "{{ random .authors }}",
+      {{ $assignee := random .authors }}
+      "AssigneeName": "{{ $assignee }}",
+      "AssigneeAddress": "{{ getValueFromStringMap $assignee .authorAddresses }}",
   }
 
 authors:
-  - "tom"
-  - "mark"
-  - "travis"
+  - "mark:mark@blink182.com"
+  - "tom:tom@blink182.com"
+  - "travis:travis@blink182.com"
 
 # preValues:
 #   git:
