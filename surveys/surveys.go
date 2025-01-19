@@ -130,6 +130,9 @@ type HomerunDemo struct {
 	Authors          []string                     `yaml:"authors"`
 	Usecases         map[string][]string          `yaml:"usecases"`
 	MessageTemplates map[string]map[string]string `yaml:"messageTemplates"`
+	Objects          map[string][]string          `yaml:"objects"`
+	Artifacts        map[string][]string          `yaml:"artifacts"`
+	Urls             map[string][]string          `yaml:"urls"`
 }
 
 // BUILD THE SURVEY FUNCTION WITH THE NEW RANDOM SETUP

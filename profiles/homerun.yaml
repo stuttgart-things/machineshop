@@ -14,28 +14,27 @@ preSurvey:
       - "ERROR"
       - "SUCCESS"
 
-# surveys:
-#   - tests/{{ .system }}-survey.yaml
-
 aliases:
   - "gitlab-survey:git"
   - "github-survey:git"
 
 bodyTemplate: |
-  {{ $object := randomUsecase .system .allUsecases }}
-  {{ $verb := getUsecaseVerb $object .system .allUsecases }}
+  {{ $usecase := randomUsecase .system .allUsecases }}
+  {{ $verb := getUsecaseVerb $usecase .system .allUsecases }}
   {{ $author := random .authors }}
   {{ $assignee := random .authors }}
   {
       "System": "{{ .system }}",
-      "Title": "{{ $object }} {{ $verb }}",
-      "Message": "{{ $object }} {{ textBlock .severity $verb .messageTemplates }}",
+      "Title": "{{ $usecase }} {{ textBlock .severity $verb .messageTemplates }}",
+      "Message": "{{ $usecase }}: {{ getObject $usecase .allObjects }} {{ textBlock .severity $verb .messageTemplates }} on System: {{ .system }}",
       "Severity": "{{ .severity }}"
       "Author": "{{ $author }}",
-      "Tags": "{{ random .authors }}",
+      "Tags": "{{ .system }},{{ $usecase }}",
       "Timestamp": "{{ timestamp }}",
       "AssigneeName": "{{ $assignee }}",
       "AssigneeAddress": "{{ getValueFromStringMap $assignee .authorAddresses }}",
+      "Artifacts": "{{ getArtifact $usecase .allArtifacts }}",
+      "Url": "{{ getArtifact $usecase .allUrls }}",
   }
 
 messageTemplates:
@@ -49,6 +48,184 @@ messageTemplates:
     run: "did run successfully"
     create: "was created successfully"
 
+urls:
+  Issue:
+    - "https://example.com/src/ui/login_button.js"
+    - "https://example.com/src/api/users_handler.go"
+    - "https://example.com/src/utils/image_upload.js"
+    - "https://example.com/src/ui/theme.css"
+    - "https://example.com/src/core/file_handler.go"
+  PullRequest:
+    - "https://example.com/README.md"
+    - "https://example.com/nginx/v21"
+    - "https://example.com/docs/contributing.md"
+    - "https://example.com/tests/api/authentication_test.go"
+    - "https://example.com/package.json"
+  PipelineRun:
+    - "https://example.com/gitlab-ci/build_test.yml"
+    - "https://example.com/gitlab-ci/staging_deploy.yml"
+    - "https://example.com/gitlab-ci/linting_js.yml"
+    - "https://example.com/tests/e2e_tests.yml"
+    - "https://example.com/docker/Dockerfile"
+  PlaybookRun:
+    - "https://example.com/playbooks/provision_nginx.yml"
+    - "https://example.com/inventories/web_servers.yml"
+    - "https://example.com/playbooks/deploy_app.yml"
+    - "https://example.com/inventories/staging.yml"
+    - "https://example.com/playbooks/backup_mysql.yml"
+  WorflowRun:
+    - "https://example.com/artifacts/build/logs/build.log"
+    - "https://example.com/artifacts/build/binaries/app_binary"
+    - "https://example.com/artifacts/test/logs/test_results.log"
+    - "https://example.com/artifacts/test/coverage/coverage_report.html"
+  CollecionBuild:
+    - "https://example.com/collections/networking/meta/runtime.yml"
+    - "https://example.com/plugins/modules/network_tools.py"
+    - "https://example.com/collections/storage/meta/runtime.yml"
+    - "https://example.com/plugins/modules/manage_storage.py"
+
+artifacts:
+  Issue:
+    - "src/ui/login_button.js"
+    - "src/api/users_handler.go"
+    - "src/utils/image_upload.js"
+    - "src/ui/theme.css"
+    - "src/core/file_handler.go"
+  PullRequest:
+    - "README.md"
+    - "nginx v21"
+    - "docs/contributing.md"
+    - "tests/api/authentication_test.go"
+    - "package.json"
+  PipelineRun:
+    - "gitlab-ci/build_test.yml"
+    - "gitlab-ci/staging_deploy.yml"
+    - "gitlab-ci/linting_js.yml"
+    - "tests/e2e_tests.yml"
+    - "docker/Dockerfile"
+  PlaybookRun:
+    - "playbooks/provision_nginx.yml"
+    - "inventories/web_servers.yml"
+    - "playbooks/deploy_app.yml"
+    - "inventories/staging.yml"
+    - "playbooks/backup_mysql.yml"
+  WorflowRun:
+    - "artifacts/build/logs/build.log"
+    - "artifacts/build/binaries/app_binary"
+    - "artifacts/test/logs/test_results.log"
+    - "artifacts/test/coverage/coverage_report.html"
+  CollecionBuild:
+    - "collections/networking/meta/runtime.yml"
+    - "plugins/modules/network_tools.py"
+    - "collections/storage/meta/runtime.yml"
+    - "plugins/modules/manage_storage.py"
+
+objects:
+  Issue:
+    - Button on login page does not respond to clicks
+    - API endpoint /users returns 500 Internal Server Error
+    - Image upload feature broken on mobile devices
+    - Dark mode styles not applying to sidebar
+    - Memory leak when handling large files in version 1.2.3
+    - Add support for dark mode in the user interface
+    - Integrate Google OAuth for seamless login
+    - Allow bulk deletion of inactive user accounts
+    - Implement customizable dashboard widgets
+    - Add progress bar for file uploads
+    - Optimize database queries for faster search results
+    - Improve error messages for invalid form inputs
+    - Refactor authentication middleware for better scalability
+    - Update dependencies to latest versions
+    - Enhance logging for better debugging information
+    - Add missing API examples in the README file
+    - Document the steps for deploying on AWS
+    - Update contributing guide to include new branch naming conventions
+    - Fix typos in setup instructions
+    - Add explanation for environment variable configurations
+    - What are the plans for supporting WebSocket integration?
+  PullRequest:
+    - update-readme
+    - rebuild-image
+    - fix-typo
+    - add-tests
+    - update-dependencies
+    - refactor-authentication
+    - add-feature-dark-mode
+    - optimize-database-query
+    - bugfix-file-upload
+    - remove-deprecated-methods
+  PipelineRun:
+    - Build and test application for master branch
+    - Deploy staging environment after feature branch merge
+    - Run linting checks for JavaScript files
+    - Execute end-to-end tests for UI
+    - Deploy production environment
+    - Verify Docker image build integrity
+    - Run security scans on application dependencies
+    - Execute performance tests for API endpoints
+    - Check database migration scripts for errors
+    - Generate and publish documentation to GitLab Pages
+    - Automate dependency updates with Renovate
+    - Compile assets and optimize images for deployment
+    - Trigger nightly build for testing
+  PlaybookRun:
+    - Provision web servers with Nginx
+    - Deploy application to staging environment
+    - Update and patch all systems
+    - Backup MySQL databases on production
+    - Configure Kubernetes cluster nodes
+    - Set up monitoring with Prometheus and Grafana
+    - Run security compliance checks
+    - Create and manage user accounts
+    - Perform server hardening for better security
+    - Deploy Docker containers to target hosts
+    - Configure load balancer with HAProxy
+    - Perform rolling updates for applications
+    - Provision AWS EC2 instances
+    - Automate application configuration changes
+    - Run CI/CD pipeline integration tasks
+    - Verify and remediate system configurations
+    - Deploy Kubernetes Helm charts
+    - Clean up old log files and temporary files
+    - Test failover for high-availability setup
+    - Generate SSL certificates with Certbot
+  WorflowRun:
+    - Run CI build
+    - Run test suite
+    - Deploy to staging
+    - Run security scan
+    - Publish Docker image
+    - Update GitHub Pages
+    - Release new version
+    - Build documentation
+    - Run lint checks
+    - Deploy to production
+    - Execute load tests
+    - Perform database migration
+    - Build mobile app
+    - Sync translations
+    - Verify accessibility
+    - Generate release notes
+    - Perform dependency updates
+    - Execute rollback
+    - Run end-to-end tests
+    - Run infrastructure provisioning
+  CollecionBuild:
+    - Build networking collection
+    - Create storage management collection
+    - Develop cloud automation collection
+    - Update database management collection
+    - Build security tools collection
+    - Package Kubernetes tools collection
+    - Build CI/CD automation collection
+    - Develop monitoring tools collection
+    - Create system utilities collection
+    - Generate compliance collection
+    - Update infrastructure automation collection
+    - Build orchestration tools collection
+    - Package Windows management collection
+    - Create DevOps utilities collection
+    - Update API integration collection
 
 usecases:
   gitlab:
@@ -67,33 +244,3 @@ authors:
   - "mark:mark@blink182.com"
   - "tom:tom@blink182.com"
   - "travis:travis@blink182.com"
-
-# preValues:
-#   git:
-#     systems:
-#       - "github"
-#       - "gitlab"
-#     github-events:
-#       - "PullRequest"
-#       - "Pipeline Run"
-#       - "Issue"
-
-
-
-# scenarios:
-#   github-:
-#     title: |
-#     message:
-#       - "Please fill out the following survey to help us understand your GitLab setup."
-#       - "Please fill out the following survey to help us understand your GitHub setup."
-#     severity: "{{ .severity }}"
-#     author:          author,
-#     timestamp:       timestamp,
-#     system:
-#       - "github"
-#       - "gitlab"
-#     tags:            tags,
-#     assigneeAddress: assigneeUrl,
-#     assigneeName:    assignee,
-#     artifacts:       artifacts,
-#     url:             url,
