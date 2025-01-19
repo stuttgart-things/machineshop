@@ -24,6 +24,8 @@ aliases:
 bodyTemplate: |
   {
       "System": "{{ .system }}",
+      {{ $object := randomUsecase .system .allUsecases }}
+      "Title": "{{ $object }}",
       "Severity": "{{ .severity }}"
       {{ $author := random .authors }}
       "Author": "{{ $author }}",
@@ -33,6 +35,25 @@ bodyTemplate: |
       "AssigneeName": "{{ $assignee }}",
       "AssigneeAddress": "{{ getValueFromStringMap $assignee .authorAddresses }}",
   }
+
+usecases:
+  gitlab:
+    - "PullRequest"
+    - "PipelineRun"
+    - "Issue"
+  github:
+    - "PullRequest"
+    - "WorflowRun"
+    - "Issue"
+  ansible:
+    - "PlaybookRun"
+    - "CollecionBuild"
+
+events:
+  PullRequest:
+    title: "PullRequest {{ .objectTitle }} was created on {{ .system }}"
+    message: PullRequest {{ .objectTitle }} was created on {{ .system }} by {{ .author }}
+
 
 authors:
   - "mark:mark@blink182.com"
