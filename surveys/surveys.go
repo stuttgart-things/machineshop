@@ -5,11 +5,13 @@ Copyright © 2025 Patrick Hermann patrick.hermann@sva.de
 package surveys
 
 import (
+	"bytes"
 	"fmt"
 	"math/rand"
 	"os"
 	"strconv"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/charmbracelet/huh"
@@ -106,13 +108,13 @@ func ReadProfileFile(filename string, target interface{}) error {
 func ReadYAML(filename string, out interface{}) error {
 	file, err := os.Open(filename)
 	if err != nil {
-		return fmt.Errorf("could not open file: %v", err)
+		return fmt.Errorf("could not open file: %w", err)
 	}
 	defer file.Close()
 
 	decoder := yaml.NewDecoder(file)
 	if err := decoder.Decode(out); err != nil {
-		return fmt.Errorf("could not decode YAML: %v", err)
+		return fmt.Errorf("could not decode YAML: %w", err)
 	}
 
 	return nil
@@ -120,14 +122,19 @@ func ReadYAML(filename string, out interface{}) error {
 
 // HomerunDemo REPRESENTS THE STRUCTURE OF THE YAML FILE
 type HomerunDemo struct {
-	Surveys   []string `yaml:"surveys"`
-	Templates []string `yaml:"templates"`
-	Values    []string `yaml:"values"`
-	Aliases   []string `yaml:"aliases"`
+	Surveys      []string `yaml:"surveys"`
+	Templates    []string `yaml:"templates"`
+	Values       []string `yaml:"values"`
+	Aliases      []string `yaml:"aliases"`
+	BodyTemplate string   `yaml:"bodyTemplate"`
+	Authors      []string `yaml:"authors"`
 }
 
 // BUILD THE SURVEY FUNCTION WITH THE NEW RANDOM SETUP
-func BuildSurvey(questions []*Question) (*huh.Form, map[string]interface{}, error) {
+func BuildSurvey(
+	questions []*Question) (
+	*huh.Form, map[string]interface{},
+	error) {
 	var groupFields []*huh.Group
 	answers := make(map[string]interface{}) // To hold question names and resolved default values
 
@@ -345,14 +352,14 @@ func ReadYAMLToMap(filename string) (map[string]interface{}, error) {
 	// Read the YAML file
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, fmt.Errorf("error reading file: %v", err)
+		return nil, fmt.Errorf("error reading file: %w", err)
 	}
 
 	// Parse the YAML into a generic map
 	var result map[string]interface{}
 	err = yaml.Unmarshal(data, &result)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing YAML: %v", err)
+		return nil, fmt.Errorf("error parsing YAML: %w", err)
 	}
 
 	return result, nil
@@ -366,4 +373,21 @@ func RandomFromSlice(inputSlice []string) string {
 	}
 	// Generate a random index and return the element
 	return inputSlice[rand.Intn(len(inputSlice))]
+}
+
+func RenderTemplateInlineWithFunctions(templateFunctions template.FuncMap, templateData string, templateVariables map[string]interface{}) ([]byte, error) {
+
+	tmpl, err := template.New("template").Funcs(templateFunctions).Parse(templateData)
+	if err != nil {
+		panic(err)
+	}
+
+	var buf bytes.Buffer
+	err = tmpl.Execute(&buf, templateVariables)
+	if err != nil {
+		panic(err)
+	}
+
+	return buf.Bytes(), nil
+
 }
