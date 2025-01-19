@@ -173,16 +173,9 @@ var pushCmd = &cobra.Command{
 				values["authorAddresses"] = authorAddresses
 				values["allUsecases"] = demo.Usecases
 				values["messageTemplates"] = demo.MessageTemplates
-
-				fmt.Println(demo.MessageTemplates["INFO"]["run"])
-
-				fmt.Println("USECASE", demo.Usecases["gitlab"][1])
-
-				// tmp
-				values["whatever"] = []string{"blabla", "this", "that"}
-
-				// values = surveys.RunSurveyFiles(demo.Surveys, values)
-				// fmt.Println(values)
+				values["allObjects"] = demo.Objects
+				values["allArtifacts"] = demo.Artifacts
+				values["allUrls"] = demo.Urls
 
 				// READ TEMPLATE TO RENDER
 				funcMap := template.FuncMap{
@@ -233,6 +226,32 @@ var pushCmd = &cobra.Command{
 
 						return verb
 					},
+					"getObject": func(usecaseName string, objects map[string][]string) string {
+						rand.Seed(time.Now().UnixNano())
+						allObjects := objects[usecaseName]
+
+						return allObjects[rand.Intn(len(allObjects))]
+					},
+					"getArtifact": func(usecaseName string, objects map[string][]string) string {
+						rand.Seed(time.Now().UnixNano())
+						allObjects := objects[usecaseName]
+
+						return allObjects[rand.Intn(len(allObjects))]
+					},
+					// "getArtifacts": func(usecaseName string, objects map[string][]string) string {
+					// 	rand.Seed(time.Now().UnixNano())
+					// 	allObjects := objects[usecaseName]
+
+					// 	allObjectNames := []string{}
+
+					// 	// LOOP OVER USECASES
+					// 	for _, usecase := range allObjects {
+					// 		objectsplit := strings.Split(usecase, ":")
+					// 		allObjectNames = append(allObjectNames, objectsplit[1])
+					// 	}
+
+					// 	return allObjectNames[rand.Intn(len(allObjectNames))]
+					// },
 				}
 
 				fmt.Println(demo.BodyTemplate)
