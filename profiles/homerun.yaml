@@ -24,17 +24,17 @@ bodyTemplate: |
   {{ $author := random .authors }}
   {{ $assignee := random .authors }}
   {
-      "System": "{{ .system }}",
       "Title": "{{ $usecase }} {{ textBlock .severity $verb .messageTemplates }}",
       "Message": "{{ $usecase }}: {{ getObject $usecase .allObjects }} {{ textBlock .severity $verb .messageTemplates }} on System: {{ .system }}",
-      "Severity": "{{ .severity }}"
+      "Severity": "{{ .severity }}",
       "Author": "{{ $author }}",
-      "Tags": "{{ .system }},{{ $usecase }}",
       "Timestamp": "{{ timestamp }}",
-      "AssigneeName": "{{ $assignee }}",
+      "System": "{{ .system }}",
+      "Tags": "{{ .system }};{{ $usecase }}",
       "AssigneeAddress": "{{ getValueFromStringMap $assignee .authorAddresses }}",
+      "AssigneeName": "{{ $assignee }}",
       "Artifacts": "{{ getArtifact $usecase .allArtifacts }}",
-      "Url": "{{ getArtifact $usecase .allUrls }}",
+      "Url": "{{ getArtifact $usecase .allUrls }}"
   }
 
 messageTemplates:

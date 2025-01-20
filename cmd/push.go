@@ -238,23 +238,7 @@ var pushCmd = &cobra.Command{
 
 						return allObjects[rand.Intn(len(allObjects))]
 					},
-					// "getArtifacts": func(usecaseName string, objects map[string][]string) string {
-					// 	rand.Seed(time.Now().UnixNano())
-					// 	allObjects := objects[usecaseName]
-
-					// 	allObjectNames := []string{}
-
-					// 	// LOOP OVER USECASES
-					// 	for _, usecase := range allObjects {
-					// 		objectsplit := strings.Split(usecase, ":")
-					// 		allObjectNames = append(allObjectNames, objectsplit[1])
-					// 	}
-
-					// 	return allObjectNames[rand.Intn(len(allObjectNames))]
-					// },
 				}
-
-				fmt.Println(demo.BodyTemplate)
 
 				rendered, err := surveys.RenderTemplateInlineWithFunctions(funcMap, demo.BodyTemplate, values)
 
@@ -263,32 +247,36 @@ var pushCmd = &cobra.Command{
 				}
 
 				fmt.Println(string(rendered))
-				// LOAD ALL QUESTION FILES
-				// for _, questionFile := range gitConfig.Questions {
 
-				// 	// RENDER QUESTION FILE
-				// 	renderedQuestionFilePath, err := sthingsBase.RenderTemplateInline(questionFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
-				// 	if err != nil {
-				// 		log.Error("ERROR RENDERING QUESTION FILE: ", err)
-				// 	}
-				// 	log.Info("LOADING QUESTION FILE: ", string(renderedQuestionFilePath))
+				// CREATE HTTP-Request
+				req, err := http.NewRequest("POST", destination, bytes.NewBuffer([]byte(rendered)))
+				if err != nil {
+					fmt.Println("faiulure at creating requests:", err)
+					return
+				}
 
-				// 	questions, _ := modules.LoadQuestionFile(string(renderedQuestionFilePath))
+				// ADD HEADER
+				req.Header.Set("Content-Type", contentType)
+				req.Header.Set("X-Auth-Token", token)
 
-				// 	if len(questions) > 0 {
-				// 		log.Info("LOADED QUESTIONS FROM FILE: ", len(questions))
-				// 	} else {
-				// 		log.Warn("NO QUESTIONS FOUND IN FILE: ", string(renderedQuestionFilePath))
-				// 	}
+				// CREATE HTTP-Client + SEND REQUEST
+				client := &http.Client{}
+				resp, err := client.Do(req)
+				if err != nil {
+					fmt.Println("error at sending request:", err)
+					return
+				}
+				defer resp.Body.Close()
 
-				// 	allQuestions = append(allQuestions, questions...)
-				// }
+				// READ THE ANSWER
+				body, err := io.ReadAll(resp.Body)
+				if err != nil {
+					fmt.Println("error reading answer:", err)
+					return
+				}
 
-				// READ SURVEYS + RUN SURVEYS
-
-				// RENDER THE FIELDS
-
-				// SEND MESSAGE
+				log.Info("ANSWER STATUS: ", resp.Status)
+				log.Info("ANSWER BODY: ", string(body))
 
 			case "homerun":
 
