@@ -41,7 +41,7 @@ func TestSendToHomerun(t *testing.T) {
 	renderedBody := []byte(`{"message":"hello"}`)
 
 	// CALL THE FUNCTION
-	response, resp := SendToHomerun(destination, token, renderedBody)
+	response, resp := SendToHomerun(destination, token, renderedBody, true)
 
 	fmt.Println(resp)
 	defer resp.Body.Close()
