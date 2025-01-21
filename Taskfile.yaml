@@ -168,6 +168,7 @@ tasks:
         RUN_ID=$(gh run list | grep {{ .BRANCH }} | head -1 | awk '{for (i=1; i<=NF; i++) if ($i ~ /^[0-9]+$/) print $i}')
         gh run watch ${RUN_ID} --exit-status
       - task: pr
+      - git checkout main && git pull
       - npx semantic-release --dry-run
       - npx semantic-release --debug --no-ci
       - task: goreleaser
@@ -207,7 +208,6 @@ tasks:
       - sleep 20s
       - gh pr checks $(gh pr list | grep "^[^#;]" | grep '{{ .BRANCH }}' | awk '{print $1}') --watch
       - gh pr merge $(gh pr list | grep "^[^#;]" | grep '{{ .BRANCH }}' | awk '{print $1}') --auto --rebase --delete-branch
-      - git checkout main && git pull
 
   commit:
     desc: Commit + push code into branch
