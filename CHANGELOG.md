@@ -1,3 +1,22 @@
+# [2.8.0](https://github.com/stuttgart-things/machineshop/compare/v2.7.1...v2.8.0) (2025-01-21)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/stuttgart-things/kaeffken to v0.3.3 ([d2cae2e](https://github.com/stuttgart-things/machineshop/commit/d2cae2e01b942a16903d60232a12599edafac5c1))
+* feat/ankit-showcase ([a3f898b](https://github.com/stuttgart-things/machineshop/commit/a3f898bd914b382ae6489c9f490c7da72ab3f41f))
+* feature/add-homerun-survey ([473b920](https://github.com/stuttgart-things/machineshop/commit/473b920bbd67558aca1aa6f2fc5258c9ad11edf9))
+* feature/add-homerun-survey ([e2e6954](https://github.com/stuttgart-things/machineshop/commit/e2e69549a2765cccecb75b3180c0904af2fd5375))
+* fix/updated-release-task ([f3dd38e](https://github.com/stuttgart-things/machineshop/commit/f3dd38e72e0d5cb60f80213674b7fd837c6520d0))
+
+
+### Features
+
+* feature/add-homerun-module ([402e96e](https://github.com/stuttgart-things/machineshop/commit/402e96e066a21c65dd72a6ffbd64255c2f3fd917))
+* feature/add-homerun-module ([4200c4e](https://github.com/stuttgart-things/machineshop/commit/4200c4e1aa6074346afac2283d98354df76b9eb7))
+* feature/add-homerun-survey ([8f4f01b](https://github.com/stuttgart-things/machineshop/commit/8f4f01b7eb1e6a862f41e56ac94325399fa1bca2))
+* feature/release-for-linux ([68c57db](https://github.com/stuttgart-things/machineshop/commit/68c57dbeb0b9738b89dcdb1a48a7b923fb3b9f05))
+
 ## [2.7.1](https://github.com/stuttgart-things/machineshop/compare/v2.7.0...v2.7.1) (2025-01-15)
 
 
