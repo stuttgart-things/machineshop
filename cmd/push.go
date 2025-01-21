@@ -93,6 +93,7 @@ var pushCmd = &cobra.Command{
 		assigneeUrl, _ := cmd.LocalFlags().GetString("assigneeUrl")
 		artifacts, _ := cmd.LocalFlags().GetString("artifacts")
 		url, _ := cmd.LocalFlags().GetString("url")
+		insecure, _ := cmd.LocalFlags().GetBool("insecure")
 
 		if destination != "" {
 
@@ -246,7 +247,7 @@ var pushCmd = &cobra.Command{
 
 				fmt.Println(string(rendered))
 
-				answer, resp := internal.SendToHomerun(destination, token, rendered)
+				answer, resp := internal.SendToHomerun(destination, token, rendered, insecure)
 
 				log.Info("ANSWER STATUS: ", resp.Status)
 				log.Info("ANSWER BODY: ", string(answer))
@@ -288,7 +289,7 @@ var pushCmd = &cobra.Command{
 				rendered := RenderBody(homeRunBodyData, messageBody)
 				fmt.Println(rendered)
 
-				answer, resp := internal.SendToHomerun(destination, token, []byte(rendered))
+				answer, resp := internal.SendToHomerun(destination, token, []byte(rendered), insecure)
 
 				log.Info("ANSWER STATUS: ", resp.Status)
 				log.Info("ANSWER BODY: ", string(answer))
@@ -365,6 +366,7 @@ func init() {
 	pushCmd.Flags().String("assigneeUrl", "", "homerun message assignee url")
 	pushCmd.Flags().String("artifacts", "", "homerun artifacts")
 	pushCmd.Flags().String("url", "", "homerun message url/link")
+	pushCmd.Flags().Bool("insecure", true, "insecure connection")
 }
 
 func RenderBody(templateData string, object interface{}) string {
