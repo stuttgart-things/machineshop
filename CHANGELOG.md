@@ -1,3 +1,11 @@
+## [2.8.1](https://github.com/stuttgart-things/machineshop/compare/v2.8.0...v2.8.1) (2025-01-21)
+
+
+### Bug Fixes
+
+* fix/add-insecure-homerun-connection ([0ed3fb2](https://github.com/stuttgart-things/machineshop/commit/0ed3fb24fded10ef4c2cf1927ab36ff6648ffafd))
+* fix/add-insecure-homerun-connection ([7b35cf7](https://github.com/stuttgart-things/machineshop/commit/7b35cf7d6da16965482f1a945fb6a0341f2f2c28))
+
 # [2.8.0](https://github.com/stuttgart-things/machineshop/compare/v2.7.1...v2.8.0) (2025-01-21)
 
 
