@@ -9,8 +9,6 @@ import (
 	"context"
 	"fmt"
 	"html/template"
-	"io"
-	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -248,35 +246,10 @@ var pushCmd = &cobra.Command{
 
 				fmt.Println(string(rendered))
 
-				// CREATE HTTP-Request
-				req, err := http.NewRequest("POST", destination, bytes.NewBuffer([]byte(rendered)))
-				if err != nil {
-					fmt.Println("faiulure at creating requests:", err)
-					return
-				}
-
-				// ADD HEADER
-				req.Header.Set("Content-Type", contentType)
-				req.Header.Set("X-Auth-Token", token)
-
-				// CREATE HTTP-Client + SEND REQUEST
-				client := &http.Client{}
-				resp, err := client.Do(req)
-				if err != nil {
-					fmt.Println("error at sending request:", err)
-					return
-				}
-				defer resp.Body.Close()
-
-				// READ THE ANSWER
-				body, err := io.ReadAll(resp.Body)
-				if err != nil {
-					fmt.Println("error reading answer:", err)
-					return
-				}
+				answer, resp := internal.SendToHomerun(destination, token, rendered)
 
 				log.Info("ANSWER STATUS: ", resp.Status)
-				log.Info("ANSWER BODY: ", string(body))
+				log.Info("ANSWER BODY: ", string(answer))
 
 			case "homerun":
 
@@ -315,35 +288,10 @@ var pushCmd = &cobra.Command{
 				rendered := RenderBody(homeRunBodyData, messageBody)
 				fmt.Println(rendered)
 
-				// CREATE HTTP-Request
-				req, err := http.NewRequest("POST", destination, bytes.NewBuffer([]byte(rendered)))
-				if err != nil {
-					fmt.Println("faiulure at creating requests:", err)
-					return
-				}
-
-				// ADD HEADER
-				req.Header.Set("Content-Type", contentType)
-				req.Header.Set("X-Auth-Token", token)
-
-				// CREATE HTTP-Client + SEND REQUEST
-				client := &http.Client{}
-				resp, err := client.Do(req)
-				if err != nil {
-					fmt.Println("error at sending request:", err)
-					return
-				}
-				defer resp.Body.Close()
-
-				// READ THE ANSWER
-				body, err := io.ReadAll(resp.Body)
-				if err != nil {
-					fmt.Println("error reading answer:", err)
-					return
-				}
+				answer, resp := internal.SendToHomerun(destination, token, []byte(rendered))
 
 				log.Info("ANSWER STATUS: ", resp.Status)
-				log.Info("ANSWER BODY: ", string(body))
+				log.Info("ANSWER BODY: ", string(answer))
 
 			case "teams":
 

@@ -32,6 +32,7 @@ task: Available tasks for this project:
 * tag:                 Commit, push & tag the module
 * test:                Test
 * test-install:        Test crossplame modules
+* test-run:            Build Bin & Test Run Command
 * test-version:        Test version cmd
 * tests:               Built cli tests
 ```
@@ -250,6 +251,20 @@ machineshop push \
 ```
 
 </details>
+
+<details><summary><b>HOMERUN-DEMO</b></summary>
+
+```bash
+HOMERUN_URL=https://homerun.homerun-dev.sthings-vsphere.labul.sva.de/generic
+
+machineshop push \
+--destination ${HOMERUN_URL} \
+--target homerun-demo \
+--source profiles/homerun.yaml
+```
+
+</details>
+
 
 <details><summary><b>HOMERUN</b></summary>
 
