@@ -24,27 +24,29 @@ func TestSendToHomerun(t *testing.T) {
 			t.Errorf("Expected Content-Type %s, got %s", contentType, r.Header.Get("Content-Type"))
 		}
 
-		// Validate the X-Auth-Token header
+		// VALIDATE THE X-AUTH-TOKEN HEADER
 		if r.Header.Get("X-Auth-Token") != "test-token" {
 			t.Errorf("Expected X-Auth-Token test-token, got %s", r.Header.Get("X-Auth-Token"))
 		}
 
-		// Write a response
+		// WRITE A RESPONSE
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(`{"status":"success"}`))
 	}))
 	defer mockServer.Close()
 
-	// Test data
+	// TEST DATA
 	destination := mockServer.URL
 	token := "test-token"
 	renderedBody := []byte(`{"message":"hello"}`)
 
-	// Call the function
+	// CALL THE FUNCTION
 	response, resp := SendToHomerun(destination, token, renderedBody)
 
 	fmt.Println(resp)
-	// Verify the response
+	defer resp.Body.Close()
+
+	// VERIFY THE RESPONSE
 	expectedResponse := `{"status":"success"}`
 	if string(response) != expectedResponse {
 		t.Errorf("Expected response %s, got %s", expectedResponse, string(response))
