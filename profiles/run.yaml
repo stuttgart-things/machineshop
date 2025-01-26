@@ -4,6 +4,25 @@ globals:
   name: machineshop
 
 run:
+  - name: tfinventory
+    description: Create ansible inventory from terraform output
+    script: |
+      cd {{ .workDir}}
+      IPS=$(terraform output)
+      IPS_EXTRACTED=$(echo ${IPS} | sed -e 's/ip = \[\(.*\)\]/\1/' -e 's/[",]//g')
+
+      echo "all:" > {{ .inventoryPath }}
+      echo "  hosts:" >> {{ .inventoryPath }}
+
+      for ip in ${IPS_EXTRACTED}; do
+        echo "    $ip:" >> {{ .inventoryPath }}
+      done
+
+      cat {{ .inventoryPath }}
+    vars:
+      workDir: .
+      inventoryPath: ./inventory.yaml
+
   - name: buildx
     description: Install Docker buildx plugin
     script: |
@@ -17,10 +36,10 @@ run:
     description: Install Onefetch
     script: |
       wget https://github.com/o2sh/onefetch/releases/download/{{ .onefetchVersion }}/onefetch-linux.tar.gz
-      tar xvfz onefetch-linux.tar.gz 
+      tar xvfz onefetch-linux.tar.gz
       sudo chmod +x onefetch
       sudo mv onefetch /usr/bin/onefetch
-      rm -rf onefetch-linux.tar.gz 
+      rm -rf onefetch-linux.tar.gz
     vars:
       onefetchVersion: 2.23.1
 
@@ -30,8 +49,13 @@ run:
       wget https://go.dev/dl/go{{ .golangVersion }}.linux-amd64.tar.gz
       rm -rf /usr/local/go && tar -C /usr/local -xzf go{{ .golangVersion }}.linux-amd64.tar.gz
       rm -rf go{{ .golangVersion }}.linux-amd64.tar.gz
+      export GOROOT=/usr/local/go
+      export PATH=$GOROOT/bin:$PATH
+      export GOPATH=$HOME/usr/local/go
+      export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+      go version
     vars:
-      golangVersion: 1.23.4
+      golangVersion: 1.23.5
 
   - name: dagger
     description: Install Dagger

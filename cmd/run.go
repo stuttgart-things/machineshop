@@ -67,7 +67,6 @@ var runCmd = &cobra.Command{
 		// PARSE PROFILE
 		runConfig := internal.LoadRunConfig(profileFile)
 		surveys.RenderInstallScriptNew(runConfig, scripts, flagVariables)
-
 	},
 }
 
@@ -75,7 +74,7 @@ func init() {
 	rootCmd.AddCommand(runCmd)
 	runCmd.Flags().String("tmp", "/tmp/machineShop", "temporary machineShop dir")
 	runCmd.Flags().String("source", "fetch", "source of profile: local or by url fetch. default: fetch.")
-	runCmd.Flags().String("url", "https://raw.githubusercontent.com/stuttgart-things/stuttgart-things/refs/heads/main/machineShop/binaries.yaml", "source of url download")
+	runCmd.Flags().String("url", "https://raw.githubusercontent.com/stuttgart-things/machineshop/refs/heads/main/profiles/run.yaml", "profile download url")
 	runCmd.Flags().String("profile", "profiles/run.yaml", "path to run profile")
 	runCmd.Flags().StringSlice("scripts", []string{}, "scripts to be run; survey will be skipped if defined")
 	runCmd.Flags().StringSlice("variables", []string{}, "variables to be used in the scripts")
