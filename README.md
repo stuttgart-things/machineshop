@@ -194,6 +194,26 @@ machineshop create \
 
 </details>
 
+### RUN
+
+<details><summary><b>RUN</b></summary>
+
+```bash
+# PROFILE FROM LOCAL
+sudo machineshop run \
+--scripts golang \
+--source local \
+--profile run.yaml
+```
+
+```bash
+# DEFAULT PROFILE BY URL
+sudo machineshop run \
+--scripts buildx,onefetch
+```
+
+</details>
+
 ### INSTALL
 
 <details><summary><b>INSTALL</b></summary>
