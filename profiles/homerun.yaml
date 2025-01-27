@@ -91,6 +91,12 @@ artifacts:
     - "src/utils/image_upload.js"
     - "src/ui/theme.css"
     - "src/core/file_handler.go"
+  MergeRequest:
+    - "README.md"
+    - "nginx v21"
+    - "docs/contributing.md"
+    - "tests/api/authentication_test.go"
+    - "package.json"
   PullRequest:
     - "README.md"
     - "nginx v21"
@@ -143,6 +149,17 @@ objects:
     - Fix typos in setup instructions
     - Add explanation for environment variable configurations
     - What are the plans for supporting WebSocket integration?
+  MergeRequest:
+    - update-readme
+    - rebuild-image
+    - fix-typo
+    - add-tests
+    - update-dependencies
+    - refactor-authentication
+    - add-feature-dark-mode
+    - optimize-database-query
+    - bugfix-file-upload
+    - remove-deprecated-methods
   PullRequest:
     - update-readme
     - rebuild-image
@@ -229,11 +246,11 @@ objects:
 
 usecases:
   gitlab:
-    - "PullRequest:create"
+    - "MergeRequest:create"
     - "PipelineRun:run"
     - "Issue:create"
   github:
-    - "MergeRequest:create"
+    - "PullRequest:create"
     - "WorflowRun:run"
     - "Issue:create"
   ansible:

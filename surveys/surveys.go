@@ -251,7 +251,6 @@ var defaultFunctions = map[string]func(params map[string]interface{}) string{
 }
 
 func RunSurvey(profilePath, surveyKey string) (surveyValues map[string]interface{}) {
-
 	surveyValues = make(map[string]interface{})
 
 	// READ PROFILE AND SURVEY BY KEY
@@ -260,6 +259,7 @@ func RunSurvey(profilePath, surveyKey string) (surveyValues map[string]interface
 	// IF SURVEY EXISTS, RUN IT
 	if len(preSurvey) > 0 {
 		surveyQuestions, answers, err := BuildSurvey(preSurvey)
+
 		if err != nil {
 			log.Fatalf("ERROR BUILDING SURVEY: %v", err)
 		}
@@ -270,7 +270,13 @@ func RunSurvey(profilePath, surveyKey string) (surveyValues map[string]interface
 		if err != nil {
 			log.Fatalf("ERROR RUNNING SURVEY: %v", err)
 		}
-		surveyValues = answers
+
+		fmt.Println("RANDPM SELECTION!!: ", answers)
+
+		// SET ANWERS TO ALL VALUES
+		for _, question := range preSurvey {
+			surveyValues[question.Name] = question.Default
+		}
 
 	} else {
 		log.Info("NO SURVEY FOUND")
