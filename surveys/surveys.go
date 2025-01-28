@@ -258,7 +258,7 @@ func RunSurvey(profilePath, surveyKey string) (surveyValues map[string]interface
 
 	// IF SURVEY EXISTS, RUN IT
 	if len(preSurvey) > 0 {
-		surveyQuestions, answers, err := BuildSurvey(preSurvey)
+		surveyQuestions, _, err := BuildSurvey(preSurvey)
 
 		if err != nil {
 			log.Fatalf("ERROR BUILDING SURVEY: %v", err)
@@ -270,8 +270,6 @@ func RunSurvey(profilePath, surveyKey string) (surveyValues map[string]interface
 		if err != nil {
 			log.Fatalf("ERROR RUNNING SURVEY: %v", err)
 		}
-
-		fmt.Println("RANDPM SELECTION!!: ", answers)
 
 		// SET ANWERS TO ALL VALUES
 		for _, question := range preSurvey {

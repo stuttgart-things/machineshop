@@ -154,8 +154,6 @@ var pushCmd = &cobra.Command{
 				aliases := surveys.RenderAliases(demo.Aliases, values)
 				values = sthingsBase.MergeMaps(aliases, values)
 
-				fmt.Println(values)
-
 				// SET VALUES
 
 				// LOOP OVER AUTHORS
@@ -182,7 +180,6 @@ var pushCmd = &cobra.Command{
 						return input + " Hello from push"
 					},
 					"random": func(input []string) string {
-						rand.Seed(time.Now().UnixNano())
 						return input[rand.Intn(len(input))]
 					},
 					"timestamp": func() string {
@@ -196,7 +193,6 @@ var pushCmd = &cobra.Command{
 						return template[severity][verb]
 					},
 					"randomUsecase": func(system string, usecases map[string][]string) string {
-						rand.Seed(time.Now().UnixNano())
 						systemUsecases := usecases[system]
 
 						allUsecaseNames := []string{}
@@ -210,8 +206,6 @@ var pushCmd = &cobra.Command{
 						return allUsecaseNames[rand.Intn(len(allUsecaseNames))]
 					},
 					"getUsecaseVerb": func(usecaseName string, system string, usecases map[string][]string) string {
-						rand.Seed(time.Now().UnixNano())
-
 						verb := "Verb not found for usecase: " + usecaseName
 						systemUsecases := usecases[system]
 
@@ -220,21 +214,18 @@ var pushCmd = &cobra.Command{
 							usecasesplit := strings.Split(usecase, ":")
 							if usecasesplit[0] == usecaseName {
 								verb = usecasesplit[1]
+								break // Exit the loop once the verb is found
 							}
 						}
 
 						return verb
 					},
 					"getObject": func(usecaseName string, objects map[string][]string) string {
-						rand.Seed(time.Now().UnixNano())
 						allObjects := objects[usecaseName]
-
 						return allObjects[rand.Intn(len(allObjects))]
 					},
 					"getArtifact": func(usecaseName string, objects map[string][]string) string {
-						rand.Seed(time.Now().UnixNano())
 						allObjects := objects[usecaseName]
-
 						return allObjects[rand.Intn(len(allObjects))]
 					},
 				}

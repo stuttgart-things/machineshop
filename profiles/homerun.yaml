@@ -55,6 +55,12 @@ urls:
     - "https://example.com/src/utils/image_upload.js"
     - "https://example.com/src/ui/theme.css"
     - "https://example.com/src/core/file_handler.go"
+  MergeRequest:
+    - "https://example.com/README.md"
+    - "https://example.com/nginx/v21"
+    - "https://example.com/docs/contributing.md"
+    - "https://example.com/tests/api/authentication_test.go"
+    - "https://example.com/package.json"
   PullRequest:
     - "https://example.com/README.md"
     - "https://example.com/nginx/v21"
