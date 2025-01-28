@@ -154,8 +154,6 @@ var pushCmd = &cobra.Command{
 				aliases := surveys.RenderAliases(demo.Aliases, values)
 				values = sthingsBase.MergeMaps(aliases, values)
 
-				// SET VALUES
-
 				// LOOP OVER AUTHORS
 				authorNames := []string{}
 				authorAddresses := make(map[string]string)
@@ -233,7 +231,7 @@ var pushCmd = &cobra.Command{
 				rendered, err := surveys.RenderTemplateInlineWithFunctions(funcMap, demo.BodyTemplate, values)
 
 				if err != nil {
-					log.Fatalf("Failed to render template: %v", err)
+					log.Fatalf("FAILED TO RENDER TEMPLATE: %v", err)
 				}
 
 				fmt.Println(string(rendered))
