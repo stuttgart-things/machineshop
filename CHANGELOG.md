@@ -1,3 +1,17 @@
+# [2.9.0](https://github.com/stuttgart-things/machineshop/compare/v2.8.1...v2.9.0) (2025-01-28)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/getsops/sops/v3 to v3.9.4 ([b9ce0bd](https://github.com/stuttgart-things/machineshop/commit/b9ce0bd14bafe7fd37936fad05b39675d779cfb3))
+* **deps:** update module github.com/go-git/go-git/v5 to v5.13.2 ([8a84e77](https://github.com/stuttgart-things/machineshop/commit/8a84e7727da2771e0336248b97fa0d966f6d6cbe))
+* feature/update-homerun-dev ([fd801cc](https://github.com/stuttgart-things/machineshop/commit/fd801ccf669e2c39ba952342913354e4e9b69725))
+
+
+### Features
+
+* feature/implement-run-cmd ([daaaed9](https://github.com/stuttgart-things/machineshop/commit/daaaed9dbd54a86efc446d40bed14317305da7ce))
+
 ## [2.8.1](https://github.com/stuttgart-things/machineshop/compare/v2.8.0...v2.8.1) (2025-01-21)
 
 
