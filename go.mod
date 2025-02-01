@@ -10,7 +10,7 @@ require (
 	github.com/google/go-github/v68 v68.0.0
 	github.com/pterm/pterm v0.12.80
 	github.com/spf13/cobra v1.8.1
-	github.com/stuttgart-things/clusterbook v0.0.0-20241120123325-b25e952ea9a6
+	github.com/stuttgart-things/clusterbook v0.0.0-20250201162914-c136fecd336e
 	github.com/stuttgart-things/kaeffken v0.3.3
 	github.com/stuttgart-things/sthingsBase v0.1.41
 	github.com/stuttgart-things/sthingsCli v0.3.0
