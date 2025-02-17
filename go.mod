@@ -9,7 +9,7 @@ require (
 	github.com/go-git/go-git/v5 v5.13.2
 	github.com/google/go-github/v68 v68.0.0
 	github.com/pterm/pterm v0.12.80
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.9.1
 	github.com/stuttgart-things/clusterbook v1.3.1
 	github.com/stuttgart-things/kaeffken v0.3.3
 	github.com/stuttgart-things/sthingsBase v0.1.41
@@ -188,7 +188,7 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/spf13/viper v1.19.0 // indirect
 	github.com/stuttgart-things/homerun-library v1.0.0 // indirect
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7 // indirect
