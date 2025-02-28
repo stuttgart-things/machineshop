@@ -35,6 +35,31 @@ token-precondition: &release
     msg: "Error: You are on the 'main' branch. Please switch to a different branch and try again."
 
 tasks:
+  tasks:
+    desc: Select a task to run
+    cmds:
+      - |
+        task=$(yq e '.tasks | keys' Taskfile.yaml | sed 's/^- //' | gum choose)
+        task ${task}
+
+  switch-remote:
+    desc: Switch to remote branch
+    cmds:
+      - |
+        git fetch
+        branches=($(git branch -r | grep -v 'origin/HEAD' | sed 's|origin/||'))
+        branch=$(printf "%s\n" "${branches[@]}" | gum choose)
+        git switch -c ${branch} --track origin/${branch}
+        git branch && git status
+
+  switch-local:
+    desc: Switch to local branch
+    cmds:
+      - |
+        branches=$(git branch -a | grep -v 'remotes')
+        branch=$(printf "%s\n" "${branches[@]}" | gum choose)
+        git checkout ${branch} && git pull
+
   test-run:
     desc: "Build Bin & Test Run Command"
     deps:
