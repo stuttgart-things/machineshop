@@ -5,7 +5,6 @@ Copyright © 2024 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"html/template"
@@ -15,6 +14,7 @@ import (
 
 	"math/rand"
 
+	homerun "github.com/stuttgart-things/homerun-library"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
 	ipservice "github.com/stuttgart-things/clusterbook/ipservice"
@@ -27,20 +27,6 @@ import (
 
 	"github.com/spf13/cobra"
 )
-
-type Message struct {
-	Title           string `json:"title,omitempty"`           // if empty: info
-	Message         string `json:"info,omitempty"`            // if empty: title
-	Severity        string `json:"severity,omitempty"`        // default: info
-	Author          string `json:"author,omitempty"`          // default: unknown
-	Timestamp       string `json:"timestamp,omitempty"`       // generate timestamp func
-	System          string `json:"system,omitempty"`          // default: unknown
-	Tags            string `json:"tags,omitempty"`            // empty
-	AssigneeAddress string `json:"assigneeaddress,omitempty"` // empty
-	AssigneeName    string `json:"assigneename,omitempty"`    // empty
-	Artifacts       string `json:"artifacts,omitempty"`       // empty
-	Url             string `json:"url,omitempty"`             // empty
-}
 
 var (
 	contentType = "application/json"
@@ -261,7 +247,8 @@ var pushCmd = &cobra.Command{
 				}
 
 				log.Info("PUSHING TO HOMERUN")
-				messageBody := Message{
+
+				messageBody := homerun.Message{
 					Title:           title,
 					Message:         body,
 					Severity:        severity,
@@ -275,7 +262,7 @@ var pushCmd = &cobra.Command{
 					Url:             url,
 				}
 
-				rendered := RenderBody(homeRunBodyData, messageBody)
+				rendered := homerun.RenderBody(homeRunBodyData, messageBody)
 				fmt.Println(rendered)
 
 				answer, resp := internal.SendToHomerun(destination, token, []byte(rendered), insecure)
@@ -356,25 +343,6 @@ func init() {
 	pushCmd.Flags().String("artifacts", "", "homerun artifacts")
 	pushCmd.Flags().String("url", "", "homerun message url/link")
 	pushCmd.Flags().Bool("insecure", true, "insecure connection")
-}
-
-func RenderBody(templateData string, object interface{}) string {
-
-	tmpl, err := template.New("template").Parse(templateData)
-	if err != nil {
-		panic(err)
-	}
-
-	var buf bytes.Buffer
-
-	err = tmpl.Execute(&buf, object)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return buf.String()
-
 }
 
 func Hello(input string) string {
