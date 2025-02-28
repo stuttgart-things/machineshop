@@ -1,3 +1,16 @@
+# [2.10.0](https://github.com/stuttgart-things/machineshop/compare/v2.9.0...v2.10.0) (2025-02-28)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/stuttgart-things/clusterbook to v1 ([70a26c4](https://github.com/stuttgart-things/machineshop/commit/70a26c43bcd16314522b86c45bb4c31d914b7799))
+
+
+### Features
+
+* feature/update-homerun-send ([e7d0017](https://github.com/stuttgart-things/machineshop/commit/e7d0017fae7ee43c96734e7e7a7c1038523a1667))
+* main ([70f5d85](https://github.com/stuttgart-things/machineshop/commit/70f5d85ce049add24f731d0829a04061e14465b8))
+
 # [2.9.0](https://github.com/stuttgart-things/machineshop/compare/v2.8.1...v2.9.0) (2025-01-28)
 
 
