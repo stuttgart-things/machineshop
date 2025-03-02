@@ -79,3 +79,50 @@ func (m *Ci) TestInstall(ctx context.Context) (versionOutput string) {
 
 	return installCmdOutput
 }
+
+func (m *Ci) BuildAndUse(
+	ctx context.Context,
+	src *dagger.Directory,
+) (*dagger.Container, error) {
+	// Initialize the Go module
+	goModule := dag.Go()
+
+	// Call the Build function with the struct
+	buildOutput := goModule.Binary(src, dagger.GoBinaryOpts{
+		GoVersion:  "1.24.0",      // Go verssion
+		Os:         "linux",       // OS
+		Arch:       "amd64",       // Architecture
+		GoMainFile: "main.go",     // Main Go file
+		BinName:    "machineshop", // Binary name
+	})
+
+	// Extract the binary file from the build output directory
+	binaryFile := buildOutput.File("machineshop")
+
+	// Create a new Alpine container
+	alpineContainer := dag.Container().From("eu.gcr.io/stuttgart-things/sthings-workflow:1.30.1")
+
+	// Copy the binary into the container at /usr/bin/
+	alpineWithBinary := alpineContainer.
+		WithFile("/usr/bin/machineshop", binaryFile).
+		WithExec([]string{"chmod", "+x", "/usr/bin/machineshop"})
+	// Debug: List files in /usr/bin/ to verify the binary is copied
+	// debugOutput, err := alpineWithBinary.WithExec([]string{"ls", "-l", "/usr/bin/"}).Stdout(ctx)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to list /usr/bin/: %w", err)
+	// }
+	// fmt.Println("Contents of /usr/bin/:", debugOutput)
+
+	// Optionally, test the binary by running it inside the container
+	// For example, you can run the binary with a --version flag to check if it works
+	testOutput, err := alpineWithBinary.WithExec([]string{"machineshop", "version"}).Stdout(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to test binary: %w", err)
+	}
+
+	// Print the test output (optional)
+	fmt.Println("Binary test output:", testOutput)
+
+	// Return the container with the binary for further use
+	return alpineWithBinary, nil
+}

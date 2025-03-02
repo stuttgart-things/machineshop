@@ -80,7 +80,7 @@ tasks:
       # KO_REPO: "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}"
       WORKFLOW_REPORT: /tmp/workflow.json
 
-  test-version:
+  test-version-dagger:
     desc: Test version cmd
     cmds:
       - dagger call -m ./{{ .MODULE }} test-version --progress plain
@@ -124,7 +124,7 @@ tasks:
 
   build-ko-dagger:
     desc: Build image w/ KO & dagger
-    deps: [lint, test, commit]
+    deps: [commit]
     env:
       KO_REPO: "{{ .MODULE }}"
       KO_DOCKER_REPO: "{{ .IMAGE_REPO }}" #scr.cd43.sthings-pve.labul.sva.de/machineshop
