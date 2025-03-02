@@ -99,30 +99,35 @@ func (m *Ci) BuildAndUse(
 	// Extract the binary file from the build output directory
 	binaryFile := buildOutput.File("machineshop")
 
-	// Create a new Alpine container
-	alpineContainer := dag.Container().From("eu.gcr.io/stuttgart-things/sthings-workflow:1.30.1")
+	// Create a new Machineshop container
+	machineShopContainer := dag.Container().From("eu.gcr.io/stuttgart-things/sthings-workflow:1.30.1")
 
 	// Copy the binary into the container at /usr/bin/
-	alpineWithBinary := alpineContainer.
+	machineShop := machineShopContainer.
 		WithFile("/usr/bin/machineshop", binaryFile).
 		WithExec([]string{"chmod", "+x", "/usr/bin/machineshop"})
 	// Debug: List files in /usr/bin/ to verify the binary is copied
-	// debugOutput, err := alpineWithBinary.WithExec([]string{"ls", "-l", "/usr/bin/"}).Stdout(ctx)
+	// debugOutput, err := machineShop.WithExec([]string{"ls", "-l", "/usr/bin/"}).Stdout(ctx)
 	// if err != nil {
 	// 	return nil, fmt.Errorf("failed to list /usr/bin/: %w", err)
 	// }
 	// fmt.Println("Contents of /usr/bin/:", debugOutput)
 
 	// Optionally, test the binary by running it inside the container
-	// For example, you can run the binary with a --version flag to check if it works
-	testOutput, err := alpineWithBinary.WithExec([]string{"machineshop", "version"}).Stdout(ctx)
+	testVersion, err := machineShop.WithExec([]string{"machineshop", "version"}).Stdout(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to test binary: %w", err)
+		return nil, fmt.Errorf("failed to test version: %w", err)
+	}
+
+	testInstall, err := machineShop.WithExec([]string{"machineshop", "install", "--profile", "machineShop/binaries.yaml", "--binaries", "sops,kubectl,flux"}).Stdout(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to test install: %w", err)
 	}
 
 	// Print the test output (optional)
-	fmt.Println("Binary test output:", testOutput)
+	fmt.Println("Binary test output:", testVersion)
+	fmt.Println("Binary test output:", testInstall)
 
 	// Return the container with the binary for further use
-	return alpineWithBinary, nil
+	return machineShop, nil
 }
