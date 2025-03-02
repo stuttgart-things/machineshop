@@ -19,7 +19,7 @@ vars:
   CMD: version
   PARAMETERS: ""
   DAGGER_GO_MODULE: github.com/stuttgart-things/dagger/go
-  DAGGER_GO_MODULE_VERSION: v0.0.4
+  DAGGER_GO_MODULE_VERSION: v0.4.1
   VERSION:
     sh: |
       [ "$(git branch --show-current)" != "main" ] && echo "previewPost-$(git describe --tags --abbrev=0)" || echo $(git describe --tags --abbrev=0)
@@ -72,12 +72,13 @@ tasks:
     cmds:
       - pre-commit run -a
 
-  dagger-ko:
+  dagger-workflow-entry-stage:
     desc: Build image w/ ko
     cmds:
-      - dagger call -m {{ .DAGGER_GO_MODULE }}@{{ .DAGGER_GO_MODULE_VERSION }} ko-build --src ./ --token=env:GITHUB_TOKEN --repo "{{ .KO_REPO }}" --progress plain
+      - dagger call -m {{ .DAGGER_GO_MODULE }}@{{ .DAGGER_GO_MODULE_VERSION }} run-workflow-entry-stage --src ./ --lint-can-fail=true --goVersion 1.24 --security-scan-can-fail=true --trivy-scan-can-fail=true export --path {{ .WORKFLOW_REPORT }} --progress plain
     vars:
-      KO_REPO: "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}"
+      # KO_REPO: "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}"
+      WORKFLOW_REPORT: /tmp/workflow.json
 
   test-version:
     desc: Test version cmd
@@ -86,8 +87,8 @@ tasks:
     vars:
       MODULE: ci
 
-  test-install:
-    desc: Test crossplame modules
+  test-install-dagger:
+    desc: Test install w/ dagger
     cmds:
       - dagger call -m ./{{ .MODULE }} test-install --progress plain
     vars:
@@ -120,6 +121,19 @@ tasks:
       - |
         BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .KO_REPO }} --tags {{ .VERSION }} --push)
         echo BUILD_IMAGE=${BUILD_IMAGE} >> .env
+
+  build-ko-dagger:
+    desc: Build image w/ KO & dagger
+    deps: [lint, test, commit]
+    env:
+      KO_REPO: "{{ .MODULE }}"
+      KO_DOCKER_REPO: "{{ .IMAGE_REPO }}" #scr.cd43.sthings-pve.labul.sva.de/machineshop
+    cmds:
+      - |
+        dagger call -m github.com/stuttgart-things/dagger/go@v0.4.2 \
+        run-workflow-container-stage --src . --token=env:GITHUB_TOKEN --token-name GITHUB_TOKEN \
+        --repo ghcr.io/stuttgart-things/machineshop/ --ko-version 3979dd70544adde24d336d5b605f4cf6f0ea9479 \
+        --output /tmp/calc-image.report.json --progress plain
 
   release-image:
     desc: Release image
