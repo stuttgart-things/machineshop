@@ -4,6 +4,7 @@ binary:
       url: https://github.com/charmbracelet/gum/releases/download/v{{ .version }}/gum_{{ .version }}_Linux_x86_64.tar.gz
       bin: gum_{{ .version }}_Linux_x86_64/gum
       version: 0.15.0 # datasource=gitlab-tags depName=charmbracelet/gum
+      versionCmd: --version
   - kaeffken:
       url: https://github.com/stuttgart-things/kaeffken/releases/download/v{{ .version }}/kaeffken_Linux_x86_64.tar.gz
       bin: kaeffken
@@ -23,6 +24,7 @@ binary:
   - sops:
       url: https://github.com/getsops/sops/releases/download/v{{ or .sopsVersion "3.8.1" }}/sops-v{{ or .sopsVersion "3.8.1" }}.linux.amd64
       bin: sops-v3.8.1.linux.amd64
+      versionCmd: --version
   - age:
       url: https://github.com/FiloSottile/age/releases/download/v1.1.1/age-v1.1.1-linux-amd64.tar.gz
       bin: sops-v3.8.1.linux.amd64

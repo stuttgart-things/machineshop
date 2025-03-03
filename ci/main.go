@@ -11,8 +11,22 @@ package main
 import (
 	"context"
 	"dagger/ci/internal/dagger"
+
+	surveys "github.com/stuttgart-things/machineshop/surveys"
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
+
 	"fmt"
 )
+
+// Parse the YAML content
+var config struct {
+	Binary []struct {
+		Name    string `yaml:"name"`
+		URL     string `yaml:"url"`
+		Bin     string `yaml:"bin"`
+		Version string `yaml:"version"`
+	} `yaml:"binary"`
+}
 
 type Ci struct {
 	MachineShopContainer *dagger.Container
@@ -83,13 +97,13 @@ func (m *Ci) TestInstall(ctx context.Context) (versionOutput string) {
 func (m *Ci) BuildAndUse(
 	ctx context.Context,
 	src *dagger.Directory,
-) (*dagger.Container, error) {
+) (*dagger.File, error) {
 	// Initialize the Go module
 	goModule := dag.Go()
 
 	// Call the Build function with the struct
 	buildOutput := goModule.Binary(src, dagger.GoBinaryOpts{
-		GoVersion:  "1.24.0",      // Go verssion
+		GoVersion:  "1.24.0",      // Go version
 		Os:         "linux",       // OS
 		Arch:       "amd64",       // Architecture
 		GoMainFile: "main.go",     // Main Go file
@@ -99,6 +113,25 @@ func (m *Ci) BuildAndUse(
 	// Extract the binary file from the build output directory
 	binaryFile := buildOutput.File("machineshop")
 
+	// Read the YAML file
+	yamlFile := src.File("profiles/binaries.yaml")
+	yamlContent, err := yamlFile.Contents(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read YAML file: %w", err)
+	}
+
+	// Parse the YAML content into a struct
+	var allConfig surveys.Profile
+	allConfig = sthingsCli.ReadInlineYamlToObject([]byte(yamlContent), allConfig).(surveys.Profile)
+
+	// Extract all binaries from the YAML
+	allBinaries := []string{}
+	for _, binaryProfile := range allConfig.BinaryProfile {
+		for key := range binaryProfile {
+			allBinaries = append(allBinaries, key)
+		}
+	}
+
 	// Create a new Machineshop container
 	machineShopContainer := dag.Container().From("eu.gcr.io/stuttgart-things/sthings-workflow:1.30.1")
 
@@ -106,28 +139,39 @@ func (m *Ci) BuildAndUse(
 	machineShop := machineShopContainer.
 		WithFile("/usr/bin/machineshop", binaryFile).
 		WithExec([]string{"chmod", "+x", "/usr/bin/machineshop"})
-	// Debug: List files in /usr/bin/ to verify the binary is copied
-	// debugOutput, err := machineShop.WithExec([]string{"ls", "-l", "/usr/bin/"}).Stdout(ctx)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to list /usr/bin/: %w", err)
-	// }
-	// fmt.Println("Contents of /usr/bin/:", debugOutput)
 
-	// Optionally, test the binary by running it inside the container
-	testVersion, err := machineShop.WithExec([]string{"machineshop", "version"}).Stdout(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("failed to test version: %w", err)
+	// Define the merged log file path
+	mergedLogPath := "/var/log/machineshop_tests.log"
+
+	// Test the binary by running it inside the container and append output to the merged log file
+	machineShop = machineShop.
+		WithExec([]string{"sh", "-c", "machineshop version >> " + mergedLogPath + " 2>&1"})
+
+	// Function to handle binary installation with error handling
+	installBinary := func(container *dagger.Container, binary string) *dagger.Container {
+		_, err := container.
+			WithExec([]string{"sh", "-c", "machineshop install --binaries " + binary + " >> " + mergedLogPath + " 2>&1"}).
+			Sync(ctx)
+		if err != nil {
+			fmt.Printf("Failed to install binary %s: %v\n", binary, err)
+			// Log the failure to the merged log file
+			container = container.
+				WithExec([]string{"sh", "-c", "echo 'Failed to install binary " + binary + "' >> " + mergedLogPath + " 2>&1"})
+		} else {
+			container = container.
+				WithExec([]string{"sh", "-c", "echo 'Successfully installed binary " + binary + "' >> " + mergedLogPath + " 2>&1"})
+		}
+		return container
 	}
 
-	testInstall, err := machineShop.WithExec([]string{"machineshop", "install", "--profile", "machineShop/binaries.yaml", "--binaries", "sops,kubectl,flux"}).Stdout(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("failed to test install: %w", err)
+	// Install each binary, skipping failures
+	for _, binary := range allBinaries {
+		machineShop = installBinary(machineShop, binary)
 	}
 
-	// Print the test output (optional)
-	fmt.Println("Binary test output:", testVersion)
-	fmt.Println("Binary test output:", testInstall)
+	// Get the merged log file as a dagger.File object
+	mergedLogFile := machineShop.File(mergedLogPath)
 
-	// Return the container with the binary for further use
-	return machineShop, nil
+	// Return the container and the merged log file
+	return mergedLogFile, nil
 }
