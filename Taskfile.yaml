@@ -87,10 +87,11 @@ tasks:
     vars:
       MODULE: ci
 
+
   test-install-dagger:
     desc: Test install w/ dagger
     cmds:
-      - dagger call -m ./{{ .MODULE }} test-install --progress plain
+      - dagger call -m {{ .MODULE }} build-and-test-install-cmd --src . --progress plain export --path /tmp/machineShop2.log
     vars:
       MODULE: ci
 

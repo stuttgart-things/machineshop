@@ -75,26 +75,7 @@ func (m *Ci) TestVersion(ctx context.Context) (versionOutput string) {
 	return versionOutput
 }
 
-// Test machineShop version command
-func (m *Ci) TestInstall(ctx context.Context) (versionOutput string) {
-
-	fmt.Println("RUNNING INSTALL COMMAND...")
-
-	installCmdOutput, err := m.MachineShopContainer.
-		WithExec(
-			[]string{"machineshop", "install", "--profile", "machineShop/binaries.yaml", "--binaries", "sops,kubectl,flux"}).
-		Stdout(ctx)
-
-	if err != nil {
-		fmt.Println("ERROR RUNNING INSTALL COMMAND: ", err)
-	}
-
-	fmt.Println(installCmdOutput)
-
-	return installCmdOutput
-}
-
-func (m *Ci) BuildAndUse(
+func (m *Ci) BuildAndTestInstallCmd(
 	ctx context.Context,
 	src *dagger.Directory,
 ) (*dagger.File, error) {
