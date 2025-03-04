@@ -80,20 +80,14 @@ tasks:
       # KO_REPO: "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}"
       WORKFLOW_REPORT: /tmp/workflow.json
 
-  test-version-dagger:
-    desc: Test version cmd
-    cmds:
-      - dagger call -m ./{{ .MODULE }} test-version --progress plain
-    vars:
-      MODULE: ci
-
-
-  test-install-dagger:
+  dagger-test-binary-install:
     desc: Test install w/ dagger
     cmds:
-      - dagger call -m {{ .MODULE }} build-and-test-install-cmd --src . --progress plain export --path /tmp/machineShop2.log
+      - dagger call -m {{ .MODULE }} build-and-test-install-cmd --src . --progress plain export --path {{ .TEST_INSTALL_LOG }}
+      - cat {{ .TEST_INSTALL_LOG }}
     vars:
       MODULE: ci
+      TEST_INSTALL_LOG: /tmp/machineShop2.log
 
   run:
     desc: Run
