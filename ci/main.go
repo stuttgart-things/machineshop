@@ -28,15 +28,7 @@ var config struct {
 	} `yaml:"binary"`
 }
 
-type Ci struct {
-	// MachineShopContainer *dagger.Container
-}
-
-// // GetMachineShopContainer return the default image for golang
-// func (m *Ci) GetMachineShopContainer() *dagger.Container {
-// 	return dag.Container().
-// 		From("ghcr.io/stuttgart-things/github.com/stuttgart-things/machineshop:v2.6.3")
-// }
+type Ci struct{}
 
 func New(
 	// machineShop container
@@ -46,12 +38,6 @@ func New(
 
 ) *Ci {
 	machineShop := &Ci{}
-
-	// if machineShopContainer != nil {
-	// 	machineShop.MachineShopContainer = machineShopContainer
-	// } else {
-	// 	machineShop.MachineShopContainer = machineShop.GetMachineShopContainer()
-	// }
 
 	return machineShop
 }
@@ -70,6 +56,7 @@ func (m *Ci) BuildAndTestInstallCmd(
 		Arch:       "amd64",       // Architecture
 		GoMainFile: "main.go",     // Main Go file
 		BinName:    "machineshop", // Binary name
+		Ldflags:    "",            // Linker flags
 	})
 
 	// Extract the binary file from the build output directory

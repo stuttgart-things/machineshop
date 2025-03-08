@@ -4,7 +4,6 @@ binary:
       url: https://github.com/charmbracelet/gum/releases/download/v{{ .version }}/gum_{{ .version }}_Linux_x86_64.tar.gz
       bin: gum_{{ .version }}_Linux_x86_64/gum
       version: 0.15.0 # datasource=gitlab-tags depName=charmbracelet/gum
-      versionCmd: --version
   - kaeffken:
       url: https://github.com/stuttgart-things/kaeffken/releases/download/v{{ .version }}/kaeffken_Linux_x86_64.tar.gz
       bin: kaeffken
@@ -14,35 +13,40 @@ binary:
       bin: bin/glab
       version: 1.53.0 # datasource=gitlab-tags depName=gitlab-org/cli
   - argocd:
-      url: https://github.com/argoproj/argo-cd/releases/download/v{{ or .argocdVersion "2.8.4" }}/argocd-linux-amd64
+      url: https://github.com/argoproj/argo-cd/releases/download/v{{ .version }}/argocd-linux-amd64
       bin: argocd-linux-amd64
       version: 2.14.3 # datasource=github-tags depName=argoproj/argo-cd
   - kubectl:
-      url: https://dl.k8s.io/release/v{{ or .kubectlVersion "1.28.2" }}/bin/linux/amd64/kubectl
+      url: https://dl.k8s.io/release/v{{ .version }}/bin/linux/amd64/kubectl
       bin: kubectl
       version: v1.29.2 # datasource=github-tags depName=kubernetes/kubectl
   - sops:
-      url: https://github.com/getsops/sops/releases/download/v{{ or .sopsVersion "3.8.1" }}/sops-v{{ or .sopsVersion "3.8.1" }}.linux.amd64
-      bin: sops-v3.8.1.linux.amd64
-      versionCmd: --version
+      url: https://github.com/getsops/sops/releases/download/v{{ or .version }}/sops-v{{ or .version }}.linux.amd64
+      bin: sops-v3.9.4.linux.amd64
+      version: v3.9.4 # datasource=github-tags depName=getsops/sops
   - age:
-      url: https://github.com/FiloSottile/age/releases/download/v1.1.1/age-v1.1.1-linux-amd64.tar.gz
-      bin: sops-v3.8.1.linux.amd64
+      url: https://github.com/FiloSottile/age/releases/download/v{{ .version }}/age-v{{ .version }}-linux-amd64.tar.gz
+      bin: age/age
+      version: 1.2.1 # datasource=github-tags depName=FiloSottile/age
   - tkn:
-      url: https://github.com/tektoncd/cli/releases/download/v{{ or .tknVersion "0.32.0" }}/tkn_{{ or .tknVersion "0.32.0" }}_Linux_x86_64.tar.gz
+      url: https://github.com/tektoncd/cli/releases/download/v{{ or .version }}/tkn_{{ or .version }}_Linux_x86_64.tar.gz
       bin: tkn
+      version: v0.40.0 # datasource=github-tags depName=tektoncd/cli
   - kind:
-      url: https://kind.sigs.k8s.io/dl/v{{ or .kindVersion "0.20.0" }}/kind-linux-amd64
+      url: https://kind.sigs.k8s.io/dl/v{{ .version }}/kind-linux-amd64
       bin: kind-linux-amd64
       version: 0.27.0 # datasource=github-tags depName=kubernetes-sigs/kind
   - velero:
-      url: https://github.com/vmware-tanzu/velero/releases/download/v{{ or .veleroVersion "1.13.0" }}/velero-v{{ or .veleroVersion "1.13.0" }}-linux-amd64.tar.gz
-      bin: velero-v1.13.0-linux-amd64/velero
+      url: https://github.com/vmware-tanzu/velero/releases/download/v{{ .version }}/velero-v{{ .version }}-linux-amd64.tar.gz
+      bin: velero-v{{ .version }}-linux-amd64/velero
+      version: 1.15.2 # datasource=github-tags depName=vmware-tanzu/velero
+
+
 #   - gh:
 #       url: https://github.com/cli/cli/releases/download/v{{ or .ghVersion 2.34.0" }}/gh_{{ or .ghVersion 2.34.0" }}_linux_amd64.tar.gz
 #       bin: gh_2.34.0_linux_amd64/bin/gh
   - helm:
-      url: https://get.helm.sh/helm-v{{ or .helmVersion "3.13.0" }}-linux-amd64.tar.gz
+      url: https://get.helm.sh/helm-v{{ .version }}-linux-amd64.tar.gz
       bin: linux-amd64/helm
       version: 3.17.1 # datasource=github-tags depName=helm/helm
   - kompose:
@@ -133,9 +137,6 @@ script:
     #     export GOPATH=$HOME/usr/local/go
     #     export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
-  - age:
-      script: |
-        go install filippo.io/age/cmd/...@v1.1.1
   - azure-cli:
       script: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -146,14 +147,6 @@ script:
         rm -rf nerdctl-full-{{ or .nerdctlVersion "1.6.0" }}-linux-amd64.tar.gz
         sudo systemctl enable --now containerd
         sudo systemctl enable --now buildkit
-  - age:
-      script: |
-        curl https://dl.min.io/client/mc/release/linux-amd64/mc \
-        --create-dirs \
-        -o $HOME/minio-binaries/mc
-
-        chmod +x $HOME/minio-binaries/mc
-        export PATH=$PATH:$HOME/minio-binaries/
   - argo:
       script: |
         curl -sLO https://github.com/argoproj/argo-workflows/releases/download/v{{ or .argocdVersion "3.5.2" }}/argo-linux-amd64.gz

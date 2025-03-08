@@ -42,6 +42,13 @@ tasks:
         task=$(yq e '.tasks | keys' Taskfile.yaml | sed 's/^- //' | gum choose)
         task ${task}
 
+  run-install:
+    desc: Run install w/ local profile
+    cmds:
+      - sudo machineshop install --source local --profile {{ .PROFILE }}
+    vars:
+      PROFILE: profiles/binaries.yaml
+
   switch-remote:
     desc: Switch to remote branch
     cmds:

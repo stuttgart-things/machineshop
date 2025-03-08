@@ -7,8 +7,8 @@
   "dependencies": [
     {
       "name": "go",
-      "source": "github.com/stuttgart-things/dagger/go@v0.4.4",
-      "pin": "58db206a4d5ef59081d423feae628888c8ecd605"
+      "source": "github.com/stuttgart-things/dagger/go@v0.5.0",
+      "pin": "f7ca625a58a334b446bc818f62957103697c15e2"
     }
   ],
   "source": "ci"
