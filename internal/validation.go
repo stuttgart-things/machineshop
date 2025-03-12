@@ -99,7 +99,7 @@ func ValidateGetVaultSecretValue(secretPathString string, log *sthingsBase.Logge
 		log.Info("SECRET FOUND IN ", secretPathString)
 
 	} else {
-		secretValue = secretPathString
+		secretValue = secretPathString // pragma: allowlist secret
 		log.Info("NO SECRET PATH FOUND - USING LITERAL ", secretValue)
 	}
 
