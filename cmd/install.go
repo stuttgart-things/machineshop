@@ -105,7 +105,7 @@ func init() {
 	installCmd.Flags().String("tmp", "/tmp/machineShop", "temporary machineShop dir")
 	installCmd.Flags().String("bin", "/usr/bin", "target dir for installing binary files")
 	installCmd.Flags().String("source", "fetch", "source of profile: local, git or by url fetch. default: fetch.")
-	installCmd.Flags().String("url", "https://raw.githubusercontent.com/stuttgart-things/stuttgart-things/refs/heads/main/machineShop/binaries.yaml", "source of url download")
+	installCmd.Flags().String("url", "https://raw.githubusercontent.com/stuttgart-things/machineshop/refs/heads/main/profiles/binaries.yaml", "source of url download")
 	installCmd.Flags().String("profile", "machineShop/binaries.yaml", "path to install profile")
 	installCmd.Flags().StringSlice("binaries", []string{}, "files to be installed; survey will be skipped if defined")
 }

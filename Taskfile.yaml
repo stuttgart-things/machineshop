@@ -19,7 +19,7 @@ vars:
   CMD: version
   PARAMETERS: ""
   DAGGER_GO_MODULE: github.com/stuttgart-things/dagger/go
-  DAGGER_GO_MODULE_VERSION: v0.0.4
+  DAGGER_GO_MODULE_VERSION: v0.4.1
   VERSION:
     sh: |
       [ "$(git branch --show-current)" != "main" ] && echo "previewPost-$(git describe --tags --abbrev=0)" || echo $(git describe --tags --abbrev=0)
@@ -35,12 +35,19 @@ token-precondition: &release
     msg: "Error: You are on the 'main' branch. Please switch to a different branch and try again."
 
 tasks:
-  tasks:
+  do:
     desc: Select a task to run
     cmds:
       - |
         task=$(yq e '.tasks | keys' Taskfile.yaml | sed 's/^- //' | gum choose)
         task ${task}
+
+  run-install:
+    desc: Run install w/ local profile
+    cmds:
+      - sudo machineshop install --source local --profile {{ .PROFILE }}
+    vars:
+      PROFILE: profiles/binaries.yaml
 
   switch-remote:
     desc: Switch to remote branch
@@ -72,26 +79,22 @@ tasks:
     cmds:
       - pre-commit run -a
 
-  dagger-ko:
+  dagger-workflow-entry-stage:
     desc: Build image w/ ko
     cmds:
-      - dagger call -m {{ .DAGGER_GO_MODULE }}@{{ .DAGGER_GO_MODULE_VERSION }} ko-build --src ./ --token=env:GITHUB_TOKEN --repo "{{ .KO_REPO }}" --progress plain
+      - dagger call -m {{ .DAGGER_GO_MODULE }}@{{ .DAGGER_GO_MODULE_VERSION }} run-workflow-entry-stage --src ./ --lint-can-fail=true --goVersion 1.24 --security-scan-can-fail=true --trivy-scan-can-fail=true export --path {{ .WORKFLOW_REPORT }} --progress plain
     vars:
-      KO_REPO: "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}"
+      # KO_REPO: "{{ .REGISTRY }}/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}"
+      WORKFLOW_REPORT: /tmp/workflow.json
 
-  test-version:
-    desc: Test version cmd
+  dagger-test-binary-install:
+    desc: Test install w/ dagger
     cmds:
-      - dagger call -m ./{{ .MODULE }} test-version --progress plain
+      - dagger call -m {{ .MODULE }} build-and-test-install-cmd --src . --progress plain export --path {{ .TEST_INSTALL_LOG }}
+      - cat {{ .TEST_INSTALL_LOG }}
     vars:
       MODULE: ci
-
-  test-install:
-    desc: Test crossplame modules
-    cmds:
-      - dagger call -m ./{{ .MODULE }} test-install --progress plain
-    vars:
-      MODULE: ci
+      TEST_INSTALL_LOG: /tmp/machineShop2.log
 
   run:
     desc: Run
@@ -120,6 +123,19 @@ tasks:
       - |
         BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .KO_REPO }} --tags {{ .VERSION }} --push)
         echo BUILD_IMAGE=${BUILD_IMAGE} >> .env
+
+  build-ko-dagger:
+    desc: Build image w/ KO & dagger
+    deps: [commit]
+    env:
+      KO_REPO: "{{ .MODULE }}"
+      KO_DOCKER_REPO: "{{ .IMAGE_REPO }}" #scr.cd43.sthings-pve.labul.sva.de/machineshop
+    cmds:
+      - |
+        dagger call -m github.com/stuttgart-things/dagger/go@v0.4.2 \
+        run-workflow-container-stage --src . --token=env:GITHUB_TOKEN --token-name GITHUB_TOKEN \
+        --repo ghcr.io/stuttgart-things/machineshop/ --ko-version 3979dd70544adde24d336d5b605f4cf6f0ea9479 \
+        --output /tmp/calc-image.report.json --progress plain
 
   release-image:
     desc: Release image
@@ -236,26 +252,32 @@ tasks:
 
   commit:
     desc: Commit + push code into branch
+    deps:
+      - check
     cmds:
-      - rm -rf dist/
       - git branch --set-upstream-to=origin/{{ .BRANCH }}
       - git pull
+      - git status
       - |
         git add *
+        git status
         if [[ -n $(git status --porcelain) ]]; then
-          echo "committing changes"
-          echo "ENTER COMMIT MESSAGE"
-          COMMIT_MESSAGE=$(echo $(gum choose "feat: {{ .BRANCH }}" "fix: {{ .BRANCH }}" "BREAKING CHANGE: {{ .BRANCH }}" "ENTER CUSTOM COMMIT MESSAGE"))
+          echo "Review the changes above."
+          gum confirm "Do you want to commit these changes?" || exit 0
 
-          if [ "$COMMIT_MESSAGE" == "ENTER CUSTOM COMMIT MESSAGE" ]; then
-            COMMIT_MESSAGE=$(echo $(gum input --placeholder "scope" --value "commit to {{ .BRANCH }}"))
+          echo "ENTER COMMIT MESSAGE"
+          COMMIT_MESSAGE=$(gum choose "CUSTOM MESSAGE" "feat: {{ .BRANCH }}" "fix: {{ .BRANCH }}" "BREAKING CHANGE: {{ .BRANCH }}")
+
+          if [ "$COMMIT_MESSAGE" == "CUSTOM MESSAGE" ]; then
+            CHANGED_FILES=$(git status --short | awk '{print $2}' | tr '\n' ' ')
+            COMMIT_MESSAGE=$(gum input --placeholder "Commit message" --value "Changed: $CHANGED_FILES")
           fi
 
-          git commit --allow-empty -a -m "$(echo ${COMMIT_MESSAGE})"
+          git commit --allow-empty -a -m "$COMMIT_MESSAGE"
         else
-          echo "no changes"
+          echo "No changes to commit."
         fi
-        git push origin -u {{ .BRANCH }}
+      - git push origin -u {{ .BRANCH }}
 
   delete-branch:
     desc: Delete branch from origin

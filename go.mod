@@ -1,6 +1,6 @@
 module github.com/stuttgart-things/machineshop
 
-go 1.23.4
+go 1.24.0
 
 require (
 	github.com/charmbracelet/huh v0.6.0
@@ -10,7 +10,7 @@ require (
 	github.com/google/go-github/v68 v68.0.0
 	github.com/pterm/pterm v0.12.80
 	github.com/spf13/cobra v1.9.1
-	github.com/stuttgart-things/clusterbook v1.3.1
+	github.com/stuttgart-things/clusterbook v1.5.0
 	github.com/stuttgart-things/homerun-library v1.2.0
 	github.com/stuttgart-things/kaeffken v0.3.3
 	github.com/stuttgart-things/sthingsBase v0.1.41
@@ -214,18 +214,18 @@ require (
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
 	golang.org/x/mod v0.19.0 // indirect
 	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/oauth2 v0.25.0 // indirect
+	golang.org/x/oauth2 v0.26.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/term v0.29.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
-	golang.org/x/time v0.9.0 // indirect
+	golang.org/x/time v0.10.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
 	google.golang.org/api v0.218.0 // indirect
 	google.golang.org/genproto v0.0.0-20241223144023-3abc09e42ca8 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20250106144421-5f5ef82da422 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250115164207-1a7da9e5054f // indirect
-	google.golang.org/protobuf v1.36.4 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250227231956-55c901821b1e // indirect
+	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect

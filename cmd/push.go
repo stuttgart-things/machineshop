@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"html/template"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -92,8 +93,8 @@ var pushCmd = &cobra.Command{
 				log.Info("IPs: ", artifacts)
 				log.Info("CLUSTER: ", assignee)
 
-				clusterBookServer := destination //"clusterbook.rke2.sthings-vsphere.labul.sva.de:443"
-				secureConnection := "true"
+				clusterBookServer := destination
+				secureConnection := strconv.FormatBool(insecure)
 
 				// SELECT CREDENTIALS BASED ON SECURECONNECTION
 				conn, err := grpc.NewClient(clusterBookServer, internal.GetCredentials(secureConnection))
@@ -110,6 +111,7 @@ var pushCmd = &cobra.Command{
 				clusterReq := &ipservice.ClusterRequest{
 					IpAddressRange: artifacts,
 					ClusterName:    assignee,
+					Status:         title,
 				}
 
 				clusterRes, err := c.SetClusterInfo(ctx, clusterReq)

@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -39,6 +40,7 @@ var getCmd = &cobra.Command{
 		system, _ := cmd.LocalFlags().GetString("system")
 		ageKey, _ := cmd.LocalFlags().GetString("key")
 		fileFormat, _ := cmd.LocalFlags().GetString("format")
+		insecure, _ := cmd.LocalFlags().GetBool("insecure")
 
 		// START LOGGING
 		log.Info("PATH: ", path)
@@ -54,7 +56,7 @@ var getCmd = &cobra.Command{
 			log.Info("NETWORK-KEY: ", path)
 
 			clusterBookServer := destinationPath //"clusterbook.rke2.sthings-vsphere.labul.sva.de:443"
-			secureConnection := "true"
+			secureConnection := strconv.FormatBool(insecure)
 			countIps := int32(sthingsBase.ConvertStringToInteger(output))
 			networkKey := path
 
@@ -174,4 +176,5 @@ func init() {
 	getCmd.Flags().String("destination", "", "path to output (if output file)")
 	getCmd.Flags().Bool("b64", false, "decode base64 for output")
 	getCmd.Flags().String("format", "yaml", "sops file format/extension")
+	getCmd.Flags().Bool("insecure", true, "insecure connection")
 }
