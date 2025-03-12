@@ -1,3 +1,14 @@
+## [2.10.1](https://github.com/stuttgart-things/machineshop/compare/v2.10.0...v2.10.1) (2025-03-12)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/go-git/go-git/v5 to v5.14.0 ([4b769af](https://github.com/stuttgart-things/machineshop/commit/4b769afa11af02b203d70147b70dec11a03cd322))
+* **deps:** update module github.com/google/go-github/v68 to v69 ([ac1c728](https://github.com/stuttgart-things/machineshop/commit/ac1c728e74906c49919a12c7d7192515a11274fb))
+* **deps:** update module github.com/spf13/cobra to v1.9.1 ([999016c](https://github.com/stuttgart-things/machineshop/commit/999016c41f12c20305f2fe6a4c4436484cbd15da))
+* **deps:** update module google.golang.org/grpc to v1.71.0 ([ab21990](https://github.com/stuttgart-things/machineshop/commit/ab219900cb7dfa49116f1a22667044e2c9e88d68))
+* fix/fix-go-releaser ([aedce3a](https://github.com/stuttgart-things/machineshop/commit/aedce3ad6e301325f87b3ae112e2bc0ad08b7962))
+
 # [2.10.0](https://github.com/stuttgart-things/machineshop/compare/v2.9.0...v2.10.0) (2025-02-28)
 
 
