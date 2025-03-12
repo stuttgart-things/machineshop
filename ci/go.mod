@@ -9,7 +9,7 @@ require (
 	github.com/Khan/genqlient v0.8.0
 	github.com/stuttgart-things/machineshop v1.8.0
 	github.com/stuttgart-things/sthingsCli v0.3.0
-	github.com/vektah/gqlparser/v2 v2.5.22
+	github.com/vektah/gqlparser/v2 v2.5.23
 	go.opentelemetry.io/otel v1.33.0
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.8.0
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp v0.8.0
