@@ -15,7 +15,7 @@ binary:
   - argocd:
       url: https://github.com/argoproj/argo-cd/releases/download/v{{ .version }}/argocd-linux-amd64
       bin: argocd-linux-amd64
-      version: 2.14.3 # datasource=github-tags depName=argoproj/argo-cd
+      version: 2.14.5 # datasource=github-tags depName=argoproj/argo-cd
   - kubectl:
       url: https://dl.k8s.io/release/v{{ .version }}/bin/linux/amd64/kubectl
       bin: kubectl
