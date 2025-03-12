@@ -40,6 +40,5 @@ repos:
         description: Detects high entropy strings that are likely to be passwords.
         entry: detect-secrets-hook
         language: python
-        # for backward compatibility
         files: .*  # all files
         args: ["--exclude-files", "dagger.json"]
