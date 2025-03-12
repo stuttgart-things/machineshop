@@ -9,7 +9,7 @@ defaults: |
   moduleName: name of module|var+resourceName
   backendKey: key of s3 backend state|var+resourceName
 
-template: |
+template: | # pragma: allowlist secret
   apiVersion: machineshop.sthings.tiab.ssc.sva.de/v1beta1
   kind: Terraform
   metadata:

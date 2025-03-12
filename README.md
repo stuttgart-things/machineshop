@@ -10,33 +10,6 @@
   </p>
 </div>
 
-## TASKS
-
-```bash
-task: Available tasks for this project:
-* branch:              Create branch from main
-* build:               Build code
-* build-image:         Build container image
-* build-ko:            Build image w/ KO
-* check:               Run pre-commit hooks
-* commit:              Commit + push code into branch
-* dagger-ko:           Build image w/ ko
-* delete-branch:       Delete branch from origin
-* goreleaser:          Release bins w/ goreleaser
-* install:             Install
-* lint:                Lint
-* pr:                  Create pull request into main
-* release:             Release
-* release-image:       Release image
-* run:                 Run
-* tag:                 Commit, push & tag the module
-* test:                Test
-* test-install:        Test crossplame modules
-* test-run:            Build Bin & Test Run Command
-* test-version:        Test version cmd
-* tests:               Built cli tests
-```
-
 ## FEATURES
 * RENDER TEMPLATES w/ DEFAULTS AND PARAMETERS (RENDER)
 * INSTALL MULTIPLE BINARIES FROM WEB SOURCES AT ONCE/IN PARALLEL (INSTALL)
@@ -45,7 +18,7 @@ task: Available tasks for this project:
 
 ## DEPLOYMENT
 
-<details><summary><b>BINARY BY RELEASE</b></summary>
+<details><summary><b>FROM RELEASE-ARCHIVE</b></summary>
 
 ```bash
 # LINUX x86_64
@@ -77,39 +50,47 @@ ghcr.io/stuttgart-things/machineshop/machineshop-9c3178088556daa12a17db5edcc6b5b
 
 ## DEV
 
-<details><summary><b>CREATE BRANCH</b></summary>
+<details><summary>ALL TASKS</summary>
 
 ```bash
-task branch
+task: Available tasks for this project:
+* branch:              Create branch from main
+* build:               Build code
+* build-image:         Build container image
+* build-ko:            Build image w/ KO
+* check:               Run pre-commit hooks
+* commit:              Commit + push code into branch
+* dagger-ko:           Build image w/ ko
+* delete-branch:       Delete branch from origin
+* goreleaser:          Release bins w/ goreleaser
+* install:             Install
+* lint:                Lint
+* pr:                  Create pull request into main
+* release:             Release
+* release-image:       Release image
+* run:                 Run
+* switch-local:        Switch to local branch
+* switch-remote:       Switch to remote branch
+* tag:                 Commit, push & tag the module
+* tasks:               Select a task to run
+* test:                Test
+* test-install:        Test crossplame modules
+* test-run:            Build Bin & Test Run Command
+* test-version:        Test version cmd
+* tests:               Built cli tests
 ```
 
 </details>
 
-<details><summary><b>CREATE PULL-REQUEST/MERGE</b></summary>
+<details><summary>SELECT TASK</summary>
 
 ```bash
-task pr
+task=$(yq e '.tasks | keys' Taskfile.yaml | sed 's/^- //' | gum choose) && task ${task}
 ```
 
 </details>
 
-<details><summary><b>BUILD RELEASE</b></summary>
-
-```bash
-task release TAG=v1.8.0 # EXAMPLE VERSION
-```
-
-</details>
-
-<details><summary><b>BUILD CONTAINER-IMAGE w/ KO</b></summary>
-
-```bash
-task ko TAG=v1.9.0 # EXAMPLE VERSION
-```
-
-</details>
-
-## USAGE EXAMPLES
+## USAGE
 
 ### CREATE
 

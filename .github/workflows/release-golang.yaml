@@ -21,7 +21,7 @@ jobs:
       runs-on: ghr-machineshop-labda-test
       alpine-version: 3.19.0
       continue-error: false
-    secrets: inherit
+    secrets: inherit # pragma: allowlist secret
 
   Release-Golang-Binaries:
     name: Release Golang
@@ -34,4 +34,4 @@ jobs:
       runs-on: ghr-machineshop-labda-test
       goreleaser-version: v1.26.2
       golang-version: 1.23.4
-    secrets: inherit
+    secrets: inherit # pragma: allowlist secret
