@@ -1,3 +1,17 @@
+# [2.11.0](https://github.com/stuttgart-things/machineshop/compare/v2.10.1...v2.11.0) (2025-03-12)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/google/go-github/v68 to v69 ([#221](https://github.com/stuttgart-things/machineshop/issues/221)) ([2c4f4bf](https://github.com/stuttgart-things/machineshop/commit/2c4f4bf47eb6bbf80700a69d9d857577161c9c91))
+* **deps:** update module github.com/vektah/gqlparser/v2 to v2.5.23 ([#230](https://github.com/stuttgart-things/machineshop/issues/230)) ([25ed720](https://github.com/stuttgart-things/machineshop/commit/25ed7205dc2d160feb25616d78eea9a96beca3ba))
+* fix/updated-go-mod ([621225b](https://github.com/stuttgart-things/machineshop/commit/621225b9a99d9cbc0fc234e063566431fdca3763))
+
+
+### Features
+
+* main ([2fcb354](https://github.com/stuttgart-things/machineshop/commit/2fcb354a93a70d756cece3a52a7944489a7617fc))
+
 ## [2.10.1](https://github.com/stuttgart-things/machineshop/compare/v2.10.0...v2.10.1) (2025-03-12)
 
 
