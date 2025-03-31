@@ -7,7 +7,7 @@ require (
 	github.com/getsops/sops/v3 v3.9.4
 	github.com/go-git/go-billy/v5 v5.6.2
 	github.com/go-git/go-git/v5 v5.14.0
-	github.com/google/go-github/v68 v68.0.0
+	github.com/google/go-github/v70 v70.0.0
 	github.com/google/go-github/v70 v70.0.0
 	github.com/pterm/pterm v0.12.80
 	github.com/spf13/cobra v1.9.1
