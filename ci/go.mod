@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/99designs/gqlgen v0.17.66
-	github.com/Khan/genqlient v0.8.0
+	github.com/Khan/genqlient v0.8.1
 	github.com/stuttgart-things/machineshop v1.8.0
 	github.com/stuttgart-things/sthingsCli v0.3.0
 	github.com/vektah/gqlparser/v2 v2.5.23
