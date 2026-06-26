@@ -15,7 +15,7 @@ require (
 	github.com/stuttgart-things/homerun-library v1.2.0
 	github.com/stuttgart-things/kaeffken v0.3.3
 	github.com/stuttgart-things/sthingsBase v0.1.41
-	github.com/stuttgart-things/sthingsCli v0.3.0
+	github.com/stuttgart-things/sthingsCli v0.3.1
 	go.hein.dev/go-version v0.1.0
 	google.golang.org/grpc v1.71.0
 	gopkg.in/yaml.v2 v2.4.0
