@@ -9,7 +9,7 @@ require (
 	github.com/go-git/go-git/v5 v5.14.0
 	github.com/google/go-github/v68 v68.0.0
 	github.com/google/go-github/v70 v70.0.0
-	github.com/pterm/pterm v0.12.80
+	github.com/pterm/pterm v0.12.83
 	github.com/spf13/cobra v1.9.1
 	github.com/stuttgart-things/clusterbook v1.5.0
 	github.com/stuttgart-things/homerun-library v1.2.0
